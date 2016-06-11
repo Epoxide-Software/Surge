@@ -1,7 +1,10 @@
 package net.epoxide.surge.features;
 
 import net.epoxide.surge.common.command.CommandSurge;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,12 +50,35 @@ public class FeaturesPlayer extends Features {
 
         @Override
         public String getUsage() {
-            return null;
+            return "/surge whitelist [add|remove|list] [username]";
         }
 
         @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
-
+        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            System.out.println("whitelist");
+            if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
+                //TODO implement
+            } else if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("add")) {
+                    EntityPlayerMP entityPlayer = server.getPlayerList().getPlayerByUsername(args[1]);
+                    if (entityPlayer != null) {
+                        FeaturesPlayer.whitelisted.add(entityPlayer.getUniqueID());
+                        System.out.println("done");
+                    }else{
+                        //TODO Not found
+                    }
+                }
+                if (args[0].equalsIgnoreCase("remove")) {
+                    EntityPlayerMP entityPlayer = server.getPlayerList().getPlayerByUsername(args[1]);
+                    if (entityPlayer != null) {
+                        whitelisted.remove(entityPlayer.getUniqueID());
+                    }else{
+                        //TODO Not found
+                    }
+                }
+            } else {
+                throw new WrongUsageException(getUsage(), new Object[0]);
+            }
         }
     }
 }

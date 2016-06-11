@@ -27,8 +27,8 @@ public class CommandSurge extends CommandBase {
     @Override
     public String getCommandUsage(ICommandSender sender) {
         //TODO Change to localization
-        StringBuilder builder = new StringBuilder("Commands: ");
-        commands.values().forEach(command -> builder.append(command.getUsage() + "\n"));
+        StringBuilder builder = new StringBuilder("Commands:");
+        commands.values().forEach(command -> builder.append("\n"+command.getUsage()));
         return builder.toString();
     }
 
@@ -38,7 +38,7 @@ public class CommandSurge extends CommandBase {
             if (commands.containsKey(args[0])) {
                 CommandFeatures command = commands.get(args[0]);
                 command.execute(server, sender, Arrays.copyOfRange(args, 1, args.length));
-                System.out.println(command.getUsage());
+
             }
         } else {
             throw new WrongUsageException(getCommandUsage(sender), new Object[0]);
