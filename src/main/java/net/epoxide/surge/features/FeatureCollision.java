@@ -1,23 +1,24 @@
 package net.epoxide.surge.features;
 
 public class FeatureCollision extends Feature {
-
+    
     @Override
-    public void onPreInit() {
-
+    public void onPreInit () {
+    
     }
-
+    
     @Override
-    public void onInit() {
-
+    public void onInit () {
+    
     }
-
+    
     @Override
-    public void onPostInit() {
-
+    public void onPostInit () {
+    
     }
+    
     @Override
-    public void setupRendering() {
-
+    public void setupRendering () {
+    
     }
 }

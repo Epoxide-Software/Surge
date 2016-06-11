@@ -6,22 +6,22 @@ import net.epoxide.surge.features.Feature;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ProxyClient extends ProxyCommon {
-
+    
     @Override
-    public void onPreInit() {
-
+    public void onPreInit () {
+        
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
-
+        
         Surge.features.forEach(Feature::setupRendering);
     }
-
+    
     @Override
-    public void onInit() {
-
+    public void onInit () {
+    
     }
-
+    
     @Override
-    public void onPostInit() {
-
+    public void onPostInit () {
+    
     }
 }

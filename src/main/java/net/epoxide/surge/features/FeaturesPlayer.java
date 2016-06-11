@@ -1,5 +1,9 @@
 package net.epoxide.surge.features;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import net.epoxide.surge.common.command.CommandSurge;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -11,74 +15,79 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 public class FeaturesPlayer extends Feature {
-
+    
     public static boolean hidePlayer = true;
     public static List<UUID> whitelisted = new ArrayList<>();
-
+    
     @Override
-    public void onInit() {
+    public void onInit () {
+        
         super.onInit();
     }
-
+    
     @Override
-    public void setupRendering() {
+    public void setupRendering () {
+        
         MinecraftForge.EVENT_BUS.register(this);
     }
-
+    
     @SubscribeEvent
-    public void hidePlayer(RenderPlayerEvent.Pre event) {
+    public void hidePlayer (RenderPlayerEvent.Pre event) {
+        
         if (hidePlayer && !whitelisted.contains(event.getEntityPlayer().getUniqueID()))
             event.setCanceled(true);
     }
-
+    
     @Override
-    public void initCommands(FMLServerStartingEvent event) {
+    public void initCommands (FMLServerStartingEvent event) {
+        
         CommandSurge.addCommand(new CommandWhiteList());
     }
-
+    
     private class CommandWhiteList implements CommandFeatures {
-
+        
         @Override
-        public String getSubCommand() {
+        public String getSubCommand () {
+            
             return "whitelist";
         }
-
+        
         @Override
-        public String getUsage() {
+        public String getUsage () {
+            
             return "/surge whitelist [add|remove|list] [username]";
         }
-
+        
         @Override
-        public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        public void execute (MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            
             System.out.println("whitelist");
             if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-                //TODO implement
-            } else if (args.length == 2) {
+                // TODO implement
+            }
+            else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("add")) {
-                    EntityPlayerMP entityPlayer = server.getPlayerList().getPlayerByUsername(args[1]);
+                    final EntityPlayerMP entityPlayer = server.getPlayerList().getPlayerByUsername(args[1]);
                     if (entityPlayer != null) {
                         FeaturesPlayer.whitelisted.add(entityPlayer.getUniqueID());
                         System.out.println("done");
-                    }else{
-                        //TODO Not found
+                    }
+                    else {
+                        // TODO Not found
                     }
                 }
                 if (args[0].equalsIgnoreCase("remove")) {
-                    EntityPlayerMP entityPlayer = server.getPlayerList().getPlayerByUsername(args[1]);
-                    if (entityPlayer != null) {
+                    final EntityPlayerMP entityPlayer = server.getPlayerList().getPlayerByUsername(args[1]);
+                    if (entityPlayer != null)
                         whitelisted.remove(entityPlayer.getUniqueID());
-                    }else{
-                        //TODO Not found
+                    else {
+                        // TODO Not found
                     }
                 }
-            } else {
-                throw new WrongUsageException(getUsage(), new Object[0]);
             }
+            else
+                throw new WrongUsageException(this.getUsage(), new Object[0]);
         }
     }
 }
