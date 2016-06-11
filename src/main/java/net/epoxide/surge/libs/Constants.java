@@ -12,7 +12,7 @@ public class Constants {
     public static final String VERSION_NUMBER = "0.0.0.0";
     public static final String CLIENT_PROXY_CLASS = "net.epoxide.surge.client.ProxyClient";
     public static final String SERVER_PROXY_CLASS = "net.epoxide.surge.common.ProxyCommon";
-    public static final String DEPENDENCIES = "required-after:bookshelf@[1.2.3.268,);";
+    public static final String DEPENDENCIES = "required-after:bookshelf@[1.2.3.261,);";
     public static final Random RANDOM = new Random();
     public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 }
