@@ -1,23 +1,24 @@
-package net.epoxide.surge.common.command;
+package net.epoxide.surge.command;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.epoxide.surge.features.CommandFeatures;
+import org.apache.commons.lang3.SystemUtils;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 
-public class CommandSurge extends CommandBase {
+public class CommandSurgeWrapper extends CommandBase {
     
-    private static Map<String, CommandFeatures> commands = new HashMap<>();
+    private static Map<String, SurgeCommand> commands = new HashMap<>();
     
-    public static void addCommand (CommandFeatures command) {
+    public static void addCommand (SurgeCommand command) {
         
-        commands.put(command.getSubCommand(), command);
+        commands.put(command.getSubName(), command);
     }
     
     @Override
@@ -31,7 +32,7 @@ public class CommandSurge extends CommandBase {
         
         // TODO Change to localization
         final StringBuilder builder = new StringBuilder("Commands:");
-        commands.values().forEach(command -> builder.append("\n" + command.getUsage()));
+        commands.values().forEach(command -> builder.append(SystemUtils.LINE_SEPARATOR + command.getUsage()));
         return builder.toString();
     }
     
@@ -40,7 +41,7 @@ public class CommandSurge extends CommandBase {
         
         if (args.length > 0) {
             if (commands.containsKey(args[0])) {
-                final CommandFeatures command = commands.get(args[0]);
+                final SurgeCommand command = commands.get(args[0]);
                 command.execute(server, sender, Arrays.copyOfRange(args, 1, args.length));
                 
             }

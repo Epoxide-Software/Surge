@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import net.epoxide.surge.common.command.CommandSurge;
+import net.epoxide.surge.command.CommandSurgeWrapper;
+import net.epoxide.surge.command.SurgeCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -12,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FeaturesPlayer extends Feature {
@@ -23,7 +23,7 @@ public class FeaturesPlayer extends Feature {
     @Override
     public void onInit () {
         
-        super.onInit();
+        CommandSurgeWrapper.addCommand(new CommandWhiteList());
     }
     
     @Override
@@ -39,16 +39,10 @@ public class FeaturesPlayer extends Feature {
             event.setCanceled(true);
     }
     
-    @Override
-    public void initCommands (FMLServerStartingEvent event) {
-        
-        CommandSurge.addCommand(new CommandWhiteList());
-    }
-    
-    private class CommandWhiteList implements CommandFeatures {
+    private class CommandWhiteList implements SurgeCommand {
         
         @Override
-        public String getSubCommand () {
+        public String getSubName () {
             
             return "whitelist";
         }

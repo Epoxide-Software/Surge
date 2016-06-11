@@ -13,6 +13,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * @deprecated The point to having feature classes is so all of the code is self contained in
+ *             one class.
+ */
+@Deprecated
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler {
     

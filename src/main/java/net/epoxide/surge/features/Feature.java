@@ -1,7 +1,6 @@
 package net.epoxide.surge.features;
 
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -43,10 +42,6 @@ public class Feature {
      */
     @SideOnly(Side.CLIENT)
     public void setupRendering () {
-    
-    }
-    
-    public void initCommands (FMLServerStartingEvent event) {
     
     }
 }
