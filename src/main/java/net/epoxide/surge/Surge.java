@@ -29,8 +29,6 @@ public class Surge {
     @Mod.Instance(Constants.MOD_ID)
     public static Surge instance;
     
-    public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel("Surge");
-    
     @EventHandler
     public void preInit (FMLPreInitializationEvent event) {
         
