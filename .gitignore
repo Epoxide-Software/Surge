@@ -1,0 +1,14 @@
+*.class
+*.iml
+*.ipr
+*.iws
+/output
+
+#ForgeGradle
+/build
+/.gradle
+/eclipse/assets
+/libs
+/src/main/java/net/minecraft
+/out
+/run
