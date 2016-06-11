@@ -3,36 +3,33 @@ package net.epoxide.surge.handler;
 import java.io.File;
 
 import net.epoxide.surge.Surge;
-import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.Constants;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ConfigurationHandler {
     
-    private static Configuration config;
+    /**
+     * An instance of the Configuration object being used.
+     */
+    private static Configuration config = null;
     
-    public ConfigurationHandler(File file) {
+    /**
+     * Initializes the configuration file.
+     * 
+     * @param file The file to read/write config stuff to.
+     */
+    public static void initConfig (File file) {
+        
+        if (config != null) {
+            
+            Constants.LOGGER.warn("Configuration file has already been initialized. " + Thread.currentThread().getStackTrace().toString());
+            return;
+        }
         
         config = new Configuration(file);
-        MinecraftForge.EVENT_BUS.register(this);
-        this.syncConfigData();
-    }
-    
-    @SubscribeEvent
-    public void onConfigChange (OnConfigChangedEvent event) {
         
-        if (event.getModID().equals(Constants.MOD_ID))
-            this.syncConfigData();
-    }
-    
-    private void syncConfigData () {
+        Surge.features.forEach(feature -> feature.setupConfig(config));
         
-        for (final Feature feature : Surge.features)
-            feature.setupConfig(config);
-            
         if (config.hasChanged())
             config.save();
     }
