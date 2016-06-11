@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class FeaturesPlayer extends Features {
+public class FeaturesPlayer extends Feature {
 
     public static boolean hidePlayer = true;
     public static List<UUID> whitelisted = new ArrayList<>();

@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Features {
+public class Feature {
 
     /**
      * Called during the mod pre-initialization phase.

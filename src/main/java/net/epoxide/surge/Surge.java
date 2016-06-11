@@ -2,7 +2,7 @@ package net.epoxide.surge;
 
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.common.command.CommandSurge;
-import net.epoxide.surge.features.Features;
+import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeaturesPlayer;
 import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.fml.common.Mod;
@@ -21,7 +21,7 @@ import java.util.List;
 @Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, version = Constants.VERSION_NUMBER, dependencies = Constants.DEPENDENCIES, acceptableRemoteVersions = "*")
 public class Surge {
 
-    public static List<Features> features = new ArrayList<>();
+    public static List<Feature> features = new ArrayList<>();
 
     @SidedProxy(clientSide = Constants.CLIENT_PROXY_CLASS, serverSide = Constants.SERVER_PROXY_CLASS)
     public static ProxyCommon proxy;
@@ -37,21 +37,21 @@ public class Surge {
         features.add(new FeaturesPlayer());
 
         proxy.onPreInit();
-        features.forEach(Features::onPreInit);
+        features.forEach(Feature::onPreInit);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
 
         proxy.onInit();
-        features.forEach(Features::onInit);
+        features.forEach(Feature::onInit);
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
 
         proxy.onPostInit();
-        features.forEach(Features::onPostInit);
+        features.forEach(Feature::onPostInit);
     }
 
     @EventHandler
