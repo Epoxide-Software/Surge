@@ -37,11 +37,11 @@ public class Feature {
     }
     
     /**
-     * Called during the end of the initialization phase. Intended for handling any rendering
-     * related code.
+     * Called during the end of the pre initialization phase. Intended for any client specific
+     * code.
      */
     @SideOnly(Side.CLIENT)
-    public void setupRendering () {
+    public void onClientPreInit () {
     
     }
 }

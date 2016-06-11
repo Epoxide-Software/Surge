@@ -27,7 +27,7 @@ public class FeaturesPlayer extends Feature {
     }
     
     @Override
-    public void setupRendering () {
+    public void onClientPreInit () {
         
         MinecraftForge.EVENT_BUS.register(this);
     }

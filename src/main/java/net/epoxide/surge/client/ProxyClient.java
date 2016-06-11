@@ -9,7 +9,7 @@ public class ProxyClient extends ProxyCommon {
     @Override
     public void onPreInit () {
         
-        Surge.features.forEach(Feature::setupRendering);
+        Surge.features.forEach(Feature::onClientPreInit);
     }
     
     @Override

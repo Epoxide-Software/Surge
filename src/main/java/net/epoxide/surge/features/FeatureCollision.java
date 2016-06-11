@@ -18,7 +18,7 @@ public class FeatureCollision extends Feature {
     }
     
     @Override
-    public void setupRendering () {
+    public void onClientPreInit () {
     
     }
 }
