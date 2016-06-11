@@ -34,6 +34,7 @@ version = getVersionFromJava(file("src/main/java/net/epoxide/surge/libs/Constant
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
 //Defines the MC environment information.
 minecraft {
 
@@ -43,18 +44,8 @@ minecraft {
     useDepAts = true
 }
 
-//Defines basic patterns for pulling various dependencies.
+//Defines repositories where dependencies can be pulled from
 repositories {
-
-    maven {
-
-        url "http://dvs1.progwml6.com/files/maven"
-    }
-
-    maven {
-
-        url "http://mobiusstrip.eu/maven"
-    }
 
     maven {
 
@@ -62,7 +53,9 @@ repositories {
     }
 }
 
+//Defines the dependencies needed
 dependencies {
+
     deobfCompile "net.darkhax.bookshelf:Bookshelf:1.9.4-1.2.3.268"
 }
 
@@ -161,12 +154,6 @@ uploadArchives {
     }
 }
 
-task setCurseForgeInfo() {
-
-    project.ext.releaseType = "alpha";
-    project.ext.changelog = "All changes can be found here: https://github.com/Epoxide-Software/Surge/commits/master/";
-}
-
 //Prevents incomplete JavaDocs from preventing a build on Java 8.
 if (JavaVersion.current().isJava8Compatible()) {
 
@@ -190,8 +177,8 @@ curseforge {
         //Sets the Project ID from the system environment, if available.
         id = System.getenv("projectId") ? System.getenv("projectId") : "0";
 
-        releaseType = project.releaseType;
-        changelog = project.changelog;
+        releaseType = "alpha";
+        changelog = "All changes can be found here: https://github.com/Epoxide-Software/Surge/commits/master/";
 
         addGameVersion "1.9.4"
         
