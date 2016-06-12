@@ -1,9 +1,8 @@
 package net.epoxide.surge.features;
 
-import java.util.List;
+import java.util.WeakHashMap;
 
 import net.minecraft.block.BlockRedstoneTorch;
-import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 
 public class FeatureRedstoneFix extends Feature {
@@ -14,7 +13,7 @@ public class FeatureRedstoneFix extends Feature {
     public void onPreInit () {
         
         if (enabled)
-            BlockRedstoneTorch.toggles = new java.util.WeakHashMap<World, List<BlockRedstoneTorch.Toggle>>();
+            BlockRedstoneTorch.toggles = new WeakHashMap<>();
     }
     
     @Override
