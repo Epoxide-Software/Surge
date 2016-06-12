@@ -4,8 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.SystemUtils;
-
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -37,24 +36,28 @@ public class CommandSurgeWrapper extends CommandBase {
     @Override
     public String getCommandUsage (ICommandSender sender) {
         
-        final StringBuilder builder = new StringBuilder("Commands:");
-        subCommands.values().forEach(command -> builder.append(SystemUtils.LINE_SEPARATOR + command.getUsage()));
-        
-        return builder.toString();
+        return "command.surge.usage";
     }
     
     @Override
     public void execute (MinecraftServer server, ICommandSender sender, String[] args) {
         
-        if (args.length > 0) {
-            if (subCommands.containsKey(args[0])) {
-                
-                final SurgeCommand command = subCommands.get(args[0]);
-                command.execute(server, sender, Arrays.copyOfRange(args, 1, args.length));
-            }
-        }
-        
+        if (args.length > 0 && subCommands.containsKey(args[0]))
+            subCommands.get(args[0]).execute(sender, Arrays.copyOfRange(args, 1, args.length));
+            
         else
-            sender.addChatMessage(new TextComponentString(this.getCommandUsage(sender)));
+            sender.addChatMessage(new TextComponentString(this.getSubCommandDescriptions()));
+    }
+    
+    /**
+     * Creates a string containing the description of all registered sub commands for surge.
+     * 
+     * @return A string that contains descriptions for all sub commands for surge.
+     */
+    private String getSubCommandDescriptions () {
+        
+        final StringBuilder builder = new StringBuilder(I18n.format("command.surge.usage"));
+        subCommands.values().forEach(command -> builder.append("\n" + command.getUsage()));
+        return builder.toString();
     }
 }

@@ -6,9 +6,9 @@ import java.util.UUID;
 
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.command.SurgeCommand;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,38 +46,41 @@ public class FeaturesPlayer extends Feature {
             return "whitelist";
         }
         
+        // FIXME Command can't display or lookup players who are offline.
+        // FIXME Using length to switch between sub-sub commands is redundant if
+        // you're checking the name of the first arg anyhow.
         @Override
-        public String getUsage () {
-            
-            return "/surge whitelist [add|remove|list] [username]";
-        }
-        
-        @Override
-        public void execute (MinecraftServer nil, ICommandSender sender, String[] args) {
+        public void execute (ICommandSender sender, String[] args) {
             
             if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
-                final StringBuilder builder = new StringBuilder("List of players whitelisted:");
+                
+                final StringBuilder builder = new StringBuilder(I18n.format("message.surge.whitelist.list"));
+                
                 for (final UUID uuid : whitelisted) {
+                    
                     final EntityPlayer entityPlayer = sender.getEntityWorld().getPlayerEntityByUUID(uuid);
                     builder.append("\n> ").append(entityPlayer.getDisplayNameString());
                 }
+                
                 sender.addChatMessage(new TextComponentString(builder.toString()));
             }
+            
             else if (args.length == 2) {
+                
                 final String username = args[1];
                 if (args[0].equalsIgnoreCase("add")) {
                     final EntityPlayer entityPlayer = sender.getEntityWorld().getPlayerEntityByName(username);
                     if (entityPlayer != null) {
                         if (whitelisted.contains(entityPlayer.getUniqueID()))
-                            sender.addChatMessage(new TextComponentString(String.format("The EntityPlayer %s has already been whitelisted!", entityPlayer.getDisplayNameString())));
+                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.already", entityPlayer.getDisplayNameString())));
                         else {
                             whitelisted.add(entityPlayer.getUniqueID());
-                            sender.addChatMessage(new TextComponentString(String.format("The EntityPlayer %s has been added to your whitelist!", entityPlayer.getDisplayNameString())));
+                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist", entityPlayer.getDisplayNameString())));
                         }
                         
                     }
                     else
-                        sender.addChatMessage(new TextComponentString(String.format("The EntityPlayer %s could not be found!", username)));
+                        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.missing", username)));
                 }
                 if (args[0].equalsIgnoreCase("remove")) {
                     final EntityPlayer entityPlayer = sender.getEntityWorld().getPlayerEntityByName(username);
@@ -85,10 +88,10 @@ public class FeaturesPlayer extends Feature {
                         if (whitelisted.contains(entityPlayer.getUniqueID()))
                             whitelisted.remove(entityPlayer.getUniqueID());
                         else
-                            sender.addChatMessage(new TextComponentString(String.format("The EntityPlayer %s is not whitelisted!", entityPlayer.getDisplayNameString())));
+                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.not", entityPlayer.getDisplayNameString())));
                     }
                     else
-                        sender.addChatMessage(new TextComponentString(String.format("The EntityPlayer %s could not be found!", username)));
+                        sender.addChatMessage(new TextComponentString(String.format("message.surge.whitelist.missing", username)));
                 }
             }
             else
