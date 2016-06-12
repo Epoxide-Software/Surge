@@ -22,7 +22,7 @@ public interface SurgeCommand {
     /**
      * Handles execution of the surge sub command.
      * 
-     * @param server Instance of the server. //TODO is null on client side?
+     * @param server Instance of the server. Null when the player is on client.
      * @param sender The player sending the command.
      * @param args The arguments for the command.
      */

@@ -34,8 +34,7 @@ public class Surge {
         features.add(new FeaturesPlayer());
         
         ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());
-        ClientCommandHandler.instance.registerCommand(new CommandSurgeWrapper());
-        
+
         proxy.onPreInit();
         features.forEach(Feature::onPreInit);
     }
