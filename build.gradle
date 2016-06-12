@@ -75,6 +75,16 @@ processResources {
 
         exclude 'mcmod.info'
     }
+    
+    rename '(.+_at.cfg)', 'META-INF/$1'
+}
+
+jar {
+
+	manifest {
+	
+		attributes 'FMLAT': 'surge_at.cfg'
+	}
 }
 
 //Pulls the build version from a Java file.

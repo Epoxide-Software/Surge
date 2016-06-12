@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
+import net.epoxide.surge.features.FeatureRedstoneFix;
 import net.epoxide.surge.features.FeaturesPlayer;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.epoxide.surge.libs.Constants;
@@ -30,6 +31,7 @@ public class Surge {
     public void preInit (FMLPreInitializationEvent event) {
         
         features.add(new FeaturesPlayer());
+        features.add(new FeatureRedstoneFix());
         
         ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());
         
