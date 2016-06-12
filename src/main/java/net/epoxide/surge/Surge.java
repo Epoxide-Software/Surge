@@ -3,13 +3,11 @@ package net.epoxide.surge;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeaturesPlayer;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.epoxide.surge.libs.Constants;
-import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -34,7 +32,7 @@ public class Surge {
         features.add(new FeaturesPlayer());
         
         ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());
-
+        
         proxy.onPreInit();
         features.forEach(Feature::onPreInit);
     }

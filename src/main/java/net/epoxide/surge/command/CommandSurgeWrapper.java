@@ -13,8 +13,16 @@ import net.minecraft.util.text.TextComponentString;
 
 public class CommandSurgeWrapper extends CommandBase {
     
+    /**
+     * Map of sub commands that are available through the command wrapper.
+     */
     private static Map<String, SurgeCommand> subCommands = new HashMap<>();
     
+    /**
+     * Adds a sub command to the surge command wrapper.
+     * 
+     * @param command The surge sub command to register.
+     */
     public static void addCommand (SurgeCommand command) {
         
         subCommands.put(command.getSubName(), command);
