@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import net.darkhax.bookshelf.lib.util.PlayerUtils;
+import net.darkhax.bookshelf.lib.util.TextUtils;
+import net.darkhax.bookshelf.lib.util.TextUtils.ChatFormat;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.command.SurgeCommand;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,12 +20,27 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FeaturesPlayer extends Feature {
     
-    public static boolean hidePlayer = true;
-    public static List<UUID> whitelisted = new ArrayList<>();
+    /**
+     * A list containing the UUID of every whitelisted player.
+     */
+    private static final List<UUID> WHITELISTED = new ArrayList<>();
+    
+    /**
+     * The UUID of the client player. Used to make sure the client player is always rendered.
+     */
+    private static UUID clientID = null;
+    
+    /**
+     * The flag for whether or not this feature is enabled. Toggled using the /surge
+     * hideplayers
+     */
+    private static boolean hidePlayers = true;
     
     @Override
     public void onInit () {
         
+        clientID = PlayerUtils.fixStrippedUUID(Minecraft.getMinecraft().getSession().getPlayerID());
+        CommandSurgeWrapper.addCommand(new CommandHidePlayers());
         CommandSurgeWrapper.addCommand(new CommandWhiteList());
     }
     
@@ -32,10 +51,39 @@ public class FeaturesPlayer extends Feature {
     }
     
     @SubscribeEvent
-    public void hidePlayer (RenderPlayerEvent.Pre event) {
+    public void onPlayerPreRender (RenderPlayerEvent.Pre event) {
         
-        if (hidePlayer && !whitelisted.contains(event.getEntityPlayer().getUniqueID()))
+        if (!event.getEntityPlayer().getUniqueID().equals(clientID) && hidePlayers && !WHITELISTED.contains(event.getEntityPlayer().getUniqueID()))
             event.setCanceled(true);
+    }
+    
+    @SubscribeEvent
+    public void onSpecialPreRender (RenderPlayerEvent.Specials.Pre event) {
+        
+        if (!event.getEntityPlayer().getUniqueID().equals(clientID) && hidePlayers && !WHITELISTED.contains(event.getEntityPlayer().getUniqueID()))
+            event.setCanceled(true);
+    }
+    
+    private class CommandHidePlayers implements SurgeCommand {
+        
+        @Override
+        public String getSubName () {
+            
+            return "hideplayers";
+        }
+        
+        @Override
+        public void execute (ICommandSender sender, String[] args) {
+            
+            hidePlayers = !hidePlayers;
+            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.hideplayers." + hidePlayers)));
+        }
+        
+        @Override
+        public String getUsage () {
+            
+            return "hideplayers";
+        }
     }
     
     private class CommandWhiteList implements SurgeCommand {
@@ -46,56 +94,69 @@ public class FeaturesPlayer extends Feature {
             return "whitelist";
         }
         
-        // FIXME Command can't display or lookup players who are offline.
-        // FIXME Using length to switch between sub-sub commands is redundant if
-        // you're checking the name of the first arg anyhow.
         @Override
         public void execute (ICommandSender sender, String[] args) {
             
-            if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
+            if (args.length > 0) {
                 
-                final StringBuilder builder = new StringBuilder(I18n.format("message.surge.whitelist.list"));
+                final String commandName = args[0];
                 
-                for (final UUID uuid : whitelisted) {
+                if (commandName.equalsIgnoreCase("list")) {
                     
-                    final EntityPlayer entityPlayer = sender.getEntityWorld().getPlayerEntityByUUID(uuid);
-                    builder.append("\n> ").append(entityPlayer.getDisplayNameString());
+                    final StringBuilder builder = new StringBuilder(I18n.format("message.surge.whitelist.list"));
+                    
+                    for (final UUID uuid : WHITELISTED) {
+                        
+                        final EntityPlayer entityPlayer = sender.getEntityWorld().getPlayerEntityByUUID(uuid);
+                        builder.append("\n> ").append(entityPlayer.getDisplayNameString());
+                    }
+                    
+                    sender.addChatMessage(new TextComponentString(builder.toString()));
                 }
                 
-                sender.addChatMessage(new TextComponentString(builder.toString()));
-            }
-            
-            else if (args.length == 2) {
-                
-                final String username = args[1];
-                if (args[0].equalsIgnoreCase("add")) {
-                    final EntityPlayer entityPlayer = sender.getEntityWorld().getPlayerEntityByName(username);
-                    if (entityPlayer != null) {
-                        if (whitelisted.contains(entityPlayer.getUniqueID()))
-                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.already", entityPlayer.getDisplayNameString())));
+                if (args.length == 2) {
+                    
+                    final String username = args[1];
+                    final UUID id = PlayerUtils.getUUIDFromName(username);
+                    
+                    if (id == null) {
+                        
+                        sender.addChatMessage(new TextComponentString(String.format("message.surge.whitelist.missing", TextUtils.formatString(username, ChatFormat.RED))));
+                        return;
+                    }
+                    
+                    if (commandName.equalsIgnoreCase("add")) {
+                        
+                        if (WHITELISTED.contains(id))
+                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.already", TextUtils.formatString(username, ChatFormat.RED))));
+                            
                         else {
-                            whitelisted.add(entityPlayer.getUniqueID());
-                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist", entityPlayer.getDisplayNameString())));
+                            
+                            WHITELISTED.add(id);
+                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist", TextUtils.formatString(username, ChatFormat.GREEN))));
+                        }
+                    }
+                    
+                    else if (args[0].equalsIgnoreCase("remove"))
+                        if (WHITELISTED.contains(id)) {
+                            
+                            WHITELISTED.remove(id);
+                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.removed", TextUtils.formatString(username, ChatFormat.RED))));
                         }
                         
-                    }
-                    else
-                        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.missing", username)));
-                }
-                if (args[0].equalsIgnoreCase("remove")) {
-                    final EntityPlayer entityPlayer = sender.getEntityWorld().getPlayerEntityByName(username);
-                    if (entityPlayer != null) {
-                        if (whitelisted.contains(entityPlayer.getUniqueID()))
-                            whitelisted.remove(entityPlayer.getUniqueID());
                         else
-                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.not", entityPlayer.getDisplayNameString())));
-                    }
-                    else
-                        sender.addChatMessage(new TextComponentString(String.format("message.surge.whitelist.missing", username)));
+                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.not", TextUtils.formatString(username, ChatFormat.RED))));
                 }
             }
+            
             else
                 sender.addChatMessage(new TextComponentString(this.getUsage()));
+        }
+        
+        @Override
+        public String getUsage () {
+            
+            return "whitelist [add|remove|list] [username]";
         }
     }
 }
