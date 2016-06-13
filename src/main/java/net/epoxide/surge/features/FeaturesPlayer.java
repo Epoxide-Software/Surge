@@ -105,11 +105,8 @@ public class FeaturesPlayer extends Feature {
                     
                     final StringBuilder builder = new StringBuilder(I18n.format("message.surge.whitelist.list"));
                     
-                    for (final UUID uuid : WHITELISTED) {
-                        
-                        final EntityPlayer entityPlayer = sender.getEntityWorld().getPlayerEntityByUUID(uuid);
-                        builder.append("\n> ").append(entityPlayer.getDisplayNameString());
-                    }
+                    for (final UUID uuid : WHITELISTED)
+                        builder.append("\n> ").append(PlayerUtils.getPlayerNameFromUUID(uuid));
                     
                     sender.addChatMessage(new TextComponentString(builder.toString()));
                 }
@@ -150,7 +147,7 @@ public class FeaturesPlayer extends Feature {
             }
             
             else
-                sender.addChatMessage(new TextComponentString(this.getUsage()));
+                sender.addChatMessage(new TextComponentString("/surge " + this.getUsage()));
         }
         
         @Override
