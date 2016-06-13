@@ -2,7 +2,7 @@
 command.surge.usage=/surge - Provides a list of all commands for the Surge mod.
 command.surge.surge.commands=Commands: 
 command.surge.hideplayers.usage=Toggles the hide players feature. Players will not be visible while enabled.
-command.surge.whitelist.usage=Allows the player render whitelist to be changed. Players who are on the whitelist will not be hidden when using /surge hide
+command.surge.whitelist.usage=Allows the player render whitelist to be changed. Players who are on the whitelist will not be hidden when using /surge hideplayers
 
 #Messages
 message.surge.hideplayers.true=Players will now be hidden!
@@ -10,5 +10,6 @@ message.surge.hideplayers.false=Players will no longer be hidden!
 message.surge.whitelist=%s has been whitelisted!
 message.surge.whitelist.not=%s is not whitelisted!
 message.surge.whitelist.already=%s is already whitelisted!
+message.surge.whitelist.removed=%s has been removed!
 message.surge.whitelist.missing=%s could not be found!
 message.surge.whitelist.list=The following players are whitelisted: 
