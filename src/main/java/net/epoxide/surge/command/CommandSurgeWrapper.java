@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.darkhax.bookshelf.lib.util.TextUtils.ChatFormat;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -57,7 +58,7 @@ public class CommandSurgeWrapper extends CommandBase {
     private String getSubCommandDescriptions () {
         
         final StringBuilder builder = new StringBuilder(I18n.format("command.surge.usage"));
-        subCommands.values().forEach(command -> builder.append("\n" + command.getUsage()));
+        subCommands.values().forEach(command -> builder.append("\n" + ChatFormat.GREEN + "/surge " + command.getSubName() + " " + command.getUsage() + ChatFormat.RESET + " - " + command.getDescription()));
         return builder.toString();
     }
 }

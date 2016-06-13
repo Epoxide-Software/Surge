@@ -13,11 +13,19 @@ public interface SurgeCommand {
     String getSubName ();
     
     /**
-     * Gets a usage string for the surge sub command.
+     * Gets the usage for the command. This actually hows parameters and should not be
+     * localized.
      * 
-     * @return The usage string for the surge sub command.
+     * @return The usage string.
      */
-    default String getUsage () {
+    String getUsage ();
+    
+    /**
+     * Gets a description string for the surge sub command.
+     * 
+     * @return The description string for the surge sub command.
+     */
+    default String getDescription () {
         
         return I18n.format("command.surge." + getSubName() + ".usage");
     }
