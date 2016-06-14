@@ -6,7 +6,7 @@ import java.util.List;
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureRedstoneFix;
-import net.epoxide.surge.features.FeaturesPlayer;
+import net.epoxide.surge.features.FeatureHidePlayer;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.fml.common.Mod;
@@ -30,7 +30,7 @@ public class Surge {
     @EventHandler
     public void preInit (FMLPreInitializationEvent event) {
         
-        features.add(new FeaturesPlayer());
+        features.add(new FeatureHidePlayer());
         features.add(new FeatureRedstoneFix());
         
         ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());

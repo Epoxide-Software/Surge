@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * manage exceptions to the hide players list. For example, if you want to only see your
  * friends, you can add them to the whitelist and they will not be hidden.
  */
-public class FeaturesPlayer extends Feature {
+public class FeatureHidePlayer extends Feature {
     
     /**
      * A list containing the UUID of every whitelisted player.
@@ -66,7 +66,7 @@ public class FeaturesPlayer extends Feature {
     }
     
     @SubscribeEvent
-    public void onSpecialPreRender (RenderPlayerEvent.Specials.Pre event) {
+    public void onSpecialPreRender (@SuppressWarnings("deprecation") RenderPlayerEvent.Specials.Pre event) {
         
         if (!event.getEntityPlayer().getUniqueID().equals(clientID) && hidePlayers && !WHITELISTED.contains(event.getEntityPlayer().getUniqueID()))
             event.setCanceled(true);
