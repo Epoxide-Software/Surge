@@ -12,12 +12,20 @@ import net.epoxide.surge.command.SurgeCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * Provides a way for the user to hide all other players. This can greatly reduce performance
+ * issues on servers with a high concentration of players. This can also be beneficial to users
+ * who want to record their game without other players getting in the way. This feature has two
+ * parts. The first is the '/surge hideplayers' command which toggles this feature on/off. The
+ * second feature is the '/surge whitelist [add|remove|list] command which allows the user to
+ * manage exceptions to the hide players list. For example, if you want to only see your
+ * friends, you can add them to the whitelist and they will not be hidden.
+ */
 public class FeaturesPlayer extends Feature {
     
     /**
@@ -34,7 +42,7 @@ public class FeaturesPlayer extends Feature {
      * The flag for whether or not this feature is enabled. Toggled using the /surge
      * hideplayers
      */
-    private static boolean hidePlayers = true;
+    private static boolean hidePlayers = false;
     
     @Override
     public void onInit () {
@@ -107,7 +115,7 @@ public class FeaturesPlayer extends Feature {
                     
                     for (final UUID uuid : WHITELISTED)
                         builder.append("\n> ").append(PlayerUtils.getPlayerNameFromUUID(uuid));
-                    
+                        
                     sender.addChatMessage(new TextComponentString(builder.toString()));
                 }
                 
