@@ -41,6 +41,12 @@ public class CommandSurgeWrapper extends CommandBase {
     }
     
     @Override
+    public int getRequiredPermissionLevel () {
+        
+        return 0;
+    }
+    
+    @Override
     public void execute (MinecraftServer server, ICommandSender sender, String[] args) {
         
         if (args.length > 0 && subCommands.containsKey(args[0]))
