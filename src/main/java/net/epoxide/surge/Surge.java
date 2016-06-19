@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.epoxide.surge.common.ProxyCommon;
-import net.epoxide.surge.features.Feature;
-import net.epoxide.surge.features.FeatureRedstoneFix;
-import net.epoxide.surge.features.FeatureHidePlayer;
+import net.epoxide.surge.features.*;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.fml.common.Mod;
@@ -32,7 +30,9 @@ public class Surge {
         
         features.add(new FeatureHidePlayer());
         features.add(new FeatureRedstoneFix());
-        
+        features.add(new FeatureGroupRenderCulling());
+        features.add(new FeatureHideUnseenEntities());
+
         ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());
         
         proxy.onPreInit();
@@ -48,7 +48,7 @@ public class Surge {
     
     @EventHandler
     public void postInit (FMLPostInitializationEvent event) {
-        
+
         proxy.onPostInit();
         features.forEach(Feature::onPostInit);
     }
