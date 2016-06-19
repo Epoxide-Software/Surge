@@ -1,6 +1,9 @@
 package net.epoxide.surge.features;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.WeakHashMap;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,21 +22,21 @@ public class FeatureGroupRenderCulling extends Feature {
     private int cullThreshold;
     private int cullAmount;
 
-    private Map<UUID, List<UUID>> entityGroup = new WeakHashMap<>();
+    private Map<UUID, Map<UUID, Boolean>> entityGroup = new WeakHashMap<>();
 
     @Override
     public void onClientPreInit () {
-        if (enabled)
+        if (this.enabled)
             MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
     public void setupConfig (Configuration config) {
         //TODO Fix
-        enabled = config.getBoolean("Group Render Culling", "grouprenderculling", true, "Allows mobs to be culled if there are a lot of them are in the same area");
-        hudRender = config.getBoolean("Group Render Culling", "grouprenderculling", true, "Allows mobs to be culled if there are a lot of them are in the same area");
-        cullThreshold = config.getInt("Group Render Culling Threshold", "grouprenderculling", 10, 0, 100, "The amount of the same type of entities in a single bounding box being culling");
-        cullAmount = config.getInt("Group Render Culling Amount", "grouprenderculling", 10, 1, 100, "The amount of the same type of entities to cull when in a single bounding box");
+        this.enabled = config.getBoolean("Group Render Culling", "grouprenderculling", true, "Allows mobs to be culled if there are a lot of them are in the same area");
+        this.hudRender = config.getBoolean("Group Render Culling", "grouprenderculling", true, "Allows mobs to be culled if there are a lot of them are in the same area");
+        this.cullThreshold = config.getInt("Group Render Culling Threshold", "grouprenderculling", 10, 0, 100, "The amount of the same type of entities in a single bounding box being culling");
+        this.cullAmount = config.getInt("Group Render Culling Amount", "grouprenderculling", 10, 1, 100, "The amount of the same type of entities to cull when in a single bounding box");
     }
 
     @SubscribeEvent
@@ -55,31 +58,30 @@ public class FeatureGroupRenderCulling extends Feature {
             return;
 
         final UUID parentUUID = parentEntity.getUniqueID();
-        for (List<UUID> value : entityGroup.values()) {
-            if (value.contains(parentUUID)) {
-                if (!isWearingArmor(parentEntity))
+        for (Map<UUID, Boolean> value : entityGroup.values()) {
+            if (value.containsKey(parentUUID)) {
+                if (value.get(parentUUID) && !isWearingArmor(parentEntity))
                     event.setCanceled(true);
                 return;
             }
         }
 
-        final List<EntityLivingBase> entityList = parentEntity.getEntityWorld().getEntitiesWithinAABB(parentEntity.getClass(), parentEntity.getRenderBoundingBox());
+        final List<EntityLivingBase> entityList = parentEntity.getEntityWorld().getEntitiesWithinAABB(parentEntity.getClass(), parentEntity.getEntityBoundingBox());
 
         if (entityList.size() > cullThreshold) {
             if (entityGroup.containsKey(parentUUID))
                 entityGroup.get(parentUUID).clear();
             else
-                this.entityGroup.put(parentUUID, new ArrayList<>());
+                this.entityGroup.put(parentUUID, new WeakHashMap<>());
 
-            List<UUID> entityChildren = this.entityGroup.get(parentUUID);
+            Map<UUID, Boolean> entityChildren = this.entityGroup.get(parentUUID);
             int i = 0;
 
             for (Entity e : entityList) {
                 i++;
                 if (parentUUID == e.getUniqueID())
                     continue;
-                if (i >= cullAmount)
-                    entityChildren.add(e.getUniqueID());
+                entityChildren.put(e.getUniqueID(), i >= cullAmount);
             }
             if (i - cullAmount > 0 && hudRender) {
                 parentEntity.setCustomNameTag("Culled: " + (i - cullAmount));
