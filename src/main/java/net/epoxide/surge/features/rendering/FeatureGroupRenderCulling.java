@@ -1,9 +1,11 @@
-package net.epoxide.surge.features;
+package net.epoxide.surge.features.rendering;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
+
+import net.epoxide.surge.features.Feature;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;

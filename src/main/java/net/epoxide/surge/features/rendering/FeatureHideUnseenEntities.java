@@ -1,5 +1,7 @@
 
-package net.epoxide.surge.features;
+package net.epoxide.surge.features.rendering;
+
+import net.epoxide.surge.features.Feature;
 
 import net.darkhax.bookshelf.lib.util.RenderUtils;
 

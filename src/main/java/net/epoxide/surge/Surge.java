@@ -5,6 +5,9 @@ import java.util.List;
 
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.*;
+import net.epoxide.surge.features.rendering.FeatureGroupRenderCulling;
+import net.epoxide.surge.features.rendering.FeatureHidePlayer;
+import net.epoxide.surge.features.rendering.FeatureHideUnseenEntities;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.fml.common.Mod;
