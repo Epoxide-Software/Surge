@@ -5,7 +5,6 @@ import java.util.Map;
 
 import net.epoxide.surge.features.FeatureManager;
 import net.epoxide.surge.handler.ConfigurationHandler;
-import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.SortingIndex(1001)
@@ -13,14 +12,23 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 // Removing version as 1.9 and 1.10 are supported. @IFMLLoadingPlugin.MCVersion("1.10.2")
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     
-    @Override
-    public String[] getASMTransformerClass () {
+    public static boolean loaded = false;
+    
+    public SurgeLoadingPlugin() {
         
+        if (loaded)
+            return; // FML Callback constructs this twice
+            
         ASMUtils.isASMEnabled = true;
         ConfigurationHandler.initConfig(new File("config/surge.cfg"));
         FeatureManager.initFeatures();
         ConfigurationHandler.syncConfig();
-        Constants.LOGGER.info("Starting to apply transformations");
+        loaded = true;
+    }
+    
+    @Override
+    public String[] getASMTransformerClass () {
+        
         return new String[] { SurgeTransformerManager.class.getName() };
     }
     
