@@ -50,17 +50,6 @@ public class Feature {
     }
     
     /**
-     * Checks if the feature subscribes to any events. This should return true if the feature
-     * uses events. When true, it will automatically be registered with Forge's config bus.
-     * 
-     * @return Whether or not the feature subscribes to any events.
-     */
-    public boolean usesEvents () {
-        
-        return false;
-    }
-    
-    /**
      * Checks if the feature should be enabled by default.
      * 
      * @return Whether or not the feature should be enabled by default.

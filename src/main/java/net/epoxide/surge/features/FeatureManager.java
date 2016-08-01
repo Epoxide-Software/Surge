@@ -9,7 +9,6 @@ import net.epoxide.surge.features.rendering.FeatureGroupRenderCulling;
 import net.epoxide.surge.features.rendering.FeatureHidePlayer;
 import net.epoxide.surge.features.rendering.FeatureHideUnseenEntities;
 import net.epoxide.surge.handler.ConfigurationHandler;
-import net.minecraftforge.common.MinecraftForge;
 
 public class FeatureManager {
     
@@ -48,9 +47,6 @@ public class FeatureManager {
             
             feature.configName = name.toLowerCase().replace(' ', '_');
             FEATURES.add(feature);
-            
-            if (feature.usesEvents())
-                MinecraftForge.EVENT_BUS.register(feature);
         }
     }
 }

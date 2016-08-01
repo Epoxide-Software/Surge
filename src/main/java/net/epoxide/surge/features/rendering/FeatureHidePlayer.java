@@ -15,9 +15,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Provides a way for the user to hide all other players. This can greatly reduce performance
@@ -55,9 +54,9 @@ public class FeatureHidePlayer extends Feature {
     }
     
     @Override
-    public boolean usesEvents () {
+    public void onClientPreInit() {
         
-        return FMLCommonHandler.instance().getSide().equals(Side.CLIENT);
+        MinecraftForge.EVENT_BUS.register(this);
     }
     
     @SubscribeEvent

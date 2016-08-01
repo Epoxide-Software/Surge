@@ -8,16 +8,15 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class FeatureHideUnseenEntities extends Feature {
     
     @Override
-    public boolean usesEvents () {
+    public void onClientPreInit() {
         
-        return FMLCommonHandler.instance().getSide().equals(Side.CLIENT);
+        MinecraftForge.EVENT_BUS.register(this);
     }
     
     @SubscribeEvent

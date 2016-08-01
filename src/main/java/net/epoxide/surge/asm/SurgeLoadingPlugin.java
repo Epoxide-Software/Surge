@@ -17,8 +17,9 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     public String[] getASMTransformerClass () {
         
         ASMUtils.isASMEnabled = true;
-        FeatureManager.initFeatures();
         ConfigurationHandler.initConfig(new File("config/surge.cfg"));
+        FeatureManager.initFeatures();
+        ConfigurationHandler.syncConfig();
         Constants.LOGGER.info("Starting to apply transformations");
         return new String[] { SurgeTransformerManager.class.getName() };
     }

@@ -12,10 +12,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
 public class FeatureGroupRenderCulling extends Feature {
     
@@ -26,9 +25,9 @@ public class FeatureGroupRenderCulling extends Feature {
     private final Map<UUID, Map<UUID, Boolean>> entityGroup = new WeakHashMap<>();
     
     @Override
-    public boolean usesEvents () {
+    public void onClientPreInit() {
         
-        return FMLCommonHandler.instance().getSide().equals(Side.CLIENT);
+        MinecraftForge.EVENT_BUS.register(this);
     }
     
     @Override
