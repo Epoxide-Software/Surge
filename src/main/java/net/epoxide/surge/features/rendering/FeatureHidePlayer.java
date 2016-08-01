@@ -54,7 +54,7 @@ public class FeatureHidePlayer extends Feature {
     }
     
     @Override
-    public void onClientPreInit() {
+    public void onClientPreInit () {
         
         MinecraftForge.EVENT_BUS.register(this);
     }

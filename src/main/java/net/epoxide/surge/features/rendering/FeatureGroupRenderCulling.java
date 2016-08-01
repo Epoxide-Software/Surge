@@ -25,7 +25,7 @@ public class FeatureGroupRenderCulling extends Feature {
     private final Map<UUID, Map<UUID, Boolean>> entityGroup = new WeakHashMap<>();
     
     @Override
-    public void onClientPreInit() {
+    public void onClientPreInit () {
         
         MinecraftForge.EVENT_BUS.register(this);
     }

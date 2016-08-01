@@ -17,17 +17,23 @@ public class FeatureManager {
      */
     public static final List<Feature> FEATURES = new ArrayList<>();
     
+    public static Feature featureHidePlayers;
+    public static Feature featureRedstoneFix;
+    public static Feature featureGroupRenderCulling;
+    public static Feature featureHideUnseenEntities;
+    public static Feature featureLoadTimes;
+    
     /**
      * This method is called before any mods have had a chance to initialize. Constructors
      * should take care not to reference any actual game code.
      */
     public static void initFeatures () {
         
-        registerFeature(new FeatureHidePlayer(), "Hide Players", "Command to disable the rendering of other players on the client.");
-        registerFeature(new FeatureRedstoneFix(), "Redstone Toggle Fix", "Fixes a memory leak with toggle state of redstone torches. MC-101233");
-        registerFeature(new FeatureGroupRenderCulling(), "Group Render Culling", "Cuts down on the amount of entities rendered, when they are bunched together.");
-        registerFeature(new FeatureHideUnseenEntities(), "Hide Unseen Entities", "Prevents the rendering of entities that are not in view of the camera.");
-        registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");
+        featureHidePlayers = registerFeature(new FeatureHidePlayer(), "Hide Players", "Command to disable the rendering of other players on the client.");
+        featureRedstoneFix = registerFeature(new FeatureRedstoneFix(), "Redstone Toggle Fix", "Fixes a memory leak with toggle state of redstone torches. MC-101233");
+        featureGroupRenderCulling = registerFeature(new FeatureGroupRenderCulling(), "Group Render Culling", "Cuts down on the amount of entities rendered, when they are bunched together.");
+        featureHideUnseenEntities = registerFeature(new FeatureHideUnseenEntities(), "Hide Unseen Entities", "Prevents the rendering of entities that are not in view of the camera.");
+        featureLoadTimes = registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");
     }
     
     /**
@@ -39,7 +45,7 @@ public class FeatureManager {
      * @param name The name of the feature.
      * @param description A short description of the feature.
      */
-    private static void registerFeature (Feature feature, String name, String description) {
+    private static Feature registerFeature (Feature feature, String name, String description) {
         
         feature.enabled = ConfigurationHandler.isFeatureEnabled(feature, name, description);
         
@@ -48,5 +54,7 @@ public class FeatureManager {
             feature.configName = name.toLowerCase().replace(' ', '_');
             FEATURES.add(feature);
         }
+        
+        return feature;
     }
 }

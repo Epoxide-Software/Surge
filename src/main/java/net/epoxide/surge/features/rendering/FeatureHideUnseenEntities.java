@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FeatureHideUnseenEntities extends Feature {
     
     @Override
-    public void onClientPreInit() {
+    public void onClientPreInit () {
         
         MinecraftForge.EVENT_BUS.register(this);
     }

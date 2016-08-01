@@ -33,17 +33,23 @@ public class FeatureLoadTimes extends Feature {
         return false;
     }
     
-    public static byte[] transform (String name, String transformedName, byte[] bytes) {
+    @Override
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
         
-        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+        if (this.enabled) {
+            
+            final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+            
+            this.transformSendEventToModContainerInitial(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
+            this.transformSendEventToModContainerPost(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
+            
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        }
         
-        transformSendEventToModContainerInitial(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
-        transformSendEventToModContainerPost(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
-        
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        return bytes;
     }
     
-    private static void transformSendEventToModContainerInitial (MethodNode method) {
+    private void transformSendEventToModContainerInitial (MethodNode method) {
         
         final InsnList needle = new InsnList();
         needle.add(new LdcInsnNode("Sending event %s to mod %s"));
@@ -72,7 +78,7 @@ public class FeatureLoadTimes extends Feature {
         method.instructions.insert(pointer, newInstr);
     }
     
-    private static void transformSendEventToModContainerPost (MethodNode method) {
+    private void transformSendEventToModContainerPost (MethodNode method) {
         
         final InsnList needle = new InsnList();
         needle.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "com/google/common/eventbus/EventBus", "post", "(Ljava/lang/Object;)V", false));

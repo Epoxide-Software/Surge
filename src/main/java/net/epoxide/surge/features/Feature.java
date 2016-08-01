@@ -60,6 +60,19 @@ public class Feature {
     }
     
     /**
+     * Gives the feature access to transforming class byes.
+     * 
+     * @param name The initial name.
+     * @param transformedName The transformed name.
+     * @param bytes The original bytes of the class.
+     * @return The new bytes for the class.
+     */
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
+        
+        return bytes;
+    }
+    
+    /**
      * Called while the mod is in the client side preInit phase.
      */
     @SideOnly(Side.CLIENT)
