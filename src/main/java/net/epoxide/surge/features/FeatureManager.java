@@ -21,9 +21,10 @@ public class FeatureManager {
      */
     public static void initFeatures () {
         
-        FeatureManager.features.add(new FeatureHidePlayer());
-        FeatureManager.features.add(new FeatureRedstoneFix());
-        FeatureManager.features.add(new FeatureGroupRenderCulling());
-        FeatureManager.features.add(new FeatureHideUnseenEntities());
+        features.add(new FeatureHidePlayer());
+        features.add(new FeatureRedstoneFix());
+        features.add(new FeatureGroupRenderCulling());
+        features.add(new FeatureHideUnseenEntities());
+        features.add(new FeatureLoadTimes());
     }
 }
