@@ -1,7 +1,8 @@
-package net.epoxide.surge.features;
+package net.epoxide.surge.features.bugfix;
 
 import java.util.WeakHashMap;
 
+import net.epoxide.surge.features.Feature;
 import net.minecraft.block.BlockRedstoneTorch;
 import net.minecraftforge.common.config.Configuration;
 

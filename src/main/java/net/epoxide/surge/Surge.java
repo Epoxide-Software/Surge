@@ -5,7 +5,7 @@ import java.util.List;
 
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
-import net.epoxide.surge.features.FeatureRedstoneFix;
+import net.epoxide.surge.features.bugfix.FeatureRedstoneFix;
 import net.epoxide.surge.features.rendering.FeatureGroupRenderCulling;
 import net.epoxide.surge.features.rendering.FeatureHidePlayer;
 import net.epoxide.surge.features.rendering.FeatureHideUnseenEntities;

@@ -1,4 +1,4 @@
-package net.epoxide.surge.asm.features;
+package net.epoxide.surge.features.analysis;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;

@@ -1,6 +1,6 @@
 package net.epoxide.surge.asm;
 
-import net.epoxide.surge.asm.features.ASMFeatureDebugInit;
+import net.epoxide.surge.features.analysis.ASMFeatureDebugInit;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 public class SurgeTransformerManager implements IClassTransformer {
