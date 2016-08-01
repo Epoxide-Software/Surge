@@ -83,7 +83,7 @@ jar {
 
 	manifest {
 	
-		attributes 'FMLAT': 'surge_at.cfg'
+		attributes 'FMLAT': 'surge_at.cfg', "FMLCorePlugin": "net.epoxide.surge.asm.SurgeLoadingPlugin", "FMLCorePluginContainsFMLMod": "true"
 	}
 }
 
