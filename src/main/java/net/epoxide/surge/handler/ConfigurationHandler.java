@@ -2,8 +2,8 @@ package net.epoxide.surge.handler;
 
 import java.io.File;
 
+import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureManager;
-import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationHandler {
@@ -20,17 +20,33 @@ public class ConfigurationHandler {
      */
     public static void initConfig (File file) {
         
-        if (config != null) {
-            
-            Constants.LOGGER.warn("Configuration file has already been initialized. " + Thread.currentThread().getStackTrace().toString());
-            return;
-        }
-        
         config = new Configuration(file);
+    }
+    
+    /**
+     * Syncs all configuration properties.
+     */
+    public static void syncConfig () {
         
-        FeatureManager.features.forEach(feature -> feature.setupConfig(config));
+        config.setCategoryComment("_features", "Allows features to be completely disabled");
         
+        for (final Feature feature : FeatureManager.FEATURES)
+            feature.setupConfig(config);
+            
         if (config.hasChanged())
             config.save();
+    }
+    
+    /**
+     * Checks if a feature is enabled.
+     * 
+     * @param feature The feature to check for.
+     * @param name The name of the feature.
+     * @param description The description for the feature.
+     * @return Whether or not the feature was enabled.
+     */
+    public static boolean isFeatureEnabled (Feature feature, String name, String description) {
+        
+        return config.getBoolean(name, "_features", feature.enabledByDefault(), description);
     }
 }

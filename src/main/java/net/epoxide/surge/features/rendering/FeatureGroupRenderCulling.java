@@ -12,13 +12,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class FeatureGroupRenderCulling extends Feature {
     
-    private boolean enabled;
     private boolean hudRender;
     private int cullThreshold;
     private int cullAmount;
@@ -26,35 +26,33 @@ public class FeatureGroupRenderCulling extends Feature {
     private final Map<UUID, Map<UUID, Boolean>> entityGroup = new WeakHashMap<>();
     
     @Override
-    public void onClientPreInit () {
+    public boolean usesEvents () {
         
-        if (this.enabled)
-            MinecraftForge.EVENT_BUS.register(this);
+        return FMLCommonHandler.instance().getSide().equals(Side.CLIENT);
     }
     
     @Override
     public void setupConfig (Configuration config) {
         
         // TODO Fix
-        this.enabled = config.getBoolean("Group Render Culling", "grouprenderculling", true, "Allows mobs to be culled if there are a lot of them are in the same area");
         this.hudRender = config.getBoolean("Group Render Culling", "grouprenderculling", true, "Allows mobs to be culled if there are a lot of them are in the same area");
         this.cullThreshold = config.getInt("Group Render Culling Threshold", "grouprenderculling", 10, 0, 100, "The amount of the same type of entities in a single bounding box being culling");
         this.cullAmount = config.getInt("Group Render Culling Amount", "grouprenderculling", 10, 1, 100, "The amount of the same type of entities to cull when in a single bounding box");
     }
     
     @SubscribeEvent
-    public void onRenderLiving (RenderLivingEvent.Pre event) {
+    public void onRenderLiving (RenderLivingEvent.Pre<EntityLivingBase> event) {
         
         this.groupCullEntities(event);
     }
     
     @SubscribeEvent
-    public void onRenderLiving (RenderLivingEvent.Specials.Pre event) {
+    public void onRenderLiving (RenderLivingEvent.Specials.Pre<EntityLivingBase> event) {
         
         this.groupCullEntities(event);
     }
     
-    public void groupCullEntities (RenderLivingEvent event) {
+    public void groupCullEntities (RenderLivingEvent<EntityLivingBase> event) {
         
         final EntityLivingBase parentEntity = event.getEntity();
         

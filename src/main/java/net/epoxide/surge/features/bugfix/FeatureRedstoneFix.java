@@ -1,10 +1,6 @@
 package net.epoxide.surge.features.bugfix;
 
-import java.util.WeakHashMap;
-
 import net.epoxide.surge.features.Feature;
-import net.minecraft.block.BlockRedstoneTorch;
-import net.minecraftforge.common.config.Configuration;
 
 /**
  * Fixes MC-101233 which is a memory leak in the Redstone Torch class. Mojang currently stores
@@ -17,18 +13,12 @@ import net.minecraftforge.common.config.Configuration;
  */
 public class FeatureRedstoneFix extends Feature {
     
-    private static boolean enabled = true;
-    
     @Override
     public void onPreInit () {
         
-        if (enabled)
-            BlockRedstoneTorch.toggles = new WeakHashMap<>();
-    }
-    
-    @Override
-    public void setupConfig (Configuration config) {
-        
-        enabled = config.getBoolean("Redstone Torch Memory Leak", "memleaks", true, "Fixes a memory leak with the redstone torch. bugs.mojang.com/browse/MC-101233");
+        if (this.enabled) {
+            
+            // BlockRedstoneTorch.toggles = new WeakHashMap<>();
+        }
     }
 }

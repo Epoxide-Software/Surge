@@ -8,40 +8,31 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class FeatureHideUnseenEntities extends Feature {
     
-    private final boolean enabled = true;
-    
     @Override
-    public void onClientPreInit () {
+    public boolean usesEvents () {
         
-        if (this.enabled)
-            MinecraftForge.EVENT_BUS.register(this);
-    }
-    
-    @Override
-    public void setupConfig (Configuration config) {
-        
-        // TODO
+        return FMLCommonHandler.instance().getSide().equals(Side.CLIENT);
     }
     
     @SubscribeEvent
-    public void onRenderLiving (RenderLivingEvent.Pre event) {
+    public void onRenderLiving (RenderLivingEvent.Pre<EntityLivingBase> event) {
         
         this.hideEntities(event);
     }
     
     @SubscribeEvent
-    public void onRenderLiving (RenderLivingEvent.Specials.Pre event) {
+    public void onRenderLiving (RenderLivingEvent.Specials.Pre<EntityLivingBase> event) {
         
         this.hideEntities(event);
     }
     
-    private void hideEntities (RenderLivingEvent event) {
+    private void hideEntities (RenderLivingEvent<EntityLivingBase> event) {
         
         final EntityLivingBase entity = event.getEntity();
         if (entity instanceof EntityPlayer)

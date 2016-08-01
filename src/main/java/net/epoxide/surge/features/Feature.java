@@ -7,41 +7,90 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class Feature {
     
     /**
-     * Called during the mod pre-initialization phase.
+     * Whether or not this feature is enabled.
+     */
+    protected boolean enabled;
+    
+    /**
+     * The category name used for this feature in the config file.
+     */
+    protected String configName;
+    
+    /**
+     * Called when the mod enters the preInit phase of loading. This is after
+     * {@link #setupConfiguration(Configuration)} but before {@link #onClientPreInit()}.
      */
     public void onPreInit () {
     
     }
     
     /**
-     * Called during the mod initialization phase.
+     * Called when the mod enters the init phase of loading.
      */
     public void onInit () {
     
     }
     
     /**
-     * Called during the mod post initialization phase
+     * Called when the mod enters the postInit phase of loading.
      */
     public void onPostInit () {
     
     }
     
     /**
-     * Called during setup of the configuration file.
-     *
-     * @param config The configuration file instance.
+     * Called before {@link #onPreInit()}. Allows for configuration options to be
+     * detected/generated. A feature being enabled or not is handled automatically by the
+     * feature manager.
+     * 
+     * @param config The configuration object to pull data from.
      */
     public void setupConfig (Configuration config) {
     
     }
     
     /**
-     * Called during the end of the pre initialization phase. Intended for any client specific
-     * code.
+     * Checks if the feature subscribes to any events. This should return true if the feature
+     * uses events. When true, it will automatically be registered with Forge's config bus.
+     * 
+     * @return Whether or not the feature subscribes to any events.
+     */
+    public boolean usesEvents () {
+        
+        return false;
+    }
+    
+    /**
+     * Checks if the feature should be enabled by default.
+     * 
+     * @return Whether or not the feature should be enabled by default.
+     */
+    public boolean enabledByDefault () {
+        
+        return true;
+    }
+    
+    /**
+     * Called while the mod is in the client side preInit phase.
      */
     @SideOnly(Side.CLIENT)
     public void onClientPreInit () {
+    
+    }
+    
+    /**
+     * Called while the mod is in the client side init phase.
+     */
+    @SideOnly(Side.CLIENT)
+    public void onClientInit () {
+    
+    }
+    
+    /**
+     * Called while the mod is in the client side postInit phase.
+     */
+    @SideOnly(Side.CLIENT)
+    public void onClientPostInit () {
     
     }
 }

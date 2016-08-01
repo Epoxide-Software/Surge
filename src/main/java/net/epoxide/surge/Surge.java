@@ -24,20 +24,20 @@ public class Surge {
     public void preInit (FMLPreInitializationEvent event) {
         
         proxy.onPreInit();
-        FeatureManager.features.forEach(Feature::onPreInit);
+        FeatureManager.FEATURES.forEach(Feature::onPreInit);
     }
     
     @EventHandler
     public void init (FMLInitializationEvent event) {
         
         proxy.onInit();
-        FeatureManager.features.forEach(Feature::onInit);
+        FeatureManager.FEATURES.forEach(Feature::onInit);
     }
     
     @EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         
         proxy.onPostInit();
-        FeatureManager.features.forEach(Feature::onPostInit);
+        FeatureManager.FEATURES.forEach(Feature::onPostInit);
     }
 }

@@ -11,17 +11,19 @@ public class ProxyClient extends ProxyCommon {
     @Override
     public void onPreInit () {
         
-        FeatureManager.features.forEach(Feature::onClientPreInit);
+        FeatureManager.FEATURES.forEach(Feature::onClientPreInit);
         ClientCommandHandler.instance.registerCommand(new CommandSurgeWrapper());
     }
     
     @Override
     public void onInit () {
-    
+        
+        FeatureManager.FEATURES.forEach(Feature::onClientInit);
     }
     
     @Override
     public void onPostInit () {
-    
+        
+        FeatureManager.FEATURES.forEach(Feature::onClientPostInit);
     }
 }
