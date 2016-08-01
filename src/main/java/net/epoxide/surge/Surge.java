@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -39,5 +40,11 @@ public class Surge {
         
         proxy.onPostInit();
         FeatureManager.FEATURES.forEach(Feature::onPostInit);
+    }
+    
+    @EventHandler
+    public void onFMLFinished (FMLLoadCompleteEvent event) {
+        
+        FeatureManager.FEATURES.forEach(Feature::onFMLFinished);
     }
 }

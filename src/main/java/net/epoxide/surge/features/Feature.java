@@ -39,6 +39,13 @@ public class Feature {
     }
     
     /**
+     * Called when FML has finished loading mods.
+     */
+    public void onFMLFinished () {
+    
+    }
+    
+    /**
      * Called before {@link #onPreInit()}. Allows for configuration options to be
      * detected/generated. A feature being enabled or not is handled automatically by the
      * feature manager.
