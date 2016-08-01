@@ -1,15 +1,8 @@
 package net.epoxide.surge;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
-import net.epoxide.surge.features.bugfix.FeatureRedstoneFix;
-import net.epoxide.surge.features.rendering.FeatureGroupRenderCulling;
-import net.epoxide.surge.features.rendering.FeatureHidePlayer;
-import net.epoxide.surge.features.rendering.FeatureHideUnseenEntities;
-import net.epoxide.surge.handler.ConfigurationHandler;
+import net.epoxide.surge.features.FeatureManager;
 import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -21,8 +14,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = Constants.MOD_ID, name = Constants.MOD_NAME, version = Constants.VERSION_NUMBER, dependencies = Constants.DEPENDENCIES, acceptableRemoteVersions = "*")
 public class Surge {
     
-    public static List<Feature> features = new ArrayList<>();
-    
     @SidedProxy(clientSide = Constants.CLIENT_PROXY_CLASS, serverSide = Constants.SERVER_PROXY_CLASS)
     public static ProxyCommon proxy;
     
@@ -32,28 +23,21 @@ public class Surge {
     @EventHandler
     public void preInit (FMLPreInitializationEvent event) {
         
-        features.add(new FeatureHidePlayer());
-        features.add(new FeatureRedstoneFix());
-        features.add(new FeatureGroupRenderCulling());
-        features.add(new FeatureHideUnseenEntities());
-        
-        ConfigurationHandler.initConfig(event.getSuggestedConfigurationFile());
-        
         proxy.onPreInit();
-        features.forEach(Feature::onPreInit);
+        FeatureManager.features.forEach(Feature::onPreInit);
     }
     
     @EventHandler
     public void init (FMLInitializationEvent event) {
         
         proxy.onInit();
-        features.forEach(Feature::onInit);
+        FeatureManager.features.forEach(Feature::onInit);
     }
     
     @EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         
         proxy.onPostInit();
-        features.forEach(Feature::onPostInit);
+        FeatureManager.features.forEach(Feature::onPostInit);
     }
 }

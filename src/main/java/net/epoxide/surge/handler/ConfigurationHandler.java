@@ -2,7 +2,7 @@ package net.epoxide.surge.handler;
 
 import java.io.File;
 
-import net.epoxide.surge.Surge;
+import net.epoxide.surge.features.FeatureManager;
 import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.common.config.Configuration;
 
@@ -28,7 +28,7 @@ public class ConfigurationHandler {
         
         config = new Configuration(file);
         
-        Surge.features.forEach(feature -> feature.setupConfig(config));
+        FeatureManager.features.forEach(feature -> feature.setupConfig(config));
         
         if (config.hasChanged())
             config.save();
