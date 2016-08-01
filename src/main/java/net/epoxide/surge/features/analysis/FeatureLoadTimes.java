@@ -27,7 +27,6 @@ import net.darkhax.bookshelf.lib.util.TextUtils;
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.Constants;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.FMLEvent;
 
@@ -36,19 +35,13 @@ public class FeatureLoadTimes extends Feature {
     private static final HashMap<String, List<LoadTime>> LOAD_TIMES = new HashMap<String, List<LoadTime>>();
     
     @Override
-    public void onPreInit () {
-        
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-    
-    @Override
     public void onFMLFinished () {
         
         try (FileWriter writer = new FileWriter("Surge-Load-Time-Analysis.txt")) {
             
             writer.write("#Surge Load Time Analysis - " + new Timestamp(new Date().getTime()) + SystemUtils.LINE_SEPARATOR);
             
-            for (final String line : TextUtils.wrapStringToList("This file contains aproximate information about how long each mod takes to load. The load time of each mod is split into groups which represent the loading stages of the game. If a mod does not have a load time listed, it took less than 0.001 seconds to load.", 80, false, new ArrayList<String>()))
+            for (final String line : TextUtils.wrapStringToList("This file contains aproximate information about how long each mod takes to load. The load time of each mod is split into groups which represent the loading stages of the game. If a mod does not have a load time listed, it took less than 0.01 seconds to load.", 80, false, new ArrayList<String>()))
                 writer.write(line + SystemUtils.LINE_SEPARATOR);
                 
             writer.write(SystemUtils.LINE_SEPARATOR);
@@ -82,9 +75,9 @@ public class FeatureLoadTimes extends Feature {
     public static void initializationTime (ModContainer mc, FMLEvent stateEvent, long startTime, long endTime) {
         
         final String eventName = stateEvent.getClass().getSimpleName();
-        final LoadTime loadTime = new LoadTime(mc.getModId(), (endTime - startTime) / 1000);
+        final LoadTime loadTime = new LoadTime(mc.getModId(), (double) (endTime - startTime) / 1000);
         
-        if (loadTime.getTime() < 0.001)
+        if (loadTime.getTime() < 0.01)
             return;
             
         if (LOAD_TIMES.containsKey(eventName) && LOAD_TIMES.get(eventName) != null)
@@ -186,7 +179,7 @@ public class FeatureLoadTimes extends Feature {
         @Override
         public String toString () {
             
-            return String.format("%s - %.3f seconds", this.modID, this.time);
+            return String.format("%s - %.2f seconds", this.modID, this.time);
         }
     }
 }
