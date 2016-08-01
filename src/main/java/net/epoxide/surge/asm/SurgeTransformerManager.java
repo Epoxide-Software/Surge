@@ -9,7 +9,7 @@ public class SurgeTransformerManager implements IClassTransformer {
     public byte[] transform (String name, String transformedName, byte[] classBytes) {
         
         if (transformedName.equals("net.minecraftforge.fml.common.LoadController"))
-            FeatureManager.featureLoadTimes.transform(name, transformedName, classBytes);
+            return FeatureManager.featureLoadTimes.transform(name, transformedName, classBytes);
             
         return classBytes;
     }
