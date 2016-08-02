@@ -41,7 +41,7 @@ public class FeatureLoadTimes extends Feature {
             
             writer.write("#Surge Load Time Analysis - " + new Timestamp(new Date().getTime()) + SystemUtils.LINE_SEPARATOR);
             
-            for (final String line : TextUtils.wrapStringToList("This file contains aproximate information about how long each mod takes to load. The load time of each mod is split into groups which represent the loading stages of the game. If a mod does not have a load time listed, it took less than 0.01 seconds to load.", 80, false, new ArrayList<String>()))
+            for (final String line : TextUtils.wrapStringToList("This file contains approximate information about how long each mod takes to load. The load time of each mod is split into groups which represent the loading stages of the game. If a mod does not have a load time listed, it took less than 0.01 seconds to load. Please note that a mod being on this list does not mean it is slow or broken. While this can be the case, load times can vary depending on how much content a mod provides.", 80, false, new ArrayList<String>()))
                 writer.write(line + SystemUtils.LINE_SEPARATOR);
                 
             writer.write(SystemUtils.LINE_SEPARATOR);
