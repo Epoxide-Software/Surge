@@ -12,31 +12,31 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FeatureHideUnseenEntities extends Feature {
-    
+
     @Override
     public void onClientPreInit () {
-        
+
         MinecraftForge.EVENT_BUS.register(this);
     }
-    
-    @SubscribeEvent
-    public void onRenderLiving (RenderLivingEvent.Pre<EntityLivingBase> event) {
-        
-        this.hideEntities(event);
-    }
-    
-    @SubscribeEvent
-    public void onRenderLiving (RenderLivingEvent.Specials.Pre<EntityLivingBase> event) {
-        
-        this.hideEntities(event);
-    }
-    
-    private void hideEntities (RenderLivingEvent<EntityLivingBase> event) {
-        
+
+//    @SubscribeEvent
+//    public void onRenderLiving (RenderLivingEvent.Pre event) {
+//
+//        this.hideEntities(event);
+//    }
+//
+//    @SubscribeEvent
+//    public void onRenderLiving (RenderLivingEvent.Specials.Pre event) {
+//
+//        this.hideEntities(event);
+//    }
+
+    private void hideEntities (RenderLivingEvent event) {
+
         final EntityLivingBase entity = event.getEntity();
         if (entity instanceof EntityPlayer)
             return;
-            
+
         final Minecraft mc = Minecraft.getMinecraft();
         final Frustum camera = RenderUtils.getCamera(mc.getRenderViewEntity(), mc.getRenderPartialTicks());
         if (!camera.isBoundingBoxInFrustum(entity.getRenderBoundingBox()))
