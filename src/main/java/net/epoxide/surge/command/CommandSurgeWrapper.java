@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.darkhax.bookshelf.lib.util.TextUtils.ChatFormat;
+import net.epoxide.surge.libs.TextUtils.ChatFormat;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;

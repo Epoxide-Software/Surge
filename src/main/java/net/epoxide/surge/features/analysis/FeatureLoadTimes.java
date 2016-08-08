@@ -1,5 +1,6 @@
 package net.epoxide.surge.features.analysis;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -11,8 +12,7 @@ import java.util.List;
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.Constants;
-
-import net.darkhax.bookshelf.lib.util.TextUtils;
+import net.epoxide.surge.libs.TextUtils;
 
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.FMLEvent;
@@ -30,8 +30,10 @@ public class FeatureLoadTimes extends Feature {
 
     @Override
     public void onFMLFinished () {
-        
-        try (FileWriter writer = new FileWriter("Surge-Load-Time-Analysis.txt")) {
+        File surge = new File("Surge");
+        if(!surge.exists())
+            surge.mkdirs();
+        try (FileWriter writer = new FileWriter(new File(surge, "Surge-Load-Time-Analysis.txt"))) {
             
             writer.write("#Surge Load Time Analysis - " + new Timestamp(new Date().getTime()) + SystemUtils.LINE_SEPARATOR);
             
@@ -43,7 +45,7 @@ public class FeatureLoadTimes extends Feature {
             long totalTime = 0;
             for (String key : LOAD_TOTAL_TIME.keySet())
                 totalTime += LOAD_TOTAL_TIME.get(key);
-            writer.write(String.format("Total time: %.2f sec", totalTime / 1000d)+SystemUtils.LINE_SEPARATOR);
+            writer.write(String.format("Total time: %.2f sec", totalTime / 1000d) + SystemUtils.LINE_SEPARATOR);
 
             writer.write(SystemUtils.LINE_SEPARATOR);
 
@@ -61,7 +63,7 @@ public class FeatureLoadTimes extends Feature {
             }
         } catch (final IOException exception) {
             
-            Constants.LOGGER.warn(exception);
+            Constants.LOG.warn(exception);
         }
     }
     
@@ -87,11 +89,12 @@ public class FeatureLoadTimes extends Feature {
         else
             LOAD_TOTAL_TIME.put(eventName, totalTime + elapsed);
 
-        if (LOAD_TIMES.containsKey(eventName) && LOAD_TIMES.get(eventName) != null)
-            LOAD_TIMES.get(eventName).add(loadTime);
+        if (LOAD_TIMES.containsKey(eventName)) {
 
+            LOAD_TIMES.get(eventName).add(loadTime);
+        }
         else {
-            
+
             final List<LoadTime> times = new ArrayList<>();
             times.add(loadTime);
             LOAD_TIMES.put(eventName, times);
@@ -163,28 +166,5 @@ public class FeatureLoadTimes extends Feature {
         newInstr.add(new LabelNode());
         
         method.instructions.insert(pointer, newInstr);
-    }
-    
-    public static class LoadTime {
-        
-        private final String modID;
-        private final long time;
-        
-        public LoadTime (String modID, long d) {
-            
-            this.modID = modID;
-            this.time = d;
-        }
-        
-        public long getTime () {
-            
-            return this.time;
-        }
-        
-        @Override
-        public String toString () {
-
-            return String.format("%s - %.2f seconds", this.modID, this.time / 1000d);
-        }
     }
 }

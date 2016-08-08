@@ -44,21 +44,6 @@ minecraft {
     useDepAts = true
 }
 
-//Defines repositories where dependencies can be pulled from
-repositories {
-
-    maven {
-
-        url = "http://maven.epoxide.xyz"
-    }
-}
-
-//Defines the dependencies needed
-dependencies {
-
-    compile "net.darkhax.bookshelf:Bookshelf:1.10.2-1.3.0.287"
-}
-
 //Handles basic resources such as mcmod.info
 processResources {
 

@@ -1,15 +1,15 @@
 
 package net.epoxide.surge.features.rendering;
 
-import net.darkhax.bookshelf.lib.util.RenderUtils;
 import net.epoxide.surge.features.Feature;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class FeatureHideUnseenEntities extends Feature {
 
@@ -38,8 +38,26 @@ public class FeatureHideUnseenEntities extends Feature {
             return;
 
         final Minecraft mc = Minecraft.getMinecraft();
-        final Frustum camera = RenderUtils.getCamera(mc.getRenderViewEntity(), mc.getRenderPartialTicks());
+        final Frustum camera = getCamera(mc.getRenderViewEntity(), mc.getRenderPartialTicks());
         if (!camera.isBoundingBoxInFrustum(entity.getRenderBoundingBox()))
             event.setCanceled(true);
+    }
+
+    /**
+     * Gets the camera for a specific entity.
+     *
+     * @param entity The entity to get the camera for.
+     * @param partialTicks The partial ticks for the camera.
+     * @return The camera for the entity.
+     */
+    public static Frustum getCamera (Entity entity, float partialTicks) {
+
+        final double cameraX = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks;
+        final double cameraY = entity.prevPosY + (entity.posY - entity.prevPosY) * partialTicks;
+        final double cameraZ = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
+
+        final Frustum camera = new Frustum();
+        camera.setPosition(cameraX, cameraY, cameraZ);
+        return camera;
     }
 }
