@@ -102,4 +102,8 @@ public class Feature {
     public void onClientPostInit () {
     
     }
+
+    public boolean isEnabled () {
+        return enabled;
+    }
 }

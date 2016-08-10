@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.epoxide.surge.features.analysis.FeatureLoadTimes;
 import net.epoxide.surge.features.bugfix.FeatureRedstoneFix;
+import net.epoxide.surge.features.rendering.FeatureDisableAnimation;
 import net.epoxide.surge.features.rendering.cloud.FeatureGPUClouds;
 import net.epoxide.surge.features.rendering.FeatureGroupRenderCulling;
 import net.epoxide.surge.features.rendering.FeatureHidePlayer;
@@ -27,6 +28,7 @@ public class FeatureManager {
     public static Feature featureHideUnseenEntities;
     public static Feature featureLoadTimes;
     public static Feature featureGPUClouds;
+    public static Feature featureDisableAnimation;
 
     /**
      * This method is called before any mods have had a chance to initialize. Constructors
@@ -41,6 +43,7 @@ public class FeatureManager {
             featureHidePlayers = registerFeature(new FeatureHidePlayer(), "Hide Players", "Command to disable the rendering of other players on the client.");
             featureRedstoneFix = registerFeature(new FeatureRedstoneFix(), "Redstone Toggle Fix", "Fixes a memory leak with toggle state of redstone torches. MC-101233");
             featureGPUClouds = registerFeature(new FeatureGPUClouds(), "Cloud Rendering", "Switches the RenderGlobal to render clouds using GPU to render.");
+            featureDisableAnimation = registerFeature(new FeatureDisableAnimation(), "Disable Animation", "");
         }
         
         featureLoadTimes = registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");

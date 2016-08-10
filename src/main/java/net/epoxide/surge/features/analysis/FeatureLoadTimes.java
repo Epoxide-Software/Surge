@@ -136,7 +136,7 @@ public class FeatureLoadTimes extends Feature {
         needle.add(new LabelNode());
         needle.add(new LineNumberNode(-1, new LabelNode()));
         
-        final AbstractInsnNode pointer = ASMUtils.findFirstNodeFromNeedle(method.instructions, needle);
+        final AbstractInsnNode pointer = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
         final InsnList newInstr = new InsnList();
         
         newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "java/lang/System", "currentTimeMillis", "()J", false));
