@@ -9,8 +9,7 @@ import net.epoxide.surge.command.SurgeCommand;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.PlayerUtils;
 import net.epoxide.surge.libs.TextUtils;
-import static net.epoxide.surge.libs.TextUtils.ChatFormat;
-
+import net.epoxide.surge.libs.TextUtils.ChatFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
