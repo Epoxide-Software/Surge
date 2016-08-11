@@ -46,40 +46,6 @@ public class Feature {
     }
     
     /**
-     * Called before {@link #onPreInit()}. Allows for configuration options to be
-     * detected/generated. A feature being enabled or not is handled automatically by the
-     * feature manager.
-     * 
-     * @param config The configuration object to pull data from.
-     */
-    public void setupConfig (Configuration config) {
-    
-    }
-    
-    /**
-     * Checks if the feature should be enabled by default.
-     * 
-     * @return Whether or not the feature should be enabled by default.
-     */
-    public boolean enabledByDefault () {
-        
-        return true;
-    }
-    
-    /**
-     * Gives the feature access to transforming class byes.
-     * 
-     * @param name The initial name.
-     * @param transformedName The transformed name.
-     * @param bytes The original bytes of the class.
-     * @return The new bytes for the class.
-     */
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
-        
-        return bytes;
-    }
-    
-    /**
      * Called while the mod is in the client side preInit phase.
      */
     @SideOnly(Side.CLIENT)
@@ -102,8 +68,59 @@ public class Feature {
     public void onClientPostInit () {
     
     }
-
-    public boolean isEnabled () {
-        return enabled;
+    
+    /**
+     * Checks if the feature uses any ASM.
+     * 
+     * @return Whether or not the feature uses ASM.
+     */
+    public boolean isTransformer () {
+        
+        return false;
+    }
+    
+    /**
+     * Checks if the feature wants to transform a specific class.
+     * 
+     * @param name The name of the class being transformed.
+     * @return Whether or not the feature wants to transform the class.
+     */
+    public boolean shouldTransform (String name) {
+        
+        return false;
+    }
+    
+    /**
+     * Gives the feature access to transforming class byes.
+     * 
+     * @param name The initial name.
+     * @param transformedName The transformed name.
+     * @param bytes The original bytes of the class.
+     * @return The new bytes for the class.
+     */
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
+        
+        return bytes;
+    }
+    
+    /**
+     * Called before {@link #onPreInit()}. Allows for configuration options to be
+     * detected/generated. A feature being enabled or not is handled automatically by the
+     * feature manager.
+     * 
+     * @param config The configuration object to pull data from.
+     */
+    public void setupConfig (Configuration config) {
+    
+    }
+    
+    /**
+     * Checks if the feature should be enabled by default.
+     * 
+     * @return Whether or not the feature should be enabled by default.
+     */
+    public boolean enabledByDefault () {
+        
+        return true;
     }
 }

@@ -1,48 +1,60 @@
 package net.epoxide.surge.features.rendering;
 
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
+
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.features.Feature;
 
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
-
 public class FeatureDisableAnimation extends Feature {
-
+    
     @Override
     public boolean enabledByDefault () {
+        
         return false;
     }
-
+    
     @Override
     public byte[] transform (String name, String transformedName, byte[] bytes) {
+        
         if (this.enabled) {
-
+            
             final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
             this.transformLoadSpriteFrames(ASMUtils.getMethodFromClass(clazz, "loadSpriteFrames", "(Lnet/minecraft/client/resources/IResource;I)V"));
             return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         }
-
+        
         return bytes;
     }
-
+    
     private void transformLoadSpriteFrames (MethodNode method) {
-
+        
         final InsnList needle = new InsnList();
         needle.add(new InsnNode(Opcodes.POP));
         needle.add(new LabelNode());
         needle.add(new LineNumberNode(-1, new LabelNode()));
         needle.add(new VarInsnNode(Opcodes.ALOAD, 4));
-
+        
         final AbstractInsnNode pointer = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
         method.instructions.remove(pointer.getNext());
         final InsnList newInstr = new InsnList();
-
-        LabelNode L6 = new LabelNode();
+        
+        final LabelNode L6 = new LabelNode();
         newInstr.add(new JumpInsnNode(Opcodes.IFNULL, L6));
         newInstr.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/epoxide/surge/features/FeatureManager", "featureDisableAnimation", "Lnet/epoxide/surge/features/Feature;"));
         newInstr.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/epoxide/surge/features/Feature", "isEnabled", "()Z", false));
-
+        
         needle.clear();
         needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
         needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/texture/TextureAtlasSprite", "framesTextureData", "Ljava/util/List;"));
@@ -51,11 +63,23 @@ public class FeatureDisableAnimation extends Feature {
         needle.add(new InsnNode(Opcodes.POP));
         needle.add(new JumpInsnNode(Opcodes.GOTO, new LabelNode()));
         needle.add(new LabelNode());
-
-        AbstractInsnNode pointer2 = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
+        
+        final AbstractInsnNode pointer2 = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
         newInstr.add(new JumpInsnNode(Opcodes.IFEQ, (LabelNode) pointer2));
         newInstr.add(L6);
-
+        
         method.instructions.insert(pointer, newInstr);
+    }
+    
+    @Override
+    public boolean isTransformer () {
+        
+        return true;
+    }
+    
+    @Override
+    public boolean shouldTransform (String name) {
+        
+        return name.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite");
     }
 }
