@@ -8,15 +8,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 public class FeatureHideUnseenEntities extends Feature {
-    
-    @Override
-    public void onClientPreInit () {
-        
-        MinecraftForge.EVENT_BUS.register(this);
-    }
     
     // @SubscribeEvent
     // public void onRenderLiving (RenderLivingEvent.Pre event) {
@@ -58,5 +51,11 @@ public class FeatureHideUnseenEntities extends Feature {
         final Frustum camera = new Frustum();
         camera.setPosition(cameraX, cameraY, cameraZ);
         return camera;
+    }
+    
+    @Override
+    public boolean usesEvents () {
+        
+        return true;
     }
 }

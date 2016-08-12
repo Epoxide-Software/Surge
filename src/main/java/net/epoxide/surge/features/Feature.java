@@ -70,6 +70,16 @@ public class Feature {
     }
     
     /**
+     * Checks if the feature listens to any events.
+     * 
+     * @return Whether or not the feature listends to events.
+     */
+    public boolean usesEvents () {
+        
+        return false;
+    }
+    
+    /**
      * Checks if the feature uses any ASM.
      * 
      * @return Whether or not the feature uses ASM.

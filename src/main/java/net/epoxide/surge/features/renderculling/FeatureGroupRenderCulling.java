@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 
 public class FeatureGroupRenderCulling extends Feature {
@@ -22,12 +21,6 @@ public class FeatureGroupRenderCulling extends Feature {
     private int cullAmount;
     
     private final Map<UUID, Map<UUID, Boolean>> entityGroup = new WeakHashMap<>();
-    
-    @Override
-    public void onClientPreInit () {
-        
-        MinecraftForge.EVENT_BUS.register(this);
-    }
     
     @Override
     public void setupConfig (Configuration config) {
@@ -112,5 +105,11 @@ public class FeatureGroupRenderCulling extends Feature {
             }
             
         return false;
+    }
+    
+    @Override
+    public boolean usesEvents () {
+        
+        return true;
     }
 }

@@ -9,7 +9,6 @@ import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -45,12 +44,6 @@ public class FeatureHidePlayer extends Feature {
         clientID = PlayerUtils.fixStrippedUUID(Minecraft.getMinecraft().getSession().getPlayerID());
         CommandSurgeWrapper.addCommand(new CommandHide());
         CommandSurgeWrapper.addCommand(new CommandWhitelist());
-    }
-    
-    @Override
-    public void onClientPreInit () {
-        
-        MinecraftForge.EVENT_BUS.register(this);
     }
     
     @SubscribeEvent
@@ -93,5 +86,11 @@ public class FeatureHidePlayer extends Feature {
     public static void toggleHiding () {
         
         hidePlayers = !hidePlayers;
+    }
+    
+    @Override
+    public boolean usesEvents () {
+        
+        return true;
     }
 }

@@ -4,6 +4,7 @@ import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureManager;
 import net.epoxide.surge.libs.Constants;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -26,6 +27,10 @@ public class Surge {
         
         proxy.onPreInit();
         FeatureManager.FEATURES.forEach(Feature::onPreInit);
+        
+        for (final Feature feature : FeatureManager.FEATURES)
+            if (feature.usesEvents())
+                MinecraftForge.EVENT_BUS.register(feature);
     }
     
     @EventHandler
