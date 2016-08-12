@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.epoxide.surge.features.analysis.FeatureLoadTimes;
-import net.epoxide.surge.features.bugfix.FeatureRedstoneFix;
+import net.epoxide.surge.features.redstonetoggle.FeatureRedstoneFix;
 import net.epoxide.surge.features.rendering.FeatureDisableAnimation;
 import net.epoxide.surge.features.rendering.FeatureGroupRenderCulling;
 import net.epoxide.surge.features.rendering.FeatureHidePlayer;

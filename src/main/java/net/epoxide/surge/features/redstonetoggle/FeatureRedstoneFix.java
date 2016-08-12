@@ -1,6 +1,9 @@
-package net.epoxide.surge.features.bugfix;
+package net.epoxide.surge.features.redstonetoggle;
+
+import java.util.WeakHashMap;
 
 import net.epoxide.surge.features.Feature;
+import net.minecraft.block.BlockRedstoneTorch;
 
 /**
  * Fixes MC-101233 which is a memory leak in the Redstone Torch class. Mojang currently stores
@@ -18,7 +21,7 @@ public class FeatureRedstoneFix extends Feature {
         
         if (this.enabled) {
             
-            // BlockRedstoneTorch.toggles = new WeakHashMap<>();
+            BlockRedstoneTorch.toggles = new WeakHashMap<>();
         }
     }
 }
