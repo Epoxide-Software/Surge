@@ -25,6 +25,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import net.epoxide.surge.asm.ASMUtils;
+import net.epoxide.surge.asm.Mappings;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.Constants;
 import net.epoxide.surge.libs.TextUtils;
@@ -146,8 +147,9 @@ public class FeatureLoadTimes extends Feature {
     public byte[] transform (String name, String transformedName, byte[] bytes) {
         
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformSendEventToModContainerInitial(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
-        this.transformSendEventToModContainerPost(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
+        final MethodNode method = Mappings.METHOD_SEND_EVENT_TO_MOD_CONTAINER.getMethodNode(clazz);
+        this.transformSendEventToModContainerInitial(method);
+        this.transformSendEventToModContainerPost(method);
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     

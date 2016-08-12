@@ -14,6 +14,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import net.epoxide.surge.asm.ASMUtils;
+import net.epoxide.surge.asm.Mappings;
 import net.epoxide.surge.features.Feature;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,7 +48,7 @@ public class FeatureGPUClouds extends Feature {
     public byte[] transform (String name, String transformedName, byte[] bytes) {
         
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformRenderClouds(ASMUtils.getMethodFromClass(clazz, "renderClouds", "(FI)V"));
+        this.transformRenderClouds(Mappings.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     

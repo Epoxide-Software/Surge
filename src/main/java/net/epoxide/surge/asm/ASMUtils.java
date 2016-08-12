@@ -87,27 +87,6 @@ public final class ASMUtils {
     }
     
     /**
-     * Retrieves a MethodNode from a ClassNode, if one can not be found, an exception will be
-     * thrown, and the game will stop.
-     *
-     * @param classNode: An instance of the ClassNode to go looking through.
-     * @param methodName: The name of the desired method.
-     * @param descriptor: The descriptor for the method, used to find a specific version of the
-     *        desired method.
-     * @return MethodNode: A MethodNode which represents the desired method. If this method can
-     *         not be found, a MethodNotFoundException will be thrown and the game will stop.
-     */
-    public static MethodNode getMethodFromClass (ClassNode classNode, String methodName, String descriptor) {
-        
-        for (final MethodNode mnode : classNode.methods)
-            if (methodName.equals(mnode.name) && descriptor.equals(mnode.desc))
-                return mnode;
-                
-        Constants.LOG.warn(new MethodNotFoundException(methodName, descriptor));
-        return null;
-    }
-    
-    /**
      * Finds the first instruction node after the the provided instruction list, within a
      * larger list of instructions.
      *
@@ -194,21 +173,6 @@ public final class ASMUtils {
         public InvalidNeedleException(int count) {
             
             super(count > 1 ? "More than one instance of the needle have been found!" : count < 1 ? "The needle was not found" : "There is a glitch in the matrix");
-        }
-    }
-    
-    public static class MethodNotFoundException extends RuntimeException {
-        
-        /**
-         * An exception which is thrown when a MethodNode is being looked for, but couldn't be
-         * found.
-         *
-         * @param methodName: The name of the method being looked for.
-         * @param methodDesc: The descriptor for the method being looked for.
-         */
-        public MethodNotFoundException(String methodName, String methodDesc) {
-            
-            super("Attempt to find a method has failed. Method: " + methodName + " Descriptor: " + methodDesc);
         }
     }
 }

@@ -15,6 +15,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import net.epoxide.surge.asm.ASMUtils;
+import net.epoxide.surge.asm.Mappings;
 import net.epoxide.surge.features.Feature;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -30,7 +31,7 @@ public class FeatureDisableAnimation extends Feature {
     public byte[] transform (String name, String transformedName, byte[] bytes) {
         
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformLoadSpriteFrames(ASMUtils.getMethodFromClass(clazz, "loadSpriteFrames", "(Lnet/minecraft/client/resources/IResource;I)V"));
+        this.transformLoadSpriteFrames(Mappings.METHOD_LOAD_SPRITE_FRAMES.getMethodNode(clazz));
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     

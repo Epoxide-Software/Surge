@@ -1,5 +1,10 @@
 package net.epoxide.surge.asm;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+
 import net.epoxide.surge.libs.Constants;
 
 public class Mapping {
@@ -14,60 +19,66 @@ public class Mapping {
      */
     private final String descriptor;
     
-    /**
-     * Whether or not this mapping is for a method.
-     */
-    private final boolean isMethod;
+    private final String path;
+    
+    private final boolean isStatic;
     
     /**
-     * Creates a mapping for a field.
+     * Creates a mapping which can be used in ASM byte code manipulation or reflection.
      * 
-     * @param srgName The srg name for the field. What MCP deobfuscates it to.
-     * @param mcpName The mcp name for the field. What you see in your IDE.
+     * @param srgName The name of mapping in a srg environment.
+     * @param mcpName The name of the mapping in a mappend mcp environment.
+     * @param descriptor The descriptor.
+     * @param path The path to the class which the mapping is in.
      */
-    public Mapping(String srgName, String mcpName) {
+    public Mapping(String srgName, String mcpName, String descriptor, String path, boolean isStatic) {
         
-        this.name = ASMUtils.isSrg ? srgName : mcpName;
-        this.descriptor = null;
-        this.isMethod = false;
+        this(ASMUtils.isSrg ? srgName : mcpName, descriptor, path, isStatic);
     }
     
     /**
-     * Creates a mapping for a method.
+     * Creates a mapping which can be used in ASM byte code manipulation or reflection.
      * 
-     * @param srgName The srg name for the method. What MCP deobfuscates it to.
-     * @param mcpName The mcp name for the method. What you see in your IDE.
-     * @param descriptor The descriptor for the method.
+     * @param name The name of the mapping. This should be one you are 100% certain of.
+     * @param descriptor The descriptor.
+     * @param path The path to the class which the mapping is in.
      */
-    public Mapping(String srgName, String mcpName, String descriptor) {
+    public Mapping(String name, String descriptor, String path, boolean isStatic) {
         
-        this.name = ASMUtils.isSrg ? srgName : mcpName;
+        this.name = name;
         this.descriptor = descriptor;
-        this.isMethod = true;
+        this.path = path;
+        this.isStatic = isStatic;
     }
     
     /**
-     * Gets the descriptor for the mapping. This describes the parameters for a method, and the
-     * return type. This will return null if you try to use it on a field mapping, and will
-     * also throw a runtime exception!
+     * Gets the descriptor of the mapping.
      * 
-     * @return The descriptor for the mapping.
+     * @return The descriptor of the mapping.
      */
     public String getDescriptor () {
         
-        if (!this.isMethod)
-            Constants.LOG.warn(new RuntimeException("Attempted to get descriptor for a field! " + this.name));
         return this.descriptor;
     }
     
-    /**
-     * Checks if the mapping defines a method or a field.
-     * 
-     * @return Whether or not the mapping defines a field.
-     */
-    public boolean isMethod () {
+    public String getPath () {
         
-        return this.isMethod;
+        return this.path;
+    }
+    
+    public FieldInsnNode getFieldNode () {
+        
+        return new FieldInsnNode(this.isStatic ? Opcodes.GETSTATIC : Opcodes.GETFIELD, this.path, this.name, this.descriptor);
+    }
+    
+    public MethodNode getMethodNode (ClassNode classNode) {
+        
+        for (final MethodNode mnode : classNode.methods)
+            if (this.name.equals(mnode.name) && this.descriptor.equals(mnode.desc))
+                return mnode;
+                
+        Constants.LOG.warn(new RuntimeException(String.format("The method %s with descriptor %s could not be found in %s", this.name, this.descriptor, classNode.name)));
+        return null;
     }
     
     @Override
