@@ -57,6 +57,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
     private int texH;
     
     public CloudRenderer() {
+        
         MC = Minecraft.getMinecraft();
         MinecraftForge.EVENT_BUS.register(this);
         final IResourceManager resourceManager = MC.getResourceManager();
@@ -248,14 +249,13 @@ public class CloudRenderer implements IResourceManagerReloadListener {
             return true;
             
         if (this.cloudMode != MC.gameSettings.shouldRenderClouds() || (OpenGlHelper.useVbo() ? this.vbo == null : this.displayList < 0)) {
+            
             this.cloudMode = MC.gameSettings.shouldRenderClouds();
             this.rebuild();
         }
         
-        final Entity entity = MC.getRenderViewEntity();
-        
-        final double totalOffset = this.ticks + partialTicks;
-        
+        final Entity entity = MC.getRenderViewEntity();       
+        final double totalOffset = this.ticks + partialTicks;       
         final double x = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks + totalOffset * 0.03;
         final double y = MC.theWorld.provider.getCloudHeight() - (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks) + 0.33;
         double z = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
@@ -295,6 +295,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         float b = (float) color.zCoord;
         
         if (MC.gameSettings.anaglyph) {
+            
             final float tempR = r * 0.3F + g * 0.59F + b * 0.11F;
             final float tempG = r * 0.3F + g * 0.7F;
             final float tempB = r * 0.3F + b * 0.7F;
@@ -319,6 +320,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         
         // Set up pointers for the display list/VBO.
         if (OpenGlHelper.useVbo()) {
+            
             this.vbo.bindBuffer();
             
             final int stride = FORMAT.getNextOffset();
@@ -329,34 +331,45 @@ public class CloudRenderer implements IResourceManagerReloadListener {
             GlStateManager.glColorPointer(4, GL11.GL_UNSIGNED_BYTE, stride, 20);
             GlStateManager.glEnableClientState(GL11.GL_COLOR_ARRAY);
         }
+        
         else {
+            
             buffer.limit(FORMAT.getNextOffset());
+            
             for (int i = 0; i < FORMAT.getElementCount(); i++)
                 FORMAT.getElements().get(i).getUsage().preDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
+            
             buffer.position(0);
         }
         
         // Depth pass to prevent insides rendering from the outside.
         GlStateManager.colorMask(false, false, false, false);
+        
         if (OpenGlHelper.useVbo())
             this.vbo.drawArrays(GL11.GL_QUADS);
+        
         else
             GlStateManager.callList(this.displayList);
             
         // Full render.
         if (!MC.gameSettings.anaglyph)
             GlStateManager.colorMask(true, true, true, true);
+        
         else
             switch (EntityRenderer.anaglyphField) {
+                
                 case 0:
                     GlStateManager.colorMask(false, true, true, true);
                     break;
+                    
                 case 1:
                     GlStateManager.colorMask(true, false, false, true);
                     break;
             }
+        
         if (OpenGlHelper.useVbo())
             this.vbo.drawArrays(GL11.GL_QUADS);
+        
         else
             GlStateManager.callList(this.displayList);
             
@@ -365,8 +378,10 @@ public class CloudRenderer implements IResourceManagerReloadListener {
             this.vbo.unbindBuffer();
             
         buffer.limit(0);
+        
         for (int i = 0; i < FORMAT.getElementCount(); i++)
             FORMAT.getElements().get(i).getUsage().postDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
+        
         buffer.position(0);
         
         // Disable our coloring.
