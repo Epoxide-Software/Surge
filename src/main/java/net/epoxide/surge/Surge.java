@@ -36,14 +36,12 @@ public class Surge {
     @EventHandler
     public void init (FMLInitializationEvent event) {
         
-        proxy.onInit();
         FeatureManager.FEATURES.forEach(Feature::onInit);
     }
     
     @EventHandler
     public void postInit (FMLPostInitializationEvent event) {
         
-        proxy.onPostInit();
         FeatureManager.FEATURES.forEach(Feature::onPostInit);
     }
     

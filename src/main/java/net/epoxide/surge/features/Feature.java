@@ -1,8 +1,6 @@
 package net.epoxide.surge.features;
 
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class Feature {
     
@@ -42,30 +40,6 @@ public class Feature {
      * Called when FML has finished loading mods.
      */
     public void onFMLFinished () {
-    
-    }
-    
-    /**
-     * Called while the mod is in the client side preInit phase.
-     */
-    @SideOnly(Side.CLIENT)
-    public void onClientPreInit () {
-    
-    }
-    
-    /**
-     * Called while the mod is in the client side init phase.
-     */
-    @SideOnly(Side.CLIENT)
-    public void onClientInit () {
-    
-    }
-    
-    /**
-     * Called while the mod is in the client side postInit phase.
-     */
-    @SideOnly(Side.CLIENT)
-    public void onClientPostInit () {
     
     }
     
