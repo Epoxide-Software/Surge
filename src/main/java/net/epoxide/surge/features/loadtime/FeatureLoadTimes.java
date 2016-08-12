@@ -56,7 +56,7 @@ public class FeatureLoadTimes extends Feature {
     public void onFMLFinished () {
         
         final File surgeDirectory = new File("Surge");
-        String timestamp = TIME_FORMAT.format(new Date());
+        final String timestamp = TIME_FORMAT.format(new Date());
         
         if (!surgeDirectory.exists())
             surgeDirectory.mkdirs();
