@@ -3,7 +3,7 @@ package net.epoxide.surge.features.loadtime;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,16 +47,21 @@ public class FeatureLoadTimes extends Feature {
      */
     private static final HashMap<String, Long> LOAD_TOTAL_TIME = new HashMap<>();
     
+    /**
+     * Format to use when representing the current data and time.
+     */
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    
     @Override
     public void onFMLFinished () {
         
         final File surgeDirectory = new File("Surge");
-        final Timestamp timestamp = new Timestamp(new Date().getTime());
+        String timestamp = TIME_FORMAT.format(new Date());
         
         if (!surgeDirectory.exists())
             surgeDirectory.mkdirs();
             
-        try (FileWriter writer = new FileWriter(new File(surgeDirectory, "Surge-Load-Time-Analysis" + timestamp + ".txt"))) {
+        try (FileWriter writer = new FileWriter(new File(surgeDirectory, "Surge-Load-Time-Analysis-" + timestamp + ".txt"))) {
             
             writer.write("#Surge Load Time Analysis - " + timestamp + SystemUtils.LINE_SEPARATOR);
             
