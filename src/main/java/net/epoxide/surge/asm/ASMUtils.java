@@ -24,23 +24,19 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import net.epoxide.surge.libs.Constants;
+
 public final class ASMUtils {
     
+    /**
+     * Whether or not the game is running with srg mappings.
+     */
     public static boolean isSrg = true;
-    public static boolean isASMEnabled = false;
     
     /**
-     * Provides an easy way to retrieve an appropriate mapping, based on if the environement is
-     * using mcp mappings or srg mappings.
-     *
-     * @param mcp: The string you want if this environment is using mcp mappings.
-     * @param srg: The string you want if this environment is using srg mappings.
-     * @return String: The most appropriate mapping for this environment.
+     * Whether or not ASM has been enabled.
      */
-    public static String getAppropriateMapping (String mcp, String srg) {
-        
-        return isSrg ? srg : mcp;
-    }
+    public static boolean isASMEnabled = false;
     
     /**
      * Converts a ClassNode into a byte array which can then be returned by your transformer.
@@ -107,7 +103,8 @@ public final class ASMUtils {
             if (methodName.equals(mnode.name) && descriptor.equals(mnode.desc))
                 return mnode;
                 
-        throw new MethodNotFoundException(methodName, descriptor);
+        Constants.LOG.warn(new MethodNotFoundException(methodName, descriptor));
+        return null;
     }
     
     /**
@@ -125,7 +122,7 @@ public final class ASMUtils {
         final List<AbstractInsnNode> ret = InstructionComparator.insnListFindStart(haystack, needle);
         
         if (ret.size() != 1)
-            throw new InvalidNeedleException(ret.size());
+            Constants.LOG.warn(new InvalidNeedleException(ret.size()));
             
         return ret.get(0);
     }
@@ -145,7 +142,7 @@ public final class ASMUtils {
         final List<AbstractInsnNode> ret = InstructionComparator.insnListFindEnd(haystack, needle);
         
         if (ret.size() != 1)
-            throw new InvalidNeedleException(ret.size());
+            Constants.LOG.warn(new InvalidNeedleException(ret.size()));
             
         return ret.get(0);
     }
