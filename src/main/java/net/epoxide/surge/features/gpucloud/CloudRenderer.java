@@ -1,4 +1,4 @@
-package net.epoxide.surge.features.rendering.cloud;
+package net.epoxide.surge.features.gpucloud;
 
 import java.nio.ByteBuffer;
 

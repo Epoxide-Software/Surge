@@ -1,4 +1,4 @@
-package net.epoxide.surge.features.analysis;
+package net.epoxide.surge.features.loadtime;
 
 import java.io.File;
 import java.io.FileWriter;

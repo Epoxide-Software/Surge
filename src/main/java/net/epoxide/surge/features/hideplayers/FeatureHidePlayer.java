@@ -1,4 +1,4 @@
-package net.epoxide.surge.features.rendering;
+package net.epoxide.surge.features.hideplayers;
 
 import java.util.ArrayList;
 import java.util.List;

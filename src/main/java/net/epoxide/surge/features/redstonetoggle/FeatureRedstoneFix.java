@@ -19,9 +19,7 @@ public class FeatureRedstoneFix extends Feature {
     @Override
     public void onPreInit () {
         
-        if (this.enabled) {
-            
+        if (this.enabled)
             BlockRedstoneTorch.toggles = new WeakHashMap<>();
-        }
     }
 }

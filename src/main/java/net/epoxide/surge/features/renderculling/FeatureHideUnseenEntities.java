@@ -1,5 +1,5 @@
 
-package net.epoxide.surge.features.rendering;
+package net.epoxide.surge.features.renderculling;
 
 import net.epoxide.surge.features.Feature;
 import net.minecraft.client.Minecraft;

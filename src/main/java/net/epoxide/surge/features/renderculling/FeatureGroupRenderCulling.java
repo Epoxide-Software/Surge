@@ -1,4 +1,4 @@
-package net.epoxide.surge.features.rendering;
+package net.epoxide.surge.features.renderculling;
 
 import java.util.List;
 import java.util.Map;
