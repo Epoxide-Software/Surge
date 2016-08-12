@@ -5,15 +5,9 @@ import java.util.List;
 import java.util.UUID;
 
 import net.epoxide.surge.command.CommandSurgeWrapper;
-import net.epoxide.surge.command.SurgeCommand;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.PlayerUtils;
-import net.epoxide.surge.libs.TextUtils;
-import net.epoxide.surge.libs.TextUtils.ChatFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -49,8 +43,8 @@ public class FeatureHidePlayer extends Feature {
     public void onInit () {
         
         clientID = PlayerUtils.fixStrippedUUID(Minecraft.getMinecraft().getSession().getPlayerID());
-        CommandSurgeWrapper.addCommand(new CommandHidePlayers());
-        CommandSurgeWrapper.addCommand(new CommandWhiteList());
+        CommandSurgeWrapper.addCommand(new CommandHide());
+        CommandSurgeWrapper.addCommand(new CommandWhitelist());
     }
     
     @Override
@@ -73,96 +67,31 @@ public class FeatureHidePlayer extends Feature {
             event.setCanceled(true);
     }
     
-    private class CommandHidePlayers implements SurgeCommand {
+    /**
+     * Gets access to the whitelist.
+     * 
+     * @return The player whitelist.
+     */
+    public static List<UUID> getWhitelist () {
         
-        @Override
-        public String getSubName () {
-            
-            return "hideplayers";
-        }
-        
-        @Override
-        public void execute (ICommandSender sender, String[] args) {
-            
-            hidePlayers = !hidePlayers;
-            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.hideplayers." + hidePlayers)));
-        }
-        
-        @Override
-        public String getUsage () {
-            
-            return "hideplayers";
-        }
+        return WHITELISTED;
     }
     
-    private class CommandWhiteList implements SurgeCommand {
+    /**
+     * Checks if players should be hidden.
+     * 
+     * @return Whether or not players are being hidden.
+     */
+    public static boolean isHiding () {
         
-        @Override
-        public String getSubName () {
-            
-            return "whitelist";
-        }
+        return isHiding();
+    }
+    
+    /**
+     * Toggles whether or not players should be hidden.
+     */
+    public static void toggleHiding () {
         
-        @Override
-        public void execute (ICommandSender sender, String[] args) {
-            
-            if (args.length > 0) {
-                
-                final String commandName = args[0];
-                
-                if (commandName.equalsIgnoreCase("list")) {
-                    
-                    final StringBuilder builder = new StringBuilder(I18n.format("message.surge.whitelist.list"));
-                    
-                    for (final UUID uuid : WHITELISTED)
-                        builder.append("\n> ").append(PlayerUtils.getPlayerNameFromUUID(uuid));
-                        
-                    sender.addChatMessage(new TextComponentString(builder.toString()));
-                }
-                
-                if (args.length == 2) {
-                    
-                    final String username = args[1];
-                    final UUID id = PlayerUtils.getUUIDFromName(username);
-                    
-                    if (id == null) {
-                        
-                        sender.addChatMessage(new TextComponentString(String.format("message.surge.whitelist.missing", TextUtils.formatString(username, ChatFormat.RED))));
-                        return;
-                    }
-                    
-                    if (commandName.equalsIgnoreCase("add")) {
-                        
-                        if (WHITELISTED.contains(id))
-                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.already", TextUtils.formatString(username, ChatFormat.RED))));
-                            
-                        else {
-                            
-                            WHITELISTED.add(id);
-                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist", TextUtils.formatString(username, ChatFormat.GREEN))));
-                        }
-                    }
-                    
-                    else if (args[0].equalsIgnoreCase("remove"))
-                        if (WHITELISTED.contains(id)) {
-                            
-                            WHITELISTED.remove(id);
-                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.removed", TextUtils.formatString(username, ChatFormat.RED))));
-                        }
-                        
-                        else
-                            sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.not", TextUtils.formatString(username, ChatFormat.RED))));
-                }
-            }
-            
-            else
-                sender.addChatMessage(new TextComponentString("/surge " + this.getUsage()));
-        }
-        
-        @Override
-        public String getUsage () {
-            
-            return "whitelist [add|remove|list] [username]";
-        }
+        hidePlayers = !hidePlayers;
     }
 }

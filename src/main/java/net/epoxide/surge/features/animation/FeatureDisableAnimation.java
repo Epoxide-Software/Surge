@@ -17,25 +17,18 @@ import org.objectweb.asm.tree.VarInsnNode;
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.features.Feature;
 
+/**
+ * Allows for animations to be disabled. This will usually improve performance, especially when
+ * in areas with lots of animation like an ocean or the nether.
+ */
 public class FeatureDisableAnimation extends Feature {
-    
-    @Override
-    public boolean enabledByDefault () {
-        
-        return false;
-    }
     
     @Override
     public byte[] transform (String name, String transformedName, byte[] bytes) {
         
-        if (this.enabled) {
-            
-            final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-            this.transformLoadSpriteFrames(ASMUtils.getMethodFromClass(clazz, "loadSpriteFrames", "(Lnet/minecraft/client/resources/IResource;I)V"));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-        }
-        
-        return bytes;
+        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+        this.transformLoadSpriteFrames(ASMUtils.getMethodFromClass(clazz, "loadSpriteFrames", "(Lnet/minecraft/client/resources/IResource;I)V"));
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     
     private void transformLoadSpriteFrames (MethodNode method) {
@@ -50,8 +43,8 @@ public class FeatureDisableAnimation extends Feature {
         method.instructions.remove(pointer.getNext());
         final InsnList newInstr = new InsnList();
         
-        final LabelNode L6 = new LabelNode();
-        newInstr.add(new JumpInsnNode(Opcodes.IFNULL, L6));
+        final LabelNode label6 = new LabelNode();
+        newInstr.add(new JumpInsnNode(Opcodes.IFNULL, label6));
         newInstr.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/epoxide/surge/features/FeatureManager", "featureDisableAnimation", "Lnet/epoxide/surge/features/Feature;"));
         newInstr.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/epoxide/surge/features/Feature", "isEnabled", "()Z", false));
         
@@ -66,7 +59,7 @@ public class FeatureDisableAnimation extends Feature {
         
         final AbstractInsnNode pointer2 = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
         newInstr.add(new JumpInsnNode(Opcodes.IFEQ, (LabelNode) pointer2));
-        newInstr.add(L6);
+        newInstr.add(label6);
         
         method.instructions.insert(pointer, newInstr);
     }
@@ -81,5 +74,11 @@ public class FeatureDisableAnimation extends Feature {
     public boolean shouldTransform (String name) {
         
         return name.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite");
+    }
+    
+    @Override
+    public boolean enabledByDefault () {
+        
+        return false;
     }
 }

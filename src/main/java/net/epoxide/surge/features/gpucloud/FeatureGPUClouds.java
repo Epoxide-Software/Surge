@@ -16,9 +16,22 @@ import org.objectweb.asm.tree.VarInsnNode;
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.features.Feature;
 
+/**
+ * Replaces vanilla cloud rendering with one that uses the GPU for cloud geometry. This causes
+ * significant improvements in cloud performance.
+ */
 public class FeatureGPUClouds extends Feature {
+    
+    /**
+     * Instance of the GPU cloud renderer.
+     */
     private static CloudRenderer INSTANCE;
     
+    /**
+     * Gets the instance of the GPU cloud renderer.
+     * 
+     * @return The effectively final instance of the gpu cloud renderer.
+     */
     public static CloudRenderer getInstance () {
         
         if (INSTANCE == null)
@@ -30,14 +43,9 @@ public class FeatureGPUClouds extends Feature {
     @Override
     public byte[] transform (String name, String transformedName, byte[] bytes) {
         
-        if (this.enabled) {
-            
-            final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-            this.transformRenderClouds(ASMUtils.getMethodFromClass(clazz, "renderClouds", "(FI)V"));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-        }
-        
-        return bytes;
+        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+        this.transformRenderClouds(ASMUtils.getMethodFromClass(clazz, "renderClouds", "(FI)V"));
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     
     private void transformRenderClouds (MethodNode method) {
@@ -56,10 +64,10 @@ public class FeatureGPUClouds extends Feature {
         newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/rendering/cloud/FeatureGPUClouds", "getInstance", "()Lnet/epoxide/surge/features/rendering/cloud/CloudRenderer;", false));
         newInstr.add(new VarInsnNode(Opcodes.FLOAD, 1));
         newInstr.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/epoxide/surge/features/rendering/cloud/CloudRenderer", "render", "(F)Z", false));
-        final LabelNode L5 = new LabelNode();
-        newInstr.add(new JumpInsnNode(Opcodes.IFEQ, L5));
+        final LabelNode label5 = new LabelNode();
+        newInstr.add(new JumpInsnNode(Opcodes.IFEQ, label5));
         newInstr.add(new InsnNode(Opcodes.RETURN));
-        newInstr.add(L5);
+        newInstr.add(label5);
         
         method.instructions.insertBefore(pointer, newInstr);
     }

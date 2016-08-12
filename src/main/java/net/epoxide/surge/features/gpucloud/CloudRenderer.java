@@ -25,6 +25,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
+ * This code was originally written by Zaggy1024 for MinecraftForge. The goal is to take
+ * advantage of the GPU when rendering clouds, which provides significant performance benefits.
+ * In testing, this cloud renderer accounted for ~0.48% of the gameRender time, compared to
+ * vanilla's ~10%. This will allow players to have clouds enabled, and not experience huge
+ * performance penalties.
+ * 
  * @author Zaggy1024
  */
 public class CloudRenderer implements IResourceManagerReloadListener {
@@ -254,8 +260,8 @@ public class CloudRenderer implements IResourceManagerReloadListener {
             this.rebuild();
         }
         
-        final Entity entity = MC.getRenderViewEntity();       
-        final double totalOffset = this.ticks + partialTicks;       
+        final Entity entity = MC.getRenderViewEntity();
+        final double totalOffset = this.ticks + partialTicks;
         final double x = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks + totalOffset * 0.03;
         final double y = MC.theWorld.provider.getCloudHeight() - (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks) + 0.33;
         double z = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
@@ -338,7 +344,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
             
             for (int i = 0; i < FORMAT.getElementCount(); i++)
                 FORMAT.getElements().get(i).getUsage().preDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
-            
+                
             buffer.position(0);
         }
         
@@ -347,14 +353,14 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         
         if (OpenGlHelper.useVbo())
             this.vbo.drawArrays(GL11.GL_QUADS);
-        
+            
         else
             GlStateManager.callList(this.displayList);
             
         // Full render.
         if (!MC.gameSettings.anaglyph)
             GlStateManager.colorMask(true, true, true, true);
-        
+            
         else
             switch (EntityRenderer.anaglyphField) {
                 
@@ -366,10 +372,10 @@ public class CloudRenderer implements IResourceManagerReloadListener {
                     GlStateManager.colorMask(true, false, false, true);
                     break;
             }
-        
+            
         if (OpenGlHelper.useVbo())
             this.vbo.drawArrays(GL11.GL_QUADS);
-        
+            
         else
             GlStateManager.callList(this.displayList);
             
@@ -381,7 +387,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         
         for (int i = 0; i < FORMAT.getElementCount(); i++)
             FORMAT.getElements().get(i).getUsage().postDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
-        
+            
         buffer.position(0);
         
         // Disable our coloring.
