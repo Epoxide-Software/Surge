@@ -22,10 +22,10 @@ public class Mapping {
     /**
      * Creates a mapping for a field.
      * 
-     * @param mcpName The mcp name for the field. What you see in your IDE.
      * @param srgName The srg name for the field. What MCP deobfuscates it to.
+     * @param mcpName The mcp name for the field. What you see in your IDE.
      */
-    public Mapping(String mcpName, String srgName) {
+    public Mapping(String srgName, String mcpName) {
         
         this.name = ASMUtils.isSrg ? srgName : mcpName;
         this.descriptor = null;
@@ -35,11 +35,11 @@ public class Mapping {
     /**
      * Creates a mapping for a method.
      * 
-     * @param mcpName The mcp name for the method. What you see in your IDE.
      * @param srgName The srg name for the method. What MCP deobfuscates it to.
+     * @param mcpName The mcp name for the method. What you see in your IDE.
      * @param descriptor The descriptor for the method.
      */
-    public Mapping(String mcpName, String srgName, String descriptor) {
+    public Mapping(String srgName, String mcpName, String descriptor) {
         
         this.name = ASMUtils.isSrg ? srgName : mcpName;
         this.descriptor = descriptor;
