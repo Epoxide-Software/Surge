@@ -10,6 +10,8 @@ import net.epoxide.surge.libs.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Provides a way for the user to hide all other players. This can greatly reduce performance
@@ -20,6 +22,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * manage exceptions to the hide players list. For example, if you want to only see your
  * friends, you can add them to the whitelist and they will not be hidden.
  */
+@SideOnly(Side.CLIENT)
 public class FeatureHidePlayer extends Feature {
     
     /**

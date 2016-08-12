@@ -4,6 +4,8 @@ import java.util.WeakHashMap;
 
 import net.epoxide.surge.features.Feature;
 import net.minecraft.block.BlockRedstoneTorch;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Fixes MC-101233 which is a memory leak in the Redstone Torch class. Mojang currently stores
@@ -14,6 +16,7 @@ import net.minecraft.block.BlockRedstoneTorch;
  * other things until the game is restarted. By switching to a WeakHashMap the world can be
  * garbage collected, allowing the previously restricted memory to be used elsewhere.
  */
+@SideOnly(Side.CLIENT)
 public class FeatureRedstoneFix extends Feature {
     
     @Override

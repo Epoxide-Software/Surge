@@ -16,11 +16,14 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.features.Feature;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Allows for animations to be disabled. This will usually improve performance, especially when
  * in areas with lots of animation like an ocean or the nether.
  */
+@SideOnly(Side.CLIENT)
 public class FeatureDisableAnimation extends Feature {
     
     @Override

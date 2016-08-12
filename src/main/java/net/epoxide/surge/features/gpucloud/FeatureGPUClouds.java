@@ -15,11 +15,14 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.features.Feature;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Replaces vanilla cloud rendering with one that uses the GPU for cloud geometry. This causes
  * significant improvements in cloud performance.
  */
+@SideOnly(Side.CLIENT)
 public class FeatureGPUClouds extends Feature {
     
     /**

@@ -23,6 +23,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * This code was originally written by Zaggy1024 for MinecraftForge. The goal is to take
@@ -33,6 +35,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
  * 
  * @author Zaggy1024
  */
+@SideOnly(Side.CLIENT)
 public class CloudRenderer implements IResourceManagerReloadListener {
     
     // Shared constants.
