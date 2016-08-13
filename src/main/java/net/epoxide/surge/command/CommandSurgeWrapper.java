@@ -64,7 +64,7 @@ public class CommandSurgeWrapper extends CommandBase {
     private String getSubCommandDescriptions () {
         
         final StringBuilder builder = new StringBuilder(I18n.format("command.surge.usage"));
-        subCommands.values().forEach(command -> builder.append("\n" + ChatFormat.GREEN + "/surge " + command.getSubName() + " " + command.getUsage() + ChatFormat.RESET + " - " + command.getDescription()));
+        subCommands.values().forEach(command -> builder.append("\n" + ChatFormat.GREEN + "/surge " + command.getUsage() + ChatFormat.RESET + " - " + command.getDescription()));
         return builder.toString();
     }
 }
