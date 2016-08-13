@@ -1,12 +1,18 @@
 #Commands
 command.surge.usage=/surge - Provides a list of all commands for the Surge mod.
-command.surge.surge.commands=Commands: 
+command.surge.surge.commands=Commands:
+command.surge.animation.usage=Toggles the disable animation feature. Animations will not animate when enabled.
 command.surge.hideplayers.usage=Toggles the hide players feature. Players will not be visible while enabled.
+command.surge.clouds.usage=Toggles the GPU cloud rendering feature. GPU cloud rendering will render when enabled.
 command.surge.whitelist.usage=Allows the player render whitelist to be changed. Players who are on the whitelist will not be hidden when using /surge hideplayers
 
 #Messages
+message.surge.animation.true=Block animations are disabled!
+message.surge.animation.false=Block animations are enabled!
 message.surge.hideplayers.true=Players will now be hidden!
 message.surge.hideplayers.false=Players will no longer be hidden!
+message.surge.clouds.true=Render Clouds using the GPU!
+message.surge.clouds.false=Render Clouds using the CPU!
 message.surge.whitelist=%s has been whitelisted!
 message.surge.whitelist.not=%s is not whitelisted!
 message.surge.whitelist.already=%s is already whitelisted!

@@ -1,17 +1,10 @@
 package net.epoxide.surge.features.gpucloud;
 
+import net.epoxide.surge.command.CommandSurgeWrapper;
+import net.epoxide.surge.features.animation.CommandAnimation;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
 
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.asm.Mappings;
@@ -25,7 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FeatureGPUClouds extends Feature {
-    
+
+    private static boolean renderClouds = false;
     /**
      * Instance of the GPU cloud renderer.
      */
@@ -43,7 +37,13 @@ public class FeatureGPUClouds extends Feature {
             
         return INSTANCE;
     }
-    
+
+    @Override
+    public void onInit() {
+
+        CommandSurgeWrapper.addCommand(new CommandClouds());
+    }
+
     @Override
     public byte[] transform (String name, String transformedName, byte[] bytes) {
         
@@ -58,16 +58,23 @@ public class FeatureGPUClouds extends Feature {
         needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
         needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/RenderGlobal", "mc", "Lnet/minecraft/client/Minecraft;"));
         needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/Minecraft", "theWorld", "Lnet/minecraft/client/multiplayer/WorldClient;"));
-        needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/multiplayer/WorldClient", "provider", "Lnet/minecraft/world/WorldProvider;"));
-        needle.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/world/WorldProvider", "isSurfaceWorld", "()Z", false));
-        needle.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode()));
-        
+        needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/RenderGlobal", "mc", "Lnet/minecraft/client/Minecraft;"));
+        needle.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraftforge/client/IRenderHandler", "render", "(FLnet/minecraft/client/multiplayer/WorldClient;Lnet/minecraft/client/Minecraft;)V", false));
+        needle.add(new LabelNode());
+        needle.add(new LineNumberNode(-1, new LabelNode()));
+        needle.add(new InsnNode(Opcodes.RETURN));
+        needle.add(new LabelNode());
+        needle.add(new LineNumberNode(-1, new LabelNode()));
+
         final AbstractInsnNode pointer = ASMUtils.findFirstNodeFromNeedle(method.instructions, needle).getNext();
         final InsnList newInstr = new InsnList();
         
-        newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/rendering/cloud/FeatureGPUClouds", "getInstance", "()Lnet/epoxide/surge/features/rendering/cloud/CloudRenderer;", false));
+        newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/gpucloud/FeatureGPUClouds", "getInstance", "()Lnet/epoxide/surge/features/gpucloud/CloudRenderer;", false));
         newInstr.add(new VarInsnNode(Opcodes.FLOAD, 1));
-        newInstr.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/epoxide/surge/features/rendering/cloud/CloudRenderer", "render", "(F)Z", false));
+        newInstr.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        newInstr.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/RenderGlobal", "cloudTickCounter", "I"));
+        newInstr.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/epoxide/surge/features/gpucloud/CloudRenderer", "render", "(FI)Z", false));
         final LabelNode label5 = new LabelNode();
         newInstr.add(new JumpInsnNode(Opcodes.IFEQ, label5));
         newInstr.add(new InsnNode(Opcodes.RETURN));
@@ -86,5 +93,13 @@ public class FeatureGPUClouds extends Feature {
     public boolean shouldTransform (String name) {
         
         return name.equals("net.minecraft.client.renderer.RenderGlobal");
+    }
+
+    public static boolean shouldRenderClouds() {
+        return renderClouds;
+    }
+
+    public static void toggleRenderClouds() {
+        renderClouds = !renderClouds;
     }
 }
