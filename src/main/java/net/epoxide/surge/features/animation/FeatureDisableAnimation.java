@@ -1,5 +1,7 @@
 package net.epoxide.surge.features.animation;
 
+import net.epoxide.surge.command.CommandSurgeWrapper;
+import net.epoxide.surge.features.hideplayers.CommandHide;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -26,63 +28,61 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FeatureDisableAnimation extends Feature {
-    
+
+    public static boolean animationDisabled = false;
+
     @Override
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
-        
+    public void onInit() {
+
+        CommandSurgeWrapper.addCommand(new CommandAnimation());
+    }
+
+    @Override
+    public byte[] transform(String name, String transformedName, byte[] bytes) {
+
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformLoadSpriteFrames(Mappings.METHOD_LOAD_SPRITE_FRAMES.getMethodNode(clazz));
+        this.transformUpdateAnimation(Mappings.METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
+
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
-    
-    private void transformLoadSpriteFrames (MethodNode method) {
-        
-        final InsnList needle = new InsnList();
-        needle.add(new InsnNode(Opcodes.POP));
-        needle.add(new LabelNode());
-        needle.add(new LineNumberNode(-1, new LabelNode()));
-        needle.add(new VarInsnNode(Opcodes.ALOAD, 4));
-        
-        final AbstractInsnNode pointer = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
-        method.instructions.remove(pointer.getNext());
+
+    private void transformUpdateAnimation(MethodNode method) {
+
         final InsnList newInstr = new InsnList();
-        
-        final LabelNode label6 = new LabelNode();
-        newInstr.add(new JumpInsnNode(Opcodes.IFNULL, label6));
-        newInstr.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/epoxide/surge/features/FeatureManager", "featureDisableAnimation", "Lnet/epoxide/surge/features/Feature;"));
-        newInstr.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/epoxide/surge/features/Feature", "isEnabled", "()Z", false));
-        
-        needle.clear();
-        needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/texture/TextureAtlasSprite", "framesTextureData", "Ljava/util/List;"));
-        needle.add(new VarInsnNode(Opcodes.ALOAD, 5));
-        needle.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "java/util/List", "add", "(Ljava/lang/Object;)Z", false));
-        needle.add(new InsnNode(Opcodes.POP));
-        needle.add(new JumpInsnNode(Opcodes.GOTO, new LabelNode()));
-        needle.add(new LabelNode());
-        
-        final AbstractInsnNode pointer2 = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
-        newInstr.add(new JumpInsnNode(Opcodes.IFEQ, (LabelNode) pointer2));
-        newInstr.add(label6);
-        
-        method.instructions.insert(pointer, newInstr);
+
+        newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/animation/FeatureDisableAnimation", "animationDisabled", "()Z", false));
+        LabelNode L1 = new LabelNode();
+        newInstr.add(new JumpInsnNode(Opcodes.IFEQ, L1));
+        newInstr.add(new LabelNode());
+        newInstr.add(new InsnNode(Opcodes.RETURN));
+        newInstr.add(L1);
+
+        method.instructions.insert(method.instructions.getFirst().getNext().getNext(), newInstr);
     }
-    
+
     @Override
-    public boolean isTransformer () {
-        
+    public boolean isTransformer() {
+
         return true;
     }
-    
+
     @Override
-    public boolean shouldTransform (String name) {
-        
+    public boolean shouldTransform(String name) {
+
         return name.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite");
     }
-    
+
     @Override
-    public boolean enabledByDefault () {
-        
+    public boolean enabledByDefault() {
+
         return false;
+    }
+
+    public static void toggleAnimation() {
+        animationDisabled = !animationDisabled;
+    }
+
+    public static boolean animationDisabled() {
+        return animationDisabled;
     }
 }
