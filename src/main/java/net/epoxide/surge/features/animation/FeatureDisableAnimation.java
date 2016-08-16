@@ -1,26 +1,18 @@
 package net.epoxide.surge.features.animation;
 
-import net.epoxide.surge.command.CommandSurgeWrapper;
-import net.epoxide.surge.features.hideplayers.CommandHide;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
 import net.epoxide.surge.asm.ASMUtils;
-import net.epoxide.surge.asm.Mappings;
+import net.epoxide.surge.asm.mappings.ClassMapping;
+import net.epoxide.surge.asm.mappings.MethodMapping;
+import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
+
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
 
 /**
  * Allows for animations to be disabled. This will usually improve performance, especially when
@@ -28,25 +20,34 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FeatureDisableAnimation extends Feature {
+    public ClassMapping CLASS_TEXTURE_ATLAS_SPRITE;
+    public MethodMapping METHOD_UPDATE_ANIMATION;
 
     public static boolean animationDisabled = false;
 
     @Override
-    public void onInit() {
+    public void initTransformer () {
+
+        CLASS_TEXTURE_ATLAS_SPRITE = new ClassMapping("net.minecraft.client.renderer.texture.TextureAtlasSprite");
+        METHOD_UPDATE_ANIMATION = new MethodMapping("updateAnimation", "func_94219_l", void.class);
+    }
+
+    @Override
+    public void onInit () {
 
         CommandSurgeWrapper.addCommand(new CommandAnimation());
     }
 
     @Override
-    public byte[] transform(String name, String transformedName, byte[] bytes) {
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
 
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformUpdateAnimation(Mappings.METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
+        this.transformUpdateAnimation(METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
 
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
 
-    private void transformUpdateAnimation(MethodNode method) {
+    private void transformUpdateAnimation (MethodNode method) {
 
         final InsnList newInstr = new InsnList();
 
@@ -61,28 +62,28 @@ public class FeatureDisableAnimation extends Feature {
     }
 
     @Override
-    public boolean isTransformer() {
+    public boolean isTransformer () {
 
         return true;
     }
 
     @Override
-    public boolean shouldTransform(String name) {
+    public boolean shouldTransform (String name) {
 
-        return name.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite");
+        return CLASS_TEXTURE_ATLAS_SPRITE.isEqual(name);
     }
 
     @Override
-    public boolean enabledByDefault() {
+    public boolean enabledByDefault () {
 
         return false;
     }
 
-    public static void toggleAnimation() {
+    public static void toggleAnimation () {
         animationDisabled = !animationDisabled;
     }
 
-    public static boolean animationDisabled() {
+    public static boolean animationDisabled () {
         return animationDisabled;
     }
 }

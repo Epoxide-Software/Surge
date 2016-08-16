@@ -9,34 +9,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TypeInsnNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
 import net.epoxide.surge.asm.ASMUtils;
-import net.epoxide.surge.asm.Mappings;
+import net.epoxide.surge.asm.mappings.ClassMapping;
+import net.epoxide.surge.asm.mappings.MethodMapping;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.Constants;
 import net.epoxide.surge.libs.TextUtils;
+
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.FMLEvent;
+
+import org.apache.commons.lang3.SystemUtils;
+
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
 
 /**
  * Tracks the load time for mods, at various load stages. While these load times are not 100%
  * accurate, they do provide a glimpse into what is going on.
  */
 public class FeatureLoadTimes extends Feature {
+
+    public ClassMapping CLASS_LOAD_CONTROLLER;
+    public MethodMapping METHOD_SEND_EVENT_TO_MOD_CONTAINER;
 
     /**
      * A map that holds the load time of all mods, at various stages.
@@ -54,7 +50,14 @@ public class FeatureLoadTimes extends Feature {
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
     @Override
-    public void onFMLFinished() {
+    public void initTransformer () {
+
+        CLASS_LOAD_CONTROLLER = new ClassMapping("net.minecraftforge.fml.common.LoadController");
+        METHOD_SEND_EVENT_TO_MOD_CONTAINER = new MethodMapping("sendEventToModContainer", void.class, FMLEvent.class, ModContainer.class);
+    }
+
+    @Override
+    public void onFMLFinished () {
 
         final File surgeDirectory = new File("Surge");
         final String timestamp = TIME_FORMAT.format(new Date());
@@ -99,7 +102,7 @@ public class FeatureLoadTimes extends Feature {
     }
 
     @Override
-    public boolean enabledByDefault() {
+    public boolean enabledByDefault () {
 
         return false;
     }
@@ -112,7 +115,7 @@ public class FeatureLoadTimes extends Feature {
      * @param startTime  The time the event started.
      * @param endTime    The time the event ended.
      */
-    public static void registerLoadingTime(ModContainer mod, FMLEvent stateEvent, long startTime, long endTime) {
+    public static void registerLoadingTime (ModContainer mod, FMLEvent stateEvent, long startTime, long endTime) {
 
         final String stageName = stateEvent.getClass().getSimpleName();
         final long elapsed = endTime - startTime;
@@ -142,15 +145,15 @@ public class FeatureLoadTimes extends Feature {
     }
 
     @Override
-    public byte[] transform(String name, String transformedName, byte[] bytes) {
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
 
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        final MethodNode method = Mappings.METHOD_SEND_EVENT_TO_MOD_CONTAINER.getMethodNode(clazz);
+        final MethodNode method = METHOD_SEND_EVENT_TO_MOD_CONTAINER.getMethodNode(clazz);
         this.transformSendEventToModContainer(method);
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
 
-    private void transformSendEventToModContainer(MethodNode method) {
+    private void transformSendEventToModContainer (MethodNode method) {
         {
             final InsnList needle = new InsnList();
             needle.add(new LdcInsnNode("Sending event %s to mod %s"));
@@ -201,14 +204,14 @@ public class FeatureLoadTimes extends Feature {
     }
 
     @Override
-    public boolean isTransformer() {
+    public boolean isTransformer () {
 
         return true;
     }
 
     @Override
-    public boolean shouldTransform(String name) {
+    public boolean shouldTransform (String name) {
 
-        return name.equals("net.minecraftforge.fml.common.LoadController");
+        return CLASS_LOAD_CONTROLLER.isEqual(name);
     }
 }
