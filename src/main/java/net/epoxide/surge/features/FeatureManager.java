@@ -8,6 +8,7 @@ import net.epoxide.surge.features.gpucloud.FeatureGPUClouds;
 import net.epoxide.surge.features.hideplayers.FeatureHidePlayer;
 import net.epoxide.surge.features.loadtime.FeatureLoadTimes;
 import net.epoxide.surge.features.redstonetoggle.FeatureRedstoneFix;
+import net.epoxide.surge.features.renderculling.FeatureGroupRenderCulling;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -28,10 +29,7 @@ public class FeatureManager {
         
         if (FMLLaunchHandler.side() == Side.CLIENT) {
             
-            // registerFeature(new FeatureHideUnseenEntities(), "Hide Unseen Entities",
-            // "Prevents the rendering of entities that are not in view of the camera.");
-            // registerFeature(new FeatureGroupRenderCulling(), "Group Render Culling", "Cuts
-            // down on the amount of entities rendered, when they are bunched together.");
+             registerFeature(new FeatureGroupRenderCulling(), "Group Render Culling", "Cuts down on the amount of entities rendered, when they are bunched together.");
             registerFeature(new FeatureHidePlayer(), "Hide Players", "Command to disable the rendering of other players on the client.");
             registerFeature(new FeatureRedstoneFix(), "Redstone Toggle Fix", "Fixes a memory leak with toggle state of redstone torches. MC-101233");
             registerFeature(new FeatureGPUClouds(), "Cloud Rendering", "Switches the RenderGlobal to render clouds using GPU to render.");
