@@ -9,6 +9,8 @@ import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -102,11 +104,25 @@ public class FeatureHidePlayer extends Feature {
     public void readNBT (NBTTagCompound nbt) {
         
         hidePlayers = nbt.getBoolean("hidePlayers");
+        final NBTTagList list = nbt.getTagList("hidePlayers", 8);
+        
+        for (int index = 0; index < list.tagCount(); index++) {
+            
+            final NBTTagString string = (NBTTagString) list.get(index);
+            WHITELISTED.add(UUID.fromString(string.getString()));
+        }
     }
     
     @Override
     public void writeNBT (NBTTagCompound nbt) {
         
         nbt.setBoolean("hidePlayers", hidePlayers);
+        
+        final NBTTagList list = new NBTTagList();
+        
+        for (final UUID uuid : WHITELISTED)
+            list.appendTag(new NBTTagString(uuid.toString()));
+            
+        nbt.setTag("playerWhitelist", list);
     }
 }
