@@ -65,7 +65,7 @@ public class FeatureLoadTimes extends Feature {
         
         if (!surgeDirectory.exists())
             surgeDirectory.mkdirs();
-        
+            
         final File loadDirectory = new File(surgeDirectory, "loadtimes");
         
         if (!loadDirectory.exists())
