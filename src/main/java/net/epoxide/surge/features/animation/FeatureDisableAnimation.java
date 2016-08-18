@@ -29,7 +29,10 @@ public class FeatureDisableAnimation extends Feature {
     private static final ClassMapping CLASS_TEXTURE_ATLAS_SPRITE = new ClassMapping("net.minecraft.client.renderer.texture.TextureAtlasSprite");
     private static final MethodMapping METHOD_UPDATE_ANIMATION = new MethodMapping("func_94219_l", "updateAnimation", void.class);
     
-    public static boolean animationDisabled = false;
+    /**
+     * Whether or not animations should be displayed. Can be toggled via command.
+     */
+    private static boolean disableAnimations = true;
     
     @Override
     public void onInit () {
@@ -37,15 +40,33 @@ public class FeatureDisableAnimation extends Feature {
         CommandSurgeWrapper.addCommand(new CommandAnimation());
     }
     
-    @Override
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
+    /**
+     * Toggles the state of {@link #disableAnimations}. If it was false, it will become true.
+     * The reverse is also true.
+     */
+    public static void toggleAnimation () {
         
-        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformUpdateAnimation(METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
-        
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        disableAnimations = !disableAnimations;
     }
     
+    /**
+     * Hook for checking if animations should be disabled. If this returns true, animated
+     * textures will stay at their first frame.
+     * 
+     * WARNING: This method is a hook, which is referenced in ASM injections. Take care when
+     * editing this method, as all references will need to be updated.
+     * 
+     * @return Whether or not animations should play.
+     */
+    public static boolean animationDisabled () {
+        
+        return disableAnimations;
+    }
+
+    /**
+     * Transforms the update animation method to check our custom hook before updating. Allows animation to be disabled.
+     * @param method TextureAtlasSprite#updateAnimation
+     */
     private void transformUpdateAnimation (MethodNode method) {
         
         final InsnList newInstr = new InsnList();
@@ -58,6 +79,14 @@ public class FeatureDisableAnimation extends Feature {
         newInstr.add(L1);
         
         method.instructions.insert(method.instructions.getFirst().getNext().getNext(), newInstr);
+    }
+    
+    @Override
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
+        
+        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+        this.transformUpdateAnimation(METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     
     @Override
@@ -81,22 +110,12 @@ public class FeatureDisableAnimation extends Feature {
     @Override
     public void readNBT (NBTTagCompound nbt) {
         
-        animationDisabled = nbt.getBoolean("animationDisabled");
+        disableAnimations = nbt.getBoolean("animationDisabled");
     }
     
     @Override
     public void writeNBT (NBTTagCompound nbt) {
         
-        nbt.setBoolean("animationDisabled", animationDisabled);
-    }
-    
-    public static void toggleAnimation () {
-        
-        animationDisabled = !animationDisabled;
-    }
-    
-    public static boolean animationDisabled () {
-        
-        return animationDisabled;
+        nbt.setBoolean("animationDisabled", disableAnimations);
     }
 }

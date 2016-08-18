@@ -8,8 +8,8 @@ command.surge.renderCulling.usage=Toggles the render culling feature. Render cul
 command.surge.whitelist.usage=Allows the player render whitelist to be changed. Players who are on the whitelist will not be hidden when using /surge hideplayers
 
 #Messages
-message.surge.animation.true=Block animations are disabled!
-message.surge.animation.false=Block animations are enabled!
+message.surge.animation.true=Texture animations disabled!
+message.surge.animation.false=Texture animations enabled!
 message.surge.clouds.true=Render Clouds using the GPU!
 message.surge.clouds.false=Render Clouds using the CPU!
 message.surge.hideplayers.true=Players will now be hidden!
