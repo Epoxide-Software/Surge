@@ -5,29 +5,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.asm.mappings.MethodMapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
 
 @SideOnly(Side.CLIENT)
 public class FeatureGroupRenderCulling extends Feature {
@@ -52,20 +44,6 @@ public class FeatureGroupRenderCulling extends Feature {
     public void onInit () {
         
         CommandSurgeWrapper.addCommand(new CommandGroupRenderCulling());
-    }
-    
-    public boolean isWearingArmor (EntityLivingBase living) {
-        
-        for (final EntityEquipmentSlot slot : EntityEquipmentSlot.values())
-            if (slot.getSlotType().equals(EntityEquipmentSlot.Type.ARMOR)) {
-                
-                final ItemStack armor = living.getItemStackFromSlot(slot);
-                
-                if (armor != null)
-                    return true;
-            }
-            
-        return false;
     }
     
     @Override
@@ -94,12 +72,11 @@ public class FeatureGroupRenderCulling extends Feature {
     
     public static boolean shouldRender (Entity entity) {
         
-        System.out.println("Should render: " + entity.getCustomNameTag());
         if (renderCull) {
-            
+
             if (entity instanceof EntityPlayer || !(entity instanceof EntityLivingBase))
                 return true;
-                
+
             final EntityLivingBase living = (EntityLivingBase) entity;
             if (cullList.contains(living))
                 return false;
@@ -120,7 +97,7 @@ public class FeatureGroupRenderCulling extends Feature {
                 }
                 else
                     parentMap.remove(living);
-                    
+
             }
             else if (!parentMap.containsKey(living)) {
                 final List<EntityLivingBase> entityList = living.getEntityWorld().getEntitiesWithinAABB(living.getClass(), living.getEntityBoundingBox());
@@ -146,25 +123,27 @@ public class FeatureGroupRenderCulling extends Feature {
         
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
         final MethodNode method = METHOD_DO_RENDER_ENTITY.getMethodNode(clazz);
-        System.out.println(METHOD_DO_RENDER_ENTITY.getDescriptor());
-        final InsnList i = new InsnList();
-        i.add(new VarInsnNode(Opcodes.ALOAD, 1));
-        i.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/renderculling/FeatureGroupRenderCulling", "shouldRender", "(Lnet/minecraft/entity/Entity;)Z", false));
-        final LabelNode node = new LabelNode();
-        i.add(new JumpInsnNode(Opcodes.IFNE, node));
-        i.add(node);
-        i.add(new InsnNode(Opcodes.RETURN));
-        
-        if (method == null)
-            System.out.println("1");
-            
-        if (method.instructions == null)
-            System.out.println("2");
-            
-        if (method.instructions.getFirst() == null)
-            System.out.println("3");
-        method.instructions.insertBefore(method.instructions.getFirst(), i);
+        this.transformDoRenderEntity(method);
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+    }
+
+    private void transformDoRenderEntity (MethodNode method) {
+        final InsnList needle = new InsnList();
+        needle.add(new LabelNode());
+        needle.add(new LineNumberNode(-1, new LabelNode()));
+
+        final AbstractInsnNode pointer = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
+
+        final InsnList newInstr = new InsnList();
+        newInstr.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/renderculling/FeatureGroupRenderCulling", "shouldRender", "(Lnet/minecraft/entity/Entity;)Z", false));
+        final LabelNode L13 = new LabelNode();
+        newInstr.add(new JumpInsnNode(Opcodes.IFNE, L13));
+        newInstr.add(new LabelNode());
+        newInstr.add(new InsnNode(Opcodes.RETURN));
+        newInstr.add(L13);
+
+        method.instructions.insert(pointer, newInstr);
     }
     
     @Override

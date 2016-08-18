@@ -7,11 +7,6 @@ public class ClassMapping extends Mapping {
         super(name, "");
     }
     
-    public ClassMapping(String srgName, String mcpName) {
-        
-        super(srgName, mcpName, "");
-    }
-    
     public boolean isEqual (String className) {
         
         return className.equals(this.toString());
