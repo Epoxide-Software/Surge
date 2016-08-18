@@ -53,8 +53,7 @@ public class FeatureDisableAnimation extends Feature {
      * Hook for checking if animations should be disabled. If this returns true, animated
      * textures will stay at their first frame.
      * 
-     * WARNING: This method is a hook, which is referenced in ASM injections. Take care when
-     * editing this method, as all references will need to be updated.
+     * WARNING: This method is referenced directly through ASM. Take care when editing it.
      * 
      * @return Whether or not animations should play.
      */
@@ -62,9 +61,11 @@ public class FeatureDisableAnimation extends Feature {
         
         return disableAnimations;
     }
-
+    
     /**
-     * Transforms the update animation method to check our custom hook before updating. Allows animation to be disabled.
+     * Transforms the update animation method to check our custom hook before updating. Allows
+     * animation to be disabled.
+     * 
      * @param method TextureAtlasSprite#updateAnimation
      */
     private void transformUpdateAnimation (MethodNode method) {
