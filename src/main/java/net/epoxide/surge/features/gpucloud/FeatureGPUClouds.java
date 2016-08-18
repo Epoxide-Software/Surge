@@ -44,7 +44,7 @@ public class FeatureGPUClouds extends Feature {
     /**
      * Whether or not the new cloud renderer should be used. Can be toggled via command.
      */
-    private static boolean renderClouds = false;
+    private static boolean renderClouds = true;
     
     /**
      * Instance of the GPU cloud renderer.
