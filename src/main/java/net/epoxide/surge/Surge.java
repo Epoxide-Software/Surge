@@ -3,6 +3,7 @@ package net.epoxide.surge;
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureManager;
+import net.epoxide.surge.handler.PersistentDataHandler;
 import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -25,6 +26,7 @@ public class Surge {
     @EventHandler
     public void preInit (FMLPreInitializationEvent event) {
         
+        PersistentDataHandler.init();
         proxy.onPreInit();
         FeatureManager.FEATURES.forEach(Feature::onPreInit);
         

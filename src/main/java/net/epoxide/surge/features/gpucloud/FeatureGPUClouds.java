@@ -21,6 +21,7 @@ import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -124,5 +125,17 @@ public class FeatureGPUClouds extends Feature {
     public static void toggleRenderClouds () {
         
         renderClouds = !renderClouds;
+    }
+    
+    @Override
+    public void readNBT (NBTTagCompound nbt) {
+        
+        renderClouds = nbt.getBoolean("renderClouds");
+    }
+    
+    @Override
+    public void writeNBT (NBTTagCompound nbt) {
+        
+        nbt.setBoolean("renderClouds", renderClouds);
     }
 }

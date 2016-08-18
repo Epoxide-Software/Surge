@@ -1,5 +1,6 @@
 package net.epoxide.surge.features;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
 
 public class Feature {
@@ -87,6 +88,25 @@ public class Feature {
     public byte[] transform (String name, String transformedName, byte[] bytes) {
         
         return bytes;
+    }
+    
+    /**
+     * Reads nbt data from a persistent nbt object which is stored separately from the world.
+     * 
+     * @param nbt The nbt object to read from.
+     */
+    public void readNBT (NBTTagCompound nbt) {
+    
+    }
+    
+    /**
+     * Writes nbt data to the persistent nbt object. This data is stored seperately from the
+     * world.
+     * 
+     * @param nbt The nbt object to write to.
+     */
+    public void writeNBT (NBTTagCompound nbt) {
+    
     }
     
     /**

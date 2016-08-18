@@ -8,6 +8,7 @@ import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.PlayerUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -95,5 +96,17 @@ public class FeatureHidePlayer extends Feature {
     public boolean usesEvents () {
         
         return true;
+    }
+    
+    @Override
+    public void readNBT (NBTTagCompound nbt) {
+        
+        hidePlayers = nbt.getBoolean("hidePlayers");
+    }
+    
+    @Override
+    public void writeNBT (NBTTagCompound nbt) {
+        
+        nbt.setBoolean("hidePlayers", hidePlayers);
     }
 }

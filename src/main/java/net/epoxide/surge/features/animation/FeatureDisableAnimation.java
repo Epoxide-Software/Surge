@@ -15,6 +15,7 @@ import net.epoxide.surge.asm.mappings.ClassMapping;
 import net.epoxide.surge.asm.mappings.MethodMapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -75,6 +76,18 @@ public class FeatureDisableAnimation extends Feature {
     public boolean enabledByDefault () {
         
         return false;
+    }
+    
+    @Override
+    public void readNBT (NBTTagCompound nbt) {
+        
+        animationDisabled = nbt.getBoolean("animationDisabled");
+    }
+    
+    @Override
+    public void writeNBT (NBTTagCompound nbt) {
+        
+        nbt.setBoolean("animationDisabled", animationDisabled);
     }
     
     public static void toggleAnimation () {

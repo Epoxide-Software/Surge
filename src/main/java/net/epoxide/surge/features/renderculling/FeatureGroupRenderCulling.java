@@ -5,21 +5,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
+
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.asm.mappings.MethodMapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
 
 @SideOnly(Side.CLIENT)
 public class FeatureGroupRenderCulling extends Feature {
@@ -28,7 +35,7 @@ public class FeatureGroupRenderCulling extends Feature {
     private static MethodMapping METHOD_DO_RENDER_ENTITY = new MethodMapping("func_188391_a", "doRenderEntity", void.class, Entity.class, double.class, double.class, double.class, float.class, float.class, boolean.class);
     private static int cullThreshold;
     
-    private static boolean renderCull;
+    private static boolean shouldCull;
     
     private static final Map<EntityLivingBase, List<EntityLivingBase>> parentMap = new WeakHashMap<>();
     private static List<EntityLivingBase> cullList = new ArrayList<>();
@@ -54,8 +61,9 @@ public class FeatureGroupRenderCulling extends Feature {
     
     public static void toggleRenderCull () {
         
-        renderCull = !renderCull;
+        shouldCull = !shouldCull;
         
+        // TODO remove
         for (final EntityLivingBase entityLivingBase : parentMap.keySet()) {
             
             entityLivingBase.setCustomNameTag("");
@@ -67,16 +75,16 @@ public class FeatureGroupRenderCulling extends Feature {
     
     public static boolean shouldRenderCull () {
         
-        return renderCull;
+        return shouldCull;
     }
     
     public static boolean shouldRender (Entity entity) {
         
-        if (renderCull) {
-
+        if (shouldCull) {
+            
             if (entity instanceof EntityPlayer || !(entity instanceof EntityLivingBase))
                 return true;
-
+                
             final EntityLivingBase living = (EntityLivingBase) entity;
             if (cullList.contains(living))
                 return false;
@@ -97,7 +105,7 @@ public class FeatureGroupRenderCulling extends Feature {
                 }
                 else
                     parentMap.remove(living);
-
+                    
             }
             else if (!parentMap.containsKey(living)) {
                 final List<EntityLivingBase> entityList = living.getEntityWorld().getEntitiesWithinAABB(living.getClass(), living.getEntityBoundingBox());
@@ -126,24 +134,32 @@ public class FeatureGroupRenderCulling extends Feature {
         this.transformDoRenderEntity(method);
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
-
+    
     private void transformDoRenderEntity (MethodNode method) {
-        final InsnList needle = new InsnList();
-        needle.add(new LabelNode());
-        needle.add(new LineNumberNode(-1, new LabelNode()));
-
-        final AbstractInsnNode pointer = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
-
+        
         final InsnList newInstr = new InsnList();
         newInstr.add(new VarInsnNode(Opcodes.ALOAD, 1));
+        
         newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/renderculling/FeatureGroupRenderCulling", "shouldRender", "(Lnet/minecraft/entity/Entity;)Z", false));
-        final LabelNode L13 = new LabelNode();
-        newInstr.add(new JumpInsnNode(Opcodes.IFNE, L13));
+        final LabelNode label = new LabelNode();
+        newInstr.add(new JumpInsnNode(Opcodes.IFNE, label));
         newInstr.add(new LabelNode());
         newInstr.add(new InsnNode(Opcodes.RETURN));
-        newInstr.add(L13);
-
-        method.instructions.insert(pointer, newInstr);
+        newInstr.add(label);
+        
+        method.instructions.insert(method.instructions.getFirst(), newInstr);
+    }
+    
+    @Override
+    public void readNBT (NBTTagCompound nbt) {
+        
+        shouldCull = nbt.getBoolean("shouldCull");
+    }
+    
+    @Override
+    public void writeNBT (NBTTagCompound nbt) {
+        
+        nbt.setBoolean("shouldCull", shouldCull);
     }
     
     @Override
