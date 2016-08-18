@@ -41,24 +41,15 @@ public class FeatureGPUClouds extends Feature {
     private final FieldMapping FIELD_MINECRAFT_THEWORLD = new FieldMapping(this.CLASS_MINECRAFT, "field_71441_e", "theWorld", WorldClient.class);
     private final FieldMapping FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72773_u", "cloudTickCounter", int.class);
     
+    /**
+     * Whether or not the new cloud renderer should be used. Can be toggled via command.
+     */
     private static boolean renderClouds = false;
+    
     /**
      * Instance of the GPU cloud renderer.
      */
     private static CloudRenderer INSTANCE;
-    
-    /**
-     * Gets the instance of the GPU cloud renderer.
-     *
-     * @return The effectively final instance of the gpu cloud renderer.
-     */
-    public static CloudRenderer getInstance () {
-        
-        if (INSTANCE == null)
-            INSTANCE = new CloudRenderer();
-            
-        return INSTANCE;
-    }
     
     @Override
     public void onInit () {
@@ -66,14 +57,11 @@ public class FeatureGPUClouds extends Feature {
         CommandSurgeWrapper.addCommand(new CommandClouds());
     }
     
-    @Override
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
-        
-        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-    }
-    
+    /**
+     * Transforms the renderClouds method to take gpu cloud rendering into account.
+     * 
+     * @param method RenderGlobal#renderClouds
+     */
     private void transformRenderClouds (MethodNode method) {
         
         final InsnList needle = new InsnList();
@@ -105,6 +93,48 @@ public class FeatureGPUClouds extends Feature {
         method.instructions.insert(pointer, newInstr);
     }
     
+    /**
+     * Toggles the state of {@link #renderClouds}. If it was true, it will become false. The
+     * opposite is also true.
+     */
+    public static void toggleRenderClouds () {
+        
+        renderClouds = !renderClouds;
+    }
+    
+    /**
+     * A hook to allow cloud rendering to be replaced with the GPU geometry clouds.
+     * 
+     * WARNING: This method is referenced directly through ASM. Take care when editing it.
+     * 
+     * @return Whether or not the custom cloud renderer should be used.
+     */
+    public static boolean shouldRenderClouds () {
+        
+        return renderClouds;
+    }
+    
+    /**
+     * Gets the instance of the GPU cloud renderer.
+     *
+     * @return The effectively final instance of the gpu cloud renderer.
+     */
+    public static CloudRenderer getInstance () {
+        
+        if (INSTANCE == null)
+            INSTANCE = new CloudRenderer();
+            
+        return INSTANCE;
+    }
+    
+    @Override
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
+        
+        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+        this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+    }
+    
     @Override
     public boolean isTransformer () {
         
@@ -115,16 +145,6 @@ public class FeatureGPUClouds extends Feature {
     public boolean shouldTransform (String name) {
         
         return this.CLASS_RENDER_GLOBAL.isEqual(name);
-    }
-    
-    public static boolean shouldRenderClouds () {
-        
-        return renderClouds;
-    }
-    
-    public static void toggleRenderClouds () {
-        
-        renderClouds = !renderClouds;
     }
     
     @Override
