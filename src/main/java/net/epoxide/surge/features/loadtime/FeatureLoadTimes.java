@@ -60,13 +60,18 @@ public class FeatureLoadTimes extends Feature {
     @Override
     public void onFMLFinished () {
         
-        final File surgeDirectory = new File("Surge");
+        final File surgeDirectory = new File("surge");
         final String timestamp = TIME_FORMAT.format(new Date());
         
         if (!surgeDirectory.exists())
             surgeDirectory.mkdirs();
+        
+        final File loadDirectory = new File(surgeDirectory, "loadtimes");
+        
+        if (!loadDirectory.exists())
+            loadDirectory.mkdirs();
             
-        try (FileWriter writer = new FileWriter(new File(surgeDirectory, "Surge-Load-Time-Analysis-" + timestamp + ".txt"))) {
+        try (FileWriter writer = new FileWriter(new File(loadDirectory, "Surge-Load-Time-Analysis-" + timestamp + ".txt"))) {
             
             writer.write("#Surge Load Time Analysis - " + timestamp + SystemUtils.LINE_SEPARATOR);
             
@@ -101,12 +106,6 @@ public class FeatureLoadTimes extends Feature {
             
             Constants.LOG.warn(exception);
         }
-    }
-    
-    @Override
-    public boolean enabledByDefault () {
-        
-        return false;
     }
     
     /**
@@ -216,5 +215,11 @@ public class FeatureLoadTimes extends Feature {
     public boolean shouldTransform (String name) {
         
         return this.CLASS_LOAD_CONTROLLER.isEqual(name);
+    }
+    
+    @Override
+    public boolean enabledByDefault () {
+        
+        return false;
     }
 }
