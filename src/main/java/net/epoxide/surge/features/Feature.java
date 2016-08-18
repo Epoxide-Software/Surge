@@ -24,9 +24,6 @@ public class Feature {
     
     }
 
-    public void initTransformer () {
-    }
-
     /**
      * Called when the mod enters the init phase of loading.
      */

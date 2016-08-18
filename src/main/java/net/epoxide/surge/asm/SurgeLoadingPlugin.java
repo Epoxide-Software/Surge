@@ -3,7 +3,6 @@ package net.epoxide.surge.asm;
 import java.io.File;
 import java.util.Map;
 
-import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureManager;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
@@ -23,8 +22,6 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
         ASMUtils.isASMEnabled = true;
         ConfigurationHandler.initConfig(new File("config/surge.cfg"));
         FeatureManager.initFeatures();
-
-        FeatureManager.TRANSFORMERS.forEach(Feature::initTransformer);
 
         ConfigurationHandler.syncConfig();
         loaded = true;

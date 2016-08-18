@@ -1,21 +1,28 @@
 package net.epoxide.surge.features.gpucloud;
 
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
+
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.asm.mappings.ClassMapping;
 import net.epoxide.surge.asm.mappings.FieldMapping;
 import net.epoxide.surge.asm.mappings.MethodMapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
 
 /**
  * Replaces vanilla cloud rendering with one that uses the GPU for cloud geometry. This causes
@@ -23,27 +30,16 @@ import org.objectweb.asm.tree.*;
  */
 @SideOnly(Side.CLIENT)
 public class FeatureGPUClouds extends Feature {
-    public ClassMapping CLASS_MINECRAFT;
-    public ClassMapping CLASS_RENDER_GLOBAL;
+    
+    private ClassMapping CLASS_MINECRAFT = new ClassMapping("net.minecraft.client.Minecraft");
+    private ClassMapping CLASS_RENDER_GLOBAL = new ClassMapping("net.minecraft.client.renderer.RenderGlobal");
 
-    public MethodMapping METHOD_RENDER_CLOUDS;
+    private MethodMapping METHOD_RENDER_CLOUDS = new MethodMapping("func_180447_b", "renderClouds", void.class, float.class, int.class);
 
-    public FieldMapping FIELD_RENDERGLOBAL_MC;
-    public FieldMapping FIELD_MINECRAFT_THEWORLD;
-    public FieldMapping FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER;
+    private FieldMapping FIELD_RENDERGLOBAL_MC = new FieldMapping(CLASS_RENDER_GLOBAL, "field_72777_q", "mc", Minecraft.class);
+    private FieldMapping FIELD_MINECRAFT_THEWORLD = new FieldMapping(CLASS_MINECRAFT, "field_71441_e", "theWorld", WorldClient.class);
+    private FieldMapping FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER = new FieldMapping(CLASS_RENDER_GLOBAL, "field_72773_u", "cloudTickCounter", int.class);
 
-    @Override
-    public void initTransformer () {
-
-        CLASS_MINECRAFT = new ClassMapping("net.minecraft.client.Minecraft");
-        CLASS_RENDER_GLOBAL = new ClassMapping("net.minecraft.client.renderer.RenderGlobal");
-
-        METHOD_RENDER_CLOUDS = new MethodMapping("renderClouds", "func_180447_b", void.class, float.class, int.class);
-
-        FIELD_RENDERGLOBAL_MC = new FieldMapping(CLASS_RENDER_GLOBAL, "field_72777_q", "mc", Minecraft.class);
-        FIELD_MINECRAFT_THEWORLD = new FieldMapping(CLASS_MINECRAFT, "field_71441_e", "theWorld", WorldClient.class);
-        FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER = new FieldMapping(CLASS_RENDER_GLOBAL, "field_72773_u", "cloudTickCounter", int.class);
-    }
 
     private static boolean renderClouds = false;
     /**

@@ -9,21 +9,29 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.SystemUtils;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
+
 import net.epoxide.surge.asm.ASMUtils;
 import net.epoxide.surge.asm.mappings.ClassMapping;
 import net.epoxide.surge.asm.mappings.MethodMapping;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.Constants;
 import net.epoxide.surge.libs.TextUtils;
-
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.FMLEvent;
-
-import org.apache.commons.lang3.SystemUtils;
-
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.*;
 
 /**
  * Tracks the load time for mods, at various load stages. While these load times are not 100%
@@ -31,8 +39,8 @@ import org.objectweb.asm.tree.*;
  */
 public class FeatureLoadTimes extends Feature {
 
-    public ClassMapping CLASS_LOAD_CONTROLLER;
-    public MethodMapping METHOD_SEND_EVENT_TO_MOD_CONTAINER;
+    public ClassMapping CLASS_LOAD_CONTROLLER = new ClassMapping("net.minecraftforge.fml.common.LoadController");
+    public MethodMapping METHOD_SEND_EVENT_TO_MOD_CONTAINER = new MethodMapping("sendEventToModContainer", void.class, FMLEvent.class, ModContainer.class);
 
     /**
      * A map that holds the load time of all mods, at various stages.
@@ -48,13 +56,6 @@ public class FeatureLoadTimes extends Feature {
      * Format to use when representing the current data and time.
      */
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-
-    @Override
-    public void initTransformer () {
-
-        CLASS_LOAD_CONTROLLER = new ClassMapping("net.minecraftforge.fml.common.LoadController");
-        METHOD_SEND_EVENT_TO_MOD_CONTAINER = new MethodMapping("sendEventToModContainer", void.class, FMLEvent.class, ModContainer.class);
-    }
 
     @Override
     public void onFMLFinished () {
