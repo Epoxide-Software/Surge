@@ -24,7 +24,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,17 +34,14 @@ public class FeatureGroupRenderCulling extends Feature {
     private static MethodMapping METHOD_DO_RENDER_ENTITY = new MethodMapping("func_188391_a", "doRenderEntity", void.class, Entity.class, double.class, double.class, double.class, float.class, float.class, boolean.class);
     private static int cullThreshold;
     
-    private static boolean shouldCull;
+    /**
+     * Whether or not entitie rendering should be culled. Allows for entity rendering to be
+     * culled.
+     */
+    private static boolean shouldCull = true;
     
     private static final Map<EntityLivingBase, List<EntityLivingBase>> parentMap = new WeakHashMap<>();
     private static List<EntityLivingBase> cullList = new ArrayList<>();
-    
-    @Override
-    public void setupConfig (Configuration config) {
-        
-        // TODO Fix
-        FeatureGroupRenderCulling.cullThreshold = config.getInt("Group Render Culling Threshold", "grouprenderculling", 10, 0, 100, "The amount of the same type of entities in a single bounding box being culling");
-    }
     
     @Override
     public void onInit () {
@@ -53,12 +49,9 @@ public class FeatureGroupRenderCulling extends Feature {
         CommandSurgeWrapper.addCommand(new CommandGroupRenderCulling());
     }
     
-    @Override
-    public boolean usesEvents () {
-        
-        return true;
-    }
-    
+    /**
+     * Toggles render culling on/off. Will also reset culling maps.
+     */
     public static void toggleRenderCull () {
         
         shouldCull = !shouldCull;
@@ -73,11 +66,23 @@ public class FeatureGroupRenderCulling extends Feature {
         parentMap.clear();
     }
     
+    /**
+     * Checks if mass render culling should be enabled.
+     * 
+     * @return Whether or not mass culling should happen.
+     */
     public static boolean shouldRenderCull () {
         
         return shouldCull;
     }
     
+    /**
+     * Custom render event hook that is fired long before forge's. Allows for culling of fire
+     * rendering and the rendering on non living entities.
+     * 
+     * @param entity The entity being rendered.
+     * @return Whether or not the entity should render.
+     */
     public static boolean shouldRender (Entity entity) {
         
         if (shouldCull) {
@@ -126,15 +131,11 @@ public class FeatureGroupRenderCulling extends Feature {
         return true;
     }
     
-    @Override
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
-        
-        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        final MethodNode method = METHOD_DO_RENDER_ENTITY.getMethodNode(clazz);
-        this.transformDoRenderEntity(method);
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-    }
-    
+    /**
+     * Transforms the doRenderEntity method to allow greater control over rendering.
+     * 
+     * @param method RenderManager#doRenderEntity
+     */
     private void transformDoRenderEntity (MethodNode method) {
         
         final InsnList newInstr = new InsnList();
@@ -148,6 +149,15 @@ public class FeatureGroupRenderCulling extends Feature {
         newInstr.add(label);
         
         method.instructions.insert(method.instructions.getFirst(), newInstr);
+    }
+    
+    @Override
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
+        
+        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+        final MethodNode method = METHOD_DO_RENDER_ENTITY.getMethodNode(clazz);
+        this.transformDoRenderEntity(method);
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     
     @Override
@@ -172,5 +182,11 @@ public class FeatureGroupRenderCulling extends Feature {
     public boolean shouldTransform (String name) {
         
         return CLASS_RENDER_MANAGER.equals(name);
+    }
+    
+    @Override
+    public boolean usesEvents () {
+        
+        return true;
     }
 }
