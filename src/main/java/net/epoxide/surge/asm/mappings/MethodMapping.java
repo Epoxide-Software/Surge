@@ -1,20 +1,20 @@
 package net.epoxide.surge.asm.mappings;
 
-import net.epoxide.surge.asm.ASMUtils;
-import net.epoxide.surge.libs.Constants;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import net.epoxide.surge.libs.Constants;
+
 public class MethodMapping extends Mapping {
-
-    public MethodMapping(String srgName, String mcpName, Class<?> returnType, Class<?>... params) {
-
-        this(ASMUtils.isSrg ? srgName : mcpName, returnType, params);
-    }
 
     public MethodMapping(String name, Class<?> returnType, Class<?>... params) {
 
-        super(name, MappingsUtil.getMethodDescriptor(returnType, params));
+        this(name, name, returnType, params);
+    }
+    
+    public MethodMapping(String srgName, String mcpName, Class<?> returnType, Class<?>... params) {
+
+        super(srgName, mcpName, MappingsUtil.getMethodDescriptor(returnType, params));
     }
 
     public MethodNode getMethodNode(ClassNode classNode) {

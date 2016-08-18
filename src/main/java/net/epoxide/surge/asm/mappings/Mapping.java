@@ -11,7 +11,7 @@ public class Mapping {
     /**
      * The name of the field or method represented by this mapping.
      */
-    protected String mcpName;
+    protected final String mcpName;
 
     /**
      * The descriptor for the mapping. Only applicable to methods. Will be null for fields.
@@ -41,6 +41,7 @@ public class Mapping {
     public Mapping (String name, String descriptor) {
 
         this.srgName = name;
+        this.mcpName = srgName;
         this.descriptor = descriptor;
     }
 
@@ -57,6 +58,6 @@ public class Mapping {
     @Override
     public String toString () {
 
-        return mcpName == null ? srgName : (ASMUtils.isSrg ? srgName : mcpName);
+        return ASMUtils.isSrg ? srgName : mcpName;
     }
 }
