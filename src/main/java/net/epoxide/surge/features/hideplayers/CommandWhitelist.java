@@ -47,7 +47,7 @@ public class CommandWhitelist implements SurgeCommand {
                 
                 if (id == null) {
                     
-                    sender.addChatMessage(new TextComponentString(String.format("message.surge.whitelist.missing", TextUtils.formatString(username, ChatFormat.RED))));
+                    sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.missing", TextUtils.formatString(username, ChatFormat.RED))));
                     return;
                 }
                 
