@@ -3,9 +3,9 @@ package net.epoxide.surge.features;
 import net.minecraftforge.common.config.Configuration;
 
 public class Feature {
-
+    
     public boolean initializedTransformer = false;
-
+    
     /**
      * Whether or not this feature is enabled.
      */
@@ -15,7 +15,7 @@ public class Feature {
      * The category name used for this feature in the config file.
      */
     protected String configName;
-
+    
     /**
      * Called when the mod enters the preInit phase of loading. This is after
      * {@link #setupConfiguration(Configuration)} but before {@link #onClientPreInit()}.
@@ -23,7 +23,7 @@ public class Feature {
     public void onPreInit () {
     
     }
-
+    
     /**
      * Called when the mod enters the init phase of loading.
      */

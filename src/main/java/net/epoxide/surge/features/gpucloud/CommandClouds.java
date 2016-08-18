@@ -9,22 +9,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class CommandClouds implements SurgeCommand {
-
+    
     @Override
-    public String getSubName() {
-
+    public String getSubName () {
+        
         return "clouds";
     }
-
+    
     @Override
-    public String getUsage() {
-
+    public String getUsage () {
+        
         return "clouds";
     }
-
+    
     @Override
-    public void execute(ICommandSender sender, String[] args) {
-
+    public void execute (ICommandSender sender, String[] args) {
+        
         FeatureGPUClouds.toggleRenderClouds();
         sender.addChatMessage(new TextComponentString(I18n.format("message.surge.clouds." + FeatureGPUClouds.shouldRenderClouds())));
     }

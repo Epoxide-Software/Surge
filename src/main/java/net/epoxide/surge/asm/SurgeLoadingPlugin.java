@@ -13,16 +13,16 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     
     public static boolean loaded = false;
-
+    
     public SurgeLoadingPlugin() {
         
         if (loaded)
             return; // FML Callback constructs this twice
-
+            
         ASMUtils.isASMEnabled = true;
         ConfigurationHandler.initConfig(new File("config/surge.cfg"));
         FeatureManager.initFeatures();
-
+        
         ConfigurationHandler.syncConfig();
         loaded = true;
     }

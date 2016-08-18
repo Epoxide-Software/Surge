@@ -27,61 +27,63 @@ public class FeatureDisableAnimation extends Feature {
     
     private static final ClassMapping CLASS_TEXTURE_ATLAS_SPRITE = new ClassMapping("net.minecraft.client.renderer.texture.TextureAtlasSprite");
     private static final MethodMapping METHOD_UPDATE_ANIMATION = new MethodMapping("func_94219_l", "updateAnimation", void.class);
-
+    
     public static boolean animationDisabled = false;
-
+    
     @Override
     public void onInit () {
-
+        
         CommandSurgeWrapper.addCommand(new CommandAnimation());
     }
-
+    
     @Override
     public byte[] transform (String name, String transformedName, byte[] bytes) {
-
+        
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
         this.transformUpdateAnimation(METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
-
+        
         return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
-
+    
     private void transformUpdateAnimation (MethodNode method) {
-
+        
         final InsnList newInstr = new InsnList();
-
+        
         newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/animation/FeatureDisableAnimation", "animationDisabled", "()Z", false));
-        LabelNode L1 = new LabelNode();
+        final LabelNode L1 = new LabelNode();
         newInstr.add(new JumpInsnNode(Opcodes.IFEQ, L1));
         newInstr.add(new LabelNode());
         newInstr.add(new InsnNode(Opcodes.RETURN));
         newInstr.add(L1);
-
+        
         method.instructions.insert(method.instructions.getFirst().getNext().getNext(), newInstr);
     }
-
+    
     @Override
     public boolean isTransformer () {
-
+        
         return true;
     }
-
+    
     @Override
     public boolean shouldTransform (String name) {
-
+        
         return CLASS_TEXTURE_ATLAS_SPRITE.isEqual(name);
     }
-
+    
     @Override
     public boolean enabledByDefault () {
-
+        
         return false;
     }
-
+    
     public static void toggleAnimation () {
+        
         animationDisabled = !animationDisabled;
     }
-
+    
     public static boolean animationDisabled () {
+        
         return animationDisabled;
     }
 }
