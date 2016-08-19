@@ -25,8 +25,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import net.epoxide.surge.asm.ASMUtils;
-import net.epoxide.surge.asm.mappings.ClassMapping;
-import net.epoxide.surge.asm.mappings.MethodMapping;
+import net.epoxide.surge.asm.mappings.Mapping;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.Constants;
 import net.epoxide.surge.libs.TextUtils;
@@ -39,8 +38,8 @@ import net.minecraftforge.fml.common.event.FMLEvent;
  */
 public class FeatureLoadTimes extends Feature {
     
-    public ClassMapping CLASS_LOAD_CONTROLLER = new ClassMapping("net.minecraftforge.fml.common.LoadController");
-    public MethodMapping METHOD_SEND_EVENT_TO_MOD_CONTAINER = new MethodMapping("sendEventToModContainer", void.class, FMLEvent.class, ModContainer.class);
+    public String CLASS_LOAD_CONTROLLER;
+    public Mapping METHOD_SEND_EVENT_TO_MOD_CONTAINER;
     
     /**
      * A map that holds the load time of all mods, at various stages.
@@ -206,6 +205,13 @@ public class FeatureLoadTimes extends Feature {
     }
     
     @Override
+    public void initTransformer () {
+        
+        this.CLASS_LOAD_CONTROLLER = "net.minecraftforge.fml.common.LoadController";
+        this.METHOD_SEND_EVENT_TO_MOD_CONTAINER = new Mapping("sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V");
+    }
+    
+    @Override
     public boolean isTransformer () {
         
         return true;
@@ -214,7 +220,7 @@ public class FeatureLoadTimes extends Feature {
     @Override
     public boolean shouldTransform (String name) {
         
-        return this.CLASS_LOAD_CONTROLLER.isEqual(name);
+        return this.CLASS_LOAD_CONTROLLER.equals(name);
     }
     
     @Override

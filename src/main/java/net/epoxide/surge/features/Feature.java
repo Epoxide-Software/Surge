@@ -5,8 +5,6 @@ import net.minecraftforge.common.config.Configuration;
 
 public class Feature {
     
-    public boolean initializedTransformer = false;
-    
     /**
      * Whether or not this feature is enabled.
      */
@@ -75,6 +73,13 @@ public class Feature {
     public boolean shouldTransform (String name) {
         
         return false;
+    }
+    
+    /**
+     * Allows features to initialize fields and mappings at the right time.
+     */
+    public void initTransformer () {
+    
     }
     
     /**

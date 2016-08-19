@@ -1,22 +1,19 @@
 package net.epoxide.surge.asm.mappings;
 
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
+
 import net.epoxide.surge.asm.ASMUtils;
+import net.epoxide.surge.libs.Constants;
 
 public class Mapping {
     
-    /**
-     * The name of the field or method represented by this mapping.
-     */
-    protected final String srgName;
-    /**
-     * The name of the field or method represented by this mapping.
-     */
-    protected final String mcpName;
+    private final String name;
     
     /**
      * The descriptor for the mapping. Only applicable to methods. Will be null for fields.
      */
-    protected final String descriptor;
+    private final String descriptor;
     
     /**
      * Creates a mapping which can be used in ASM byte code manipulation or reflection.
@@ -27,8 +24,7 @@ public class Mapping {
      */
     public Mapping(String srgName, String mcpName, String descriptor) {
         
-        this.srgName = srgName;
-        this.mcpName = mcpName;
+        this.name = ASMUtils.isSrg ? srgName : mcpName;
         this.descriptor = descriptor;
     }
     
@@ -40,9 +36,13 @@ public class Mapping {
      */
     public Mapping(String name, String descriptor) {
         
-        this.srgName = name;
-        this.mcpName = this.srgName;
+        this.name = name;
         this.descriptor = descriptor;
+    }
+    
+    public String getName () {
+        
+        return this.name;
     }
     
     /**
@@ -55,9 +55,13 @@ public class Mapping {
         return this.descriptor;
     }
     
-    @Override
-    public String toString () {
+    public MethodNode getMethodNode (ClassNode classNode) {
         
-        return ASMUtils.isSrg ? this.srgName : this.mcpName;
+        for (final MethodNode mnode : classNode.methods)
+            if (this.getName().equals(mnode.name) && this.descriptor.equals(mnode.desc))
+                return mnode;
+                
+        Constants.LOG.warn(new RuntimeException(String.format("The method %s with descriptor %s could not be found in %s", this.getName(), this.descriptor, classNode.name)));
+        return null;
     }
 }

@@ -17,7 +17,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import net.epoxide.surge.asm.ASMUtils;
-import net.epoxide.surge.asm.mappings.MethodMapping;
+import net.epoxide.surge.asm.mappings.Mapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
 import net.minecraft.entity.Entity;
@@ -30,8 +30,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FeatureGroupRenderCulling extends Feature {
     
-    private static String CLASS_RENDER_MANAGER = "net.minecraft.client.renderer.entity.RenderManager";
-    private static MethodMapping METHOD_DO_RENDER_ENTITY = new MethodMapping("func_188391_a", "doRenderEntity", void.class, Entity.class, double.class, double.class, double.class, float.class, float.class, boolean.class);
+    private static String CLASS_RENDER_MANAGER;
+    private static Mapping METHOD_DO_RENDER_ENTITY;
     private static int cullThreshold;
     
     /**
@@ -176,6 +176,13 @@ public class FeatureGroupRenderCulling extends Feature {
     public boolean isTransformer () {
         
         return true;
+    }
+    
+    @Override
+    public void initTransformer () {
+        
+        CLASS_RENDER_MANAGER = "net.minecraft.client.renderer.entity.RenderManager";
+        METHOD_DO_RENDER_ENTITY = new Mapping("func_188391_a", "doRenderEntity", "(Lnet/minecraft/entity/Entity;DDDFFZ)V");
     }
     
     @Override

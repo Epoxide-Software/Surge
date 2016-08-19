@@ -11,8 +11,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import net.epoxide.surge.asm.ASMUtils;
-import net.epoxide.surge.asm.mappings.ClassMapping;
-import net.epoxide.surge.asm.mappings.MethodMapping;
+import net.epoxide.surge.asm.mappings.Mapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,8 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FeatureDisableAnimation extends Feature {
     
-    private static final ClassMapping CLASS_TEXTURE_ATLAS_SPRITE = new ClassMapping("net.minecraft.client.renderer.texture.TextureAtlasSprite");
-    private static final MethodMapping METHOD_UPDATE_ANIMATION = new MethodMapping("func_94219_l", "updateAnimation", void.class);
+    private static String CLASS_TEXTURE_ATLAS_SPRITE;
+    private static Mapping METHOD_UPDATE_ANIMATION;
     
     /**
      * Whether or not animations should be displayed. Can be toggled via command.
@@ -83,29 +82,30 @@ public class FeatureDisableAnimation extends Feature {
     }
     
     @Override
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
-        
-        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformUpdateAnimation(METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-    }
-    
-    @Override
     public boolean isTransformer () {
         
         return true;
     }
     
     @Override
-    public boolean shouldTransform (String name) {
+    public void initTransformer () {
         
-        return CLASS_TEXTURE_ATLAS_SPRITE.isEqual(name);
+        CLASS_TEXTURE_ATLAS_SPRITE = "net.minecraft.client.renderer.texture.TextureAtlasSprite";
+        METHOD_UPDATE_ANIMATION = new Mapping("func_94219_l", "updateAnimation", "()V");
     }
     
     @Override
-    public boolean enabledByDefault () {
+    public boolean shouldTransform (String name) {
         
-        return false;
+        return CLASS_TEXTURE_ATLAS_SPRITE.equals(name);
+    }
+    
+    @Override
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
+        
+        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+        this.transformUpdateAnimation(METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     
     @Override
@@ -118,5 +118,11 @@ public class FeatureDisableAnimation extends Feature {
     public void writeNBT (NBTTagCompound nbt) {
         
         nbt.setBoolean("animationDisabled", disableAnimations);
+    }
+    
+    @Override
+    public boolean enabledByDefault () {
+        
+        return false;
     }
 }

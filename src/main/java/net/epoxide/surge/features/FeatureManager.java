@@ -19,6 +19,10 @@ public class FeatureManager {
      * List of all registered features.
      */
     public static final List<Feature> FEATURES = new ArrayList<>();
+    
+    /**
+     * List of all transformer features.
+     */
     public static final List<Feature> TRANSFORMERS = new ArrayList<>();
     
     /**

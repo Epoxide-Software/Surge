@@ -3,27 +3,17 @@ package net.epoxide.surge.asm.mappings;
 import org.objectweb.asm.tree.FieldInsnNode;
 
 public class FieldMapping extends Mapping {
-    private final ClassMapping classMapping;
     
-    public FieldMapping(ClassMapping classMapping, String name, Class<?> clazz) {
-        
-        super(name, MappingsUtil.getDescriptorFromClass(clazz));
-        this.classMapping = classMapping;
-    }
+    private final String classPath;
     
-    public FieldMapping(ClassMapping classMapping, String srgName, String mcpName, Class<?> clazz) {
+    public FieldMapping(String classMapping, String srgName, String mcpName, String descriptor) {
         
-        super(srgName, mcpName, MappingsUtil.getDescriptorFromClass(clazz));
-        this.classMapping = classMapping;
-    }
-    
-    public String getClassPath () {
-        
-        return this.classMapping.toString().replace(".", "/");
+        super(srgName, mcpName, descriptor);
+        this.classPath = classMapping.replace(".", "/");
     }
     
     public FieldInsnNode getFieldNode (int opCode) {
         
-        return new FieldInsnNode(opCode, this.getClassPath(), this.toString(), this.getDescriptor());
+        return new FieldInsnNode(opCode, this.classPath, this.getName(), this.getDescriptor());
     }
 }

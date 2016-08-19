@@ -14,13 +14,10 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import net.epoxide.surge.asm.ASMUtils;
-import net.epoxide.surge.asm.mappings.ClassMapping;
 import net.epoxide.surge.asm.mappings.FieldMapping;
-import net.epoxide.surge.asm.mappings.MethodMapping;
+import net.epoxide.surge.asm.mappings.Mapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,14 +29,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class FeatureGPUClouds extends Feature {
     
-    private final ClassMapping CLASS_MINECRAFT = new ClassMapping("net.minecraft.client.Minecraft");
-    private final ClassMapping CLASS_RENDER_GLOBAL = new ClassMapping("net.minecraft.client.renderer.RenderGlobal");
-    
-    private final MethodMapping METHOD_RENDER_CLOUDS = new MethodMapping("func_180447_b", "renderClouds", void.class, float.class, int.class);
-    
-    private final FieldMapping FIELD_RENDERGLOBAL_MC = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72777_q", "mc", Minecraft.class);
-    private final FieldMapping FIELD_MINECRAFT_THEWORLD = new FieldMapping(this.CLASS_MINECRAFT, "field_71441_e", "theWorld", WorldClient.class);
-    private final FieldMapping FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72773_u", "cloudTickCounter", int.class);
+    private String CLASS_MINECRAFT;
+    private String CLASS_RENDER_GLOBAL;
+    private Mapping METHOD_RENDER_CLOUDS;
+    private FieldMapping FIELD_RENDERGLOBAL_MC;
+    private FieldMapping FIELD_MINECRAFT_THEWORLD;
+    private FieldMapping FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER;
     
     /**
      * Whether or not the new cloud renderer should be used. Can be toggled via command.
@@ -128,23 +123,34 @@ public class FeatureGPUClouds extends Feature {
     }
     
     @Override
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
-        
-        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-    }
-    
-    @Override
     public boolean isTransformer () {
         
         return true;
     }
     
     @Override
+    public void initTransformer () {
+        
+        this.CLASS_MINECRAFT = "net.minecraft.client.Minecraft";
+        this.CLASS_RENDER_GLOBAL = "net.minecraft.client.renderer.RenderGlobal";
+        this.METHOD_RENDER_CLOUDS = new Mapping("func_180447_b", "renderClouds", "(FI)V");
+        this.FIELD_RENDERGLOBAL_MC = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72777_q", "mc", "Lnet/minecraft/client/Minecraft;");
+        this.FIELD_MINECRAFT_THEWORLD = new FieldMapping(this.CLASS_MINECRAFT, "field_71441_e", "theWorld", "Lnet/minecraft/client/multiplayer/WorldClient;");
+        this.FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72773_u", "cloudTickCounter", "I");
+    }
+    
+    @Override
     public boolean shouldTransform (String name) {
         
-        return this.CLASS_RENDER_GLOBAL.isEqual(name);
+        return this.CLASS_RENDER_GLOBAL.equals(name);
+    }
+    
+    @Override
+    public byte[] transform (String name, String transformedName, byte[] bytes) {
+        
+        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
+        this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     
     @Override

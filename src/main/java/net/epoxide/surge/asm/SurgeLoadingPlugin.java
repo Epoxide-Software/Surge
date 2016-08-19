@@ -3,6 +3,7 @@ package net.epoxide.surge.asm;
 import java.io.File;
 import java.util.Map;
 
+import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureManager;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
@@ -49,6 +50,7 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     public void injectData (Map<String, Object> data) {
         
         ASMUtils.isSrg = (Boolean) data.get("runtimeDeobfuscationEnabled");
+        FeatureManager.TRANSFORMERS.forEach(Feature::initTransformer);
     }
     
     @Override
