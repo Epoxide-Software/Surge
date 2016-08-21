@@ -23,7 +23,7 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     @Override
     public String[] getASMTransformerClass () {
         
-        return new String[]{SurgeTransformerManager.class.getName()};
+        return new String[]{"net.epoxide.surge.asm.SurgeTransformerManager" };
     }
     
     @Override

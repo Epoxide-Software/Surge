@@ -1,11 +1,8 @@
 package net.epoxide.surge.asm;
 
-import java.util.Objects;
-
 import net.epoxide.surge.asm.mappings.FieldMapping;
 import net.epoxide.surge.asm.mappings.Mapping;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassWriter;
@@ -13,43 +10,24 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 
 public class SurgeTransformerManager implements IClassTransformer {
-    private String CLASS_MINECRAFT;
-    private String CLASS_RENDER_GLOBAL;
-    private String CLASS_RENDER_MANAGER;
-    private String CLASS_LOAD_CONTROLLER;
-    private String CLASS_TEXTURE_ATLAS_SPRITE;
+    private final String CLASS_MINECRAFT;
+    private final String CLASS_RENDER_GLOBAL;
+    private final String CLASS_RENDER_MANAGER;
+    private final String CLASS_LOAD_CONTROLLER;
+    private final String CLASS_TEXTURE_ATLAS_SPRITE;
 
-    private Mapping METHOD_RENDER_CLOUDS;
-    private Mapping METHOD_DO_RENDER_ENTITY;
-    private Mapping METHOD_UPDATE_ANIMATION;
-    private Mapping METHOD_SEND_EVENT_TO_MOD_CONTAINER;
+    private final Mapping METHOD_RENDER_CLOUDS;
+    private final Mapping METHOD_DO_RENDER_ENTITY;
+    private final Mapping METHOD_UPDATE_ANIMATION;
+    private final Mapping METHOD_SEND_EVENT_TO_MOD_CONTAINER;
 
-    private FieldMapping FIELD_RENDERGLOBAL_MC;
-    private FieldMapping FIELD_MINECRAFT_THEWORLD;
-    private FieldMapping FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER;
+    private final FieldMapping FIELD_RENDERGLOBAL_MC;
+    private final FieldMapping FIELD_MINECRAFT_THEWORLD;
+    private final FieldMapping FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER;
 
 
-    public SurgeTransformerManager(){
-        init();
-    }
-    @Override
-    public byte[] transform (String name, String transformedName, byte[] classBytes) {
+    public SurgeTransformerManager () {
 
-        final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-        if (transformedName.equals(this.CLASS_RENDER_GLOBAL))
-            this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
-        else if (transformedName.equals(this.CLASS_RENDER_MANAGER))
-            this.transformDoRenderEntity(this.METHOD_DO_RENDER_ENTITY.getMethodNode(clazz));
-        else if (transformedName.equals(this.CLASS_LOAD_CONTROLLER))
-            this.transformSendEventToModContainer(this.METHOD_SEND_EVENT_TO_MOD_CONTAINER.getMethodNode(clazz));
-        else if (transformedName.equals(this.CLASS_TEXTURE_ATLAS_SPRITE))
-            this.transformUpdateAnimation(this.METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
-
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-    }
-
-    public void init () {
-        System.out.println("Init");
         this.CLASS_MINECRAFT = "net.minecraft.client.Minecraft";
         this.CLASS_RENDER_GLOBAL = "net.minecraft.client.renderer.RenderGlobal";
         this.CLASS_RENDER_MANAGER = "net.minecraft.client.renderer.entity.RenderManager";
@@ -64,8 +42,32 @@ public class SurgeTransformerManager implements IClassTransformer {
         this.FIELD_RENDERGLOBAL_MC = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72777_q", "mc", "Lnet/minecraft/client/Minecraft;");
         this.FIELD_MINECRAFT_THEWORLD = new FieldMapping(this.CLASS_MINECRAFT, "field_71441_e", "theWorld", "Lnet/minecraft/client/multiplayer/WorldClient;");
         this.FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72773_u", "cloudTickCounter", "I");
+    }
 
-        System.out.println("Done Init");
+    @Override
+    public byte[] transform (String name, String transformedName, byte[] classBytes) {
+
+        if (transformedName.equals(this.CLASS_RENDER_GLOBAL)) {
+            final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+            this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        }
+        else if (transformedName.equals(this.CLASS_RENDER_MANAGER)) {
+            final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+            this.transformDoRenderEntity(this.METHOD_DO_RENDER_ENTITY.getMethodNode(clazz));
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        }
+        else if (transformedName.equals(this.CLASS_LOAD_CONTROLLER)) {
+            final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+            this.transformSendEventToModContainer(this.METHOD_SEND_EVENT_TO_MOD_CONTAINER.getMethodNode(clazz));
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        }
+        else if (transformedName.equals(this.CLASS_TEXTURE_ATLAS_SPRITE)) {
+            final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+            this.transformUpdateAnimation(this.METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        }
+        return classBytes;
     }
 
     /**
