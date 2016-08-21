@@ -3,6 +3,7 @@ package net.epoxide.surge.features.redstonetoggle;
 import java.util.WeakHashMap;
 
 import net.epoxide.surge.features.Feature;
+
 import net.minecraft.block.BlockRedstoneTorch;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

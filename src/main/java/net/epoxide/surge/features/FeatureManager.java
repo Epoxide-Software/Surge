@@ -10,6 +10,7 @@ import net.epoxide.surge.features.loadtime.FeatureLoadTimes;
 import net.epoxide.surge.features.redstonetoggle.FeatureRedstoneFix;
 import net.epoxide.surge.features.renderculling.FeatureGroupRenderCulling;
 import net.epoxide.surge.handler.ConfigurationHandler;
+
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -19,11 +20,6 @@ public class FeatureManager {
      * List of all registered features.
      */
     public static final List<Feature> FEATURES = new ArrayList<>();
-    
-    /**
-     * List of all transformer features.
-     */
-    public static final List<Feature> TRANSFORMERS = new ArrayList<>();
     
     /**
      * This method is called before any mods have had a chance to initialize. Constructors
@@ -48,8 +44,8 @@ public class FeatureManager {
      * entry in the configuration file to enable/disable this feature. If the feature has been
      * disabled, it will not be registered. This will also handle event bus subscriptions.
      *
-     * @param feature The feature being registered.
-     * @param name The name of the feature.
+     * @param feature     The feature being registered.
+     * @param name        The name of the feature.
      * @param description A short description of the feature.
      */
     private static void registerFeature (Feature feature, String name, String description) {
@@ -60,9 +56,6 @@ public class FeatureManager {
             
             feature.configName = name.toLowerCase().replace(' ', '_');
             FEATURES.add(feature);
-            
-            if (feature.isTransformer())
-                TRANSFORMERS.add(feature);
         }
     }
 }

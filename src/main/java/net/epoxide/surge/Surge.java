@@ -1,10 +1,14 @@
 package net.epoxide.surge;
 
+import java.io.File;
+
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureManager;
+import net.epoxide.surge.handler.ConfigurationHandler;
 import net.epoxide.surge.handler.PersistentDataHandler;
 import net.epoxide.surge.libs.Constants;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -25,7 +29,10 @@ public class Surge {
     
     @EventHandler
     public void preInit (FMLPreInitializationEvent event) {
-        
+        ConfigurationHandler.initConfig(new File("config/surge.cfg"));
+        FeatureManager.initFeatures();
+        ConfigurationHandler.syncConfig();
+
         PersistentDataHandler.init();
         proxy.onPreInit();
         FeatureManager.FEATURES.forEach(Feature::onPreInit);

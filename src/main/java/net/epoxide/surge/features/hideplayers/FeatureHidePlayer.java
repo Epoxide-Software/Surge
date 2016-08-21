@@ -7,6 +7,7 @@ import java.util.UUID;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.PlayerUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -68,7 +69,7 @@ public class FeatureHidePlayer extends Feature {
     
     /**
      * Gets access to the whitelist.
-     * 
+     *
      * @return The player whitelist.
      */
     public static List<UUID> getWhitelist () {
@@ -78,7 +79,7 @@ public class FeatureHidePlayer extends Feature {
     
     /**
      * Checks if players should be hidden.
-     * 
+     *
      * @return Whether or not players are being hidden.
      */
     public static boolean isHiding () {
@@ -122,7 +123,7 @@ public class FeatureHidePlayer extends Feature {
         
         for (final UUID uuid : WHITELISTED)
             list.appendTag(new NBTTagString(uuid.toString()));
-            
+
         nbt.setTag("playerWhitelist", list);
     }
 }

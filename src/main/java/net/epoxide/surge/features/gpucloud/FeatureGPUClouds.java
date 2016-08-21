@@ -1,23 +1,8 @@
 package net.epoxide.surge.features.gpucloud;
 
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
-
-import net.epoxide.surge.asm.ASMUtils;
-import net.epoxide.surge.asm.mappings.FieldMapping;
-import net.epoxide.surge.asm.mappings.Mapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,13 +13,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FeatureGPUClouds extends Feature {
-    
-    private String CLASS_MINECRAFT;
-    private String CLASS_RENDER_GLOBAL;
-    private Mapping METHOD_RENDER_CLOUDS;
-    private FieldMapping FIELD_RENDERGLOBAL_MC;
-    private FieldMapping FIELD_MINECRAFT_THEWORLD;
-    private FieldMapping FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER;
     
     /**
      * Whether or not the new cloud renderer should be used. Can be toggled via command.
@@ -53,42 +31,6 @@ public class FeatureGPUClouds extends Feature {
     }
     
     /**
-     * Transforms the renderClouds method to take gpu cloud rendering into account.
-     * 
-     * @param method RenderGlobal#renderClouds
-     */
-    private void transformRenderClouds (MethodNode method) {
-        
-        final InsnList needle = new InsnList();
-        needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        needle.add(this.FIELD_RENDERGLOBAL_MC.getFieldNode(Opcodes.GETFIELD));
-        needle.add(this.FIELD_MINECRAFT_THEWORLD.getFieldNode(Opcodes.GETFIELD));
-        needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        needle.add(this.FIELD_RENDERGLOBAL_MC.getFieldNode(Opcodes.GETFIELD));
-        needle.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraftforge/client/IRenderHandler", "render", "(FLnet/minecraft/client/multiplayer/WorldClient;Lnet/minecraft/client/Minecraft;)V", false));
-        needle.add(new LabelNode());
-        needle.add(new LineNumberNode(-1, new LabelNode()));
-        needle.add(new InsnNode(Opcodes.RETURN));
-        needle.add(new LabelNode());
-        needle.add(new LineNumberNode(-1, new LabelNode()));
-        
-        final AbstractInsnNode pointer = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
-        final InsnList newInstr = new InsnList();
-        
-        newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/gpucloud/FeatureGPUClouds", "getInstance", "()Lnet/epoxide/surge/features/gpucloud/CloudRenderer;", false));
-        newInstr.add(new VarInsnNode(Opcodes.FLOAD, 1));
-        newInstr.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        newInstr.add(this.FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER.getFieldNode(Opcodes.GETFIELD));
-        newInstr.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/epoxide/surge/features/gpucloud/CloudRenderer", "render", "(FI)Z", false));
-        final LabelNode label5 = new LabelNode();
-        newInstr.add(new JumpInsnNode(Opcodes.IFEQ, label5));
-        newInstr.add(new InsnNode(Opcodes.RETURN));
-        newInstr.add(label5);
-        
-        method.instructions.insert(pointer, newInstr);
-    }
-    
-    /**
      * Toggles the state of {@link #renderClouds}. If it was true, it will become false. The
      * opposite is also true.
      */
@@ -99,9 +41,9 @@ public class FeatureGPUClouds extends Feature {
     
     /**
      * A hook to allow cloud rendering to be replaced with the GPU geometry clouds.
-     * 
+     * <p>
      * WARNING: This method is referenced directly through ASM. Take care when editing it.
-     * 
+     *
      * @return Whether or not the custom cloud renderer should be used.
      */
     public static boolean shouldRenderClouds () {
@@ -118,39 +60,8 @@ public class FeatureGPUClouds extends Feature {
         
         if (INSTANCE == null)
             INSTANCE = new CloudRenderer();
-            
+
         return INSTANCE;
-    }
-    
-    @Override
-    public boolean isTransformer () {
-        
-        return true;
-    }
-    
-    @Override
-    public void initTransformer () {
-        
-        this.CLASS_MINECRAFT = "net.minecraft.client.Minecraft";
-        this.CLASS_RENDER_GLOBAL = "net.minecraft.client.renderer.RenderGlobal";
-        this.METHOD_RENDER_CLOUDS = new Mapping("func_180447_b", "renderClouds", "(FI)V");
-        this.FIELD_RENDERGLOBAL_MC = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72777_q", "mc", "Lnet/minecraft/client/Minecraft;");
-        this.FIELD_MINECRAFT_THEWORLD = new FieldMapping(this.CLASS_MINECRAFT, "field_71441_e", "theWorld", "Lnet/minecraft/client/multiplayer/WorldClient;");
-        this.FIELD_RENDERGLOBAL_CLOUDTICKCOUNTER = new FieldMapping(this.CLASS_RENDER_GLOBAL, "field_72773_u", "cloudTickCounter", "I");
-    }
-    
-    @Override
-    public boolean shouldTransform (String name) {
-        
-        return this.CLASS_RENDER_GLOBAL.equals(name);
-    }
-    
-    @Override
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
-        
-        final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
     
     @Override

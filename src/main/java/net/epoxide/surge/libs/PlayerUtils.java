@@ -1,14 +1,14 @@
 package net.epoxide.surge.libs;
 
-import java.io.BufferedReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.Resources;
 import com.google.gson.stream.JsonReader;
+
+import java.io.BufferedReader;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class PlayerUtils {
     
@@ -28,7 +28,7 @@ public class PlayerUtils {
         
         if (PROFILE_CACHE.containsValue(uuid))
             return PROFILE_CACHE.inverse().get(uuid);
-            
+
         String name = null;
         
         try {
@@ -40,16 +40,14 @@ public class PlayerUtils {
             while (json.hasNext())
                 if (json.nextName().equals("name"))
                     name = json.nextString();
-                    
+
                 else
                     json.skipValue();
-                    
+
             json.endObject();
             json.close();
             reader.close();
-        }
-        
-        catch (final Exception exception) {
+        } catch (final Exception exception) {
             
             Constants.LOG.warn("Could not get name for " + uuid + " " + exception.getMessage());
             name = exception.getMessage();
@@ -69,7 +67,7 @@ public class PlayerUtils {
         
         if (PROFILE_CACHE.containsKey(username))
             return PROFILE_CACHE.get(username);
-            
+
         UUID uuid = null;
         
         try {
@@ -82,16 +80,14 @@ public class PlayerUtils {
             while (json.hasNext())
                 if (json.nextName().equals("id"))
                     uuid = fixStrippedUUID(json.nextString());
-                    
+
                 else
                     json.skipValue();
-                    
+
             json.endObject();
             json.close();
             reader.close();
-        }
-        
-        catch (final Exception exception) {
+        } catch (final Exception exception) {
             
             Constants.LOG.warn("Could not get name for " + username + " " + exception.getMessage());
         }

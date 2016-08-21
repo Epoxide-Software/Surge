@@ -7,6 +7,7 @@ import net.epoxide.surge.command.SurgeCommand;
 import net.epoxide.surge.libs.PlayerUtils;
 import net.epoxide.surge.libs.TextUtils;
 import net.epoxide.surge.libs.TextUtils.ChatFormat;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentString;
@@ -36,7 +37,7 @@ public class CommandWhitelist implements SurgeCommand {
                 
                 for (final UUID uuid : whitelist)
                     builder.append("\n> ").append(PlayerUtils.getPlayerNameFromUUID(uuid));
-                    
+
                 sender.addChatMessage(new TextComponentString(builder.toString()));
             }
             
@@ -55,7 +56,7 @@ public class CommandWhitelist implements SurgeCommand {
                     
                     if (whitelist.contains(id))
                         sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.already", TextUtils.formatString(username, ChatFormat.RED))));
-                        
+
                     else {
                         
                         whitelist.add(id);

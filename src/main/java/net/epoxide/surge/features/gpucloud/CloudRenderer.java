@@ -2,15 +2,8 @@ package net.epoxide.surge.features.gpucloud;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -23,6 +16,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import org.lwjgl.opengl.GL11;
 
 /**
  * This code was originally written by Zaggy1024 for MinecraftForge. The goal is to take
@@ -61,7 +56,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
     private int texW;
     private int texH;
     
-    public CloudRenderer() {
+    public CloudRenderer () {
         
         MC = Minecraft.getMinecraft();
         MinecraftForge.EVENT_BUS.register(this);
@@ -131,7 +126,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
                     float sliceCoord0;
                     float sliceCoord1;
                     
-                    for (slice = sectX0; slice < sectX1;) {
+                    for (slice = sectX0; slice < sectX1; ) {
                         
                         sliceCoord0 = slice * sectPx;
                         sliceCoord1 = sliceCoord0 + PX_SIZE;
@@ -160,7 +155,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
                         }
                     }
                     
-                    for (slice = sectZ0; slice < sectZ1;) {
+                    for (slice = sectZ0; slice < sectZ1; ) {
                         
                         sliceCoord0 = slice * sectPx;
                         sliceCoord1 = sliceCoord0 + PX_SIZE;
@@ -201,7 +196,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         
         if (this.vbo != null)
             this.vbo.deleteGlBuffers();
-            
+
         if (this.displayList >= 0) {
             
             GLAllocation.deleteDisplayLists(this.displayList);
@@ -215,10 +210,10 @@ public class CloudRenderer implements IResourceManagerReloadListener {
             
             if (OpenGlHelper.useVbo())
                 this.vbo = new net.minecraft.client.renderer.vertex.VertexBuffer(FORMAT);
-                
+
             else
                 GlStateManager.glNewList(this.displayList = GLAllocation.generateDisplayLists(1), GL11.GL_COMPILE);
-                
+
             this.vertices(buffer);
             
             if (OpenGlHelper.useVbo()) {
@@ -245,10 +240,10 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         
         if (!FeatureGPUClouds.shouldRenderClouds())
             return false;
-            
+
         if (!MC.theWorld.provider.isSurfaceWorld())
             return true;
-            
+
         if (this.cloudMode != MC.gameSettings.shouldRenderClouds() || (OpenGlHelper.useVbo() ? this.vbo == null : this.displayList < 0)) {
             
             this.cloudMode = MC.gameSettings.shouldRenderClouds();
@@ -263,7 +258,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         
         if (this.cloudMode == 2)
             z += 0.33 * this.getScale();
-            
+
         final int scale = this.getScale();
         
         // Integer UVs to translate the texture matrix by.
@@ -338,7 +333,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
             
             for (int i = 0; i < FORMAT.getElementCount(); i++)
                 FORMAT.getElements().get(i).getUsage().preDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
-                
+
             buffer.position(0);
         }
         
@@ -347,41 +342,41 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         
         if (OpenGlHelper.useVbo())
             this.vbo.drawArrays(GL11.GL_QUADS);
-            
+
         else
             GlStateManager.callList(this.displayList);
-            
+
         // Full render.
         if (!MC.gameSettings.anaglyph)
             GlStateManager.colorMask(true, true, true, true);
-            
+
         else
             switch (EntityRenderer.anaglyphField) {
                 
                 case 0:
                     GlStateManager.colorMask(false, true, true, true);
                     break;
-                    
+
                 case 1:
                     GlStateManager.colorMask(true, false, false, true);
                     break;
             }
-            
+
         if (OpenGlHelper.useVbo())
             this.vbo.drawArrays(GL11.GL_QUADS);
-            
+
         else
             GlStateManager.callList(this.displayList);
-            
+
         // Unbind buffer and disable pointers.
         if (OpenGlHelper.useVbo())
             this.vbo.unbindBuffer();
-            
+
         buffer.limit(0);
         
         for (int i = 0; i < FORMAT.getElementCount(); i++)
             FORMAT.getElements().get(i).getUsage().postDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
-            
+
         buffer.position(0);
         
         // Disable our coloring.

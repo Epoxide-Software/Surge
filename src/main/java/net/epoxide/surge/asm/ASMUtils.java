@@ -1,13 +1,13 @@
 /*******************************************************************************************************************
  * Copyright: SanAndreasP
- *
+ * <p>
  * License:   Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
- *            http://creativecommons.org/licenses/by-nc-sa/4.0/
- *
+ * http://creativecommons.org/licenses/by-nc-sa/4.0/
+ * <p>
  * Changes: -Removal of deprecated methods
- *          -Reformat to project specifics
- *          -Recreation of all documentation
- *          -Renamed to ASMUtils
+ * -Reformat to project specifics
+ * -Recreation of all documentation
+ * -Renamed to ASMUtils
  *******************************************************************************************************************/
 
 package net.epoxide.surge.asm;
@@ -15,16 +15,11 @@ package net.epoxide.surge.asm;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.epoxide.surge.libs.Constants;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodNode;
-
-import net.epoxide.surge.libs.Constants;
+import org.objectweb.asm.tree.*;
 
 public final class ASMUtils {
     
@@ -42,8 +37,8 @@ public final class ASMUtils {
      * Converts a ClassNode into a byte array which can then be returned by your transformer.
      *
      * @param classNode: An instance of the ClassNode you wish to convert into a byte array.
-     * @param flags: The flags to use when converting the ClassNode. These are generally
-     *        COMPUTE_FRAMES and COMPUTE_MAXS.
+     * @param flags:     The flags to use when converting the ClassNode. These are generally
+     *                   COMPUTE_FRAMES and COMPUTE_MAXS.
      * @return byte[]: A byte array representation of the ClassNode.
      */
     public static byte[] createByteArrayFromClass (ClassNode classNode, int flags) {
@@ -73,7 +68,7 @@ public final class ASMUtils {
      * Checks if a ClassNode has an instance of the target method. This does not take
      * descriptors into account.
      *
-     * @param classNode: The instance of ClassNode to look through.
+     * @param classNode:  The instance of ClassNode to look through.
      * @param methodName: The name of the method you are looking for.
      * @return boolean: True if the method is found, false if it is not.
      */
@@ -82,7 +77,7 @@ public final class ASMUtils {
         for (final MethodNode method : classNode.methods)
             if (methodName.equals(method.name))
                 return true;
-                
+
         return false;
     }
     
@@ -91,10 +86,10 @@ public final class ASMUtils {
      * larger list of instructions.
      *
      * @param haystack: A complete list of instructions which is being searched through.
-     * @param needle: A small list of instructions which represents a very specific part of the
-     *        larger instruction list.
+     * @param needle:   A small list of instructions which represents a very specific part of the
+     *                  larger instruction list.
      * @return AbstractInsnNode: The first instruction node from the specified list of
-     *         instructions. (the needle)
+     * instructions. (the needle)
      */
     public static AbstractInsnNode findFirstNodeFromNeedle (InsnList haystack, InsnList needle) {
         
@@ -102,7 +97,7 @@ public final class ASMUtils {
         
         if (ret.size() != 1)
             Constants.LOG.warn(new InvalidNeedleException(ret.size()));
-            
+
         return ret.get(0);
     }
     
@@ -111,10 +106,10 @@ public final class ASMUtils {
      * list of instructions.
      *
      * @param haystack: A large list of instructions which is being searched through.
-     * @param needle: A small list of instructions which represents a very specific part of the
-     *        larger instruction list.
+     * @param needle:   A small list of instructions which represents a very specific part of the
+     *                  larger instruction list.
      * @return AbstractInsnNode: The last instruction node from the specified list of
-     *         instructions. (the needle)
+     * instructions. (the needle)
      */
     public static AbstractInsnNode findLastNodeFromNeedle (InsnList haystack, InsnList needle) {
         
@@ -122,7 +117,7 @@ public final class ASMUtils {
         
         if (ret.size() != 1)
             Constants.LOG.warn(new InvalidNeedleException(ret.size()));
-            
+
         return ret.get(0);
     }
     
@@ -132,8 +127,8 @@ public final class ASMUtils {
      * a good idea to remove instructions.
      *
      * @param haystack: A large list of instructions which is being searched through.
-     * @param needle: A specific list of instructions which are to be removed from the larger
-     *        instruction list.
+     * @param needle:   A specific list of instructions which are to be removed from the larger
+     *                  instruction list.
      */
     public static void removeNeedleFromHaystack (InsnList haystack, InsnList needle) {
         
@@ -143,7 +138,7 @@ public final class ASMUtils {
         
         for (int i = firstInd; i <= lastInd; i++)
             realNeedle.add(haystack.get(i));
-            
+
         for (final AbstractInsnNode node : realNeedle)
             haystack.remove(node);
     }
@@ -170,7 +165,7 @@ public final class ASMUtils {
          *
          * @param count: The amount of the specified needle which was found.
          */
-        public InvalidNeedleException(int count) {
+        public InvalidNeedleException (int count) {
             
             super(count > 1 ? "More than one instance of the needle have been found!" : count < 1 ? "The needle was not found" : "There is a glitch in the matrix");
         }
