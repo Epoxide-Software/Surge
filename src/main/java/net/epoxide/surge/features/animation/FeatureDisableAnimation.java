@@ -105,7 +105,7 @@ public class FeatureDisableAnimation extends Feature {
         
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
         this.transformUpdateAnimation(METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
     }
     
     @Override

@@ -155,9 +155,8 @@ public class FeatureGroupRenderCulling extends Feature {
     public byte[] transform (String name, String transformedName, byte[] bytes) {
         
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
-        final MethodNode method = METHOD_DO_RENDER_ENTITY.getMethodNode(clazz);
-        this.transformDoRenderEntity(method);
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        this.transformDoRenderEntity(METHOD_DO_RENDER_ENTITY.getMethodNode(clazz));
+        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
     }
     
     @Override

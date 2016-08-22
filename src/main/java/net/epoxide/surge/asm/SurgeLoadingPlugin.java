@@ -21,10 +21,7 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
             return; // FML Callback constructs this twice
             
         ASMUtils.isASMEnabled = true;
-        ConfigurationHandler.initConfig(new File("config/surge.cfg"));
-        FeatureManager.initFeatures();
-        
-        ConfigurationHandler.syncConfig();
+
         loaded = true;
     }
     
@@ -50,7 +47,6 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     public void injectData (Map<String, Object> data) {
         
         ASMUtils.isSrg = (Boolean) data.get("runtimeDeobfuscationEnabled");
-        FeatureManager.TRANSFORMERS.forEach(Feature::initTransformer);
     }
     
     @Override

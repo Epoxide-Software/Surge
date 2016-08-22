@@ -150,7 +150,7 @@ public class FeatureGPUClouds extends Feature {
         
         final ClassNode clazz = ASMUtils.createClassFromByteArray(bytes);
         this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
-        return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        return ASMUtils.createByteArrayFromClass(clazz,ClassWriter.COMPUTE_MAXS);
     }
     
     @Override
