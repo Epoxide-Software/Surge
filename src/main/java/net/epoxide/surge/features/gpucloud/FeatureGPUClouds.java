@@ -2,7 +2,6 @@ package net.epoxide.surge.features.gpucloud;
 
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,8 +39,7 @@ public class FeatureGPUClouds extends Feature {
     }
     
     /**
-     * A hook to allow cloud rendering to be replaced with the GPU geometry clouds.
-     * <p>
+     * A hook to allow cloud rendering to be replaced with the GPU geometry clouds. <p>
      * WARNING: This method is referenced directly through ASM. Take care when editing it.
      *
      * @return Whether or not the custom cloud renderer should be used.
@@ -60,7 +58,7 @@ public class FeatureGPUClouds extends Feature {
         
         if (INSTANCE == null)
             INSTANCE = new CloudRenderer();
-
+            
         return INSTANCE;
     }
     

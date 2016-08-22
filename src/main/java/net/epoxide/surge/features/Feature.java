@@ -20,28 +20,28 @@ public class Feature {
      * {@link #setupConfiguration(Configuration)} but before {@link #onClientPreInit()}.
      */
     public void onPreInit () {
-
+    
     }
     
     /**
      * Called when the mod enters the init phase of loading.
      */
     public void onInit () {
-
+    
     }
     
     /**
      * Called when the mod enters the postInit phase of loading.
      */
     public void onPostInit () {
-
+    
     }
     
     /**
      * Called when FML has finished loading mods.
      */
     public void onFMLFinished () {
-
+    
     }
     
     /**
@@ -60,7 +60,7 @@ public class Feature {
      * @param nbt The nbt object to read from.
      */
     public void readNBT (NBTTagCompound nbt) {
-
+    
     }
     
     /**
@@ -70,7 +70,7 @@ public class Feature {
      * @param nbt The nbt object to write to.
      */
     public void writeNBT (NBTTagCompound nbt) {
-
+    
     }
     
     /**
@@ -81,7 +81,7 @@ public class Feature {
      * @param config The configuration object to pull data from.
      */
     public void setupConfig (Configuration config) {
-
+    
     }
     
     /**

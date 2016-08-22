@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import net.epoxide.surge.features.FeatureManager;
 import net.epoxide.surge.libs.Constants;
-
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,9 +43,10 @@ public class PersistentDataHandler {
             
             if (persistentData == null)
                 persistentData = new NBTTagCompound();
-
+                
             FeatureManager.FEATURES.forEach(feature -> feature.readNBT(persistentData));
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             
             Constants.LOG.warn("Issue loading data file! Please report! " + e);
         }
@@ -61,7 +61,8 @@ public class PersistentDataHandler {
             
             FeatureManager.FEATURES.forEach(feature -> feature.writeNBT(persistentData));
             CompressedStreamTools.write(persistentData, getSaveFile());
-        } catch (final IOException e) {
+        }
+        catch (final IOException e) {
             
             Constants.LOG.warn("Issue writing data file! Please report! " + e);
         }
@@ -76,12 +77,12 @@ public class PersistentDataHandler {
         
         if (saveFile != null)
             return saveFile;
-
+            
         final File surgeDirectory = new File("Surge");
         
         if (!surgeDirectory.exists())
             surgeDirectory.mkdirs();
-
+            
         return new File(surgeDirectory, "SurgeData.nbt");
     }
     

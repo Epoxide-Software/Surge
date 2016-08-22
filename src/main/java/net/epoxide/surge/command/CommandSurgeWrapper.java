@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.epoxide.surge.libs.TextUtils.ChatFormat;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -52,7 +51,7 @@ public class CommandSurgeWrapper extends CommandBase {
         
         if (args.length > 0 && subCommands.containsKey(args[0]))
             subCommands.get(args[0]).execute(sender, Arrays.copyOfRange(args, 1, args.length));
-
+            
         else
             sender.addChatMessage(new TextComponentString(this.getSubCommandDescriptions()));
     }

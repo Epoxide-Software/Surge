@@ -11,11 +11,11 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     
     public static boolean loaded = false;
     
-    public SurgeLoadingPlugin () {
+    public SurgeLoadingPlugin() {
         
         if (loaded)
             return; // FML Callback constructs this twice
-
+            
         ASMUtils.isASMEnabled = true;
         loaded = true;
     }
@@ -23,7 +23,7 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     @Override
     public String[] getASMTransformerClass () {
         
-        return new String[]{"net.epoxide.surge.asm.SurgeTransformerManager" };
+        return new String[] { "net.epoxide.surge.asm.SurgeTransformerManager" };
     }
     
     @Override

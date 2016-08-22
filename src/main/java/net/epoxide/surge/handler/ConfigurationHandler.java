@@ -4,7 +4,6 @@ import java.io.File;
 
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureManager;
-
 import net.minecraftforge.common.config.Configuration;
 
 public class ConfigurationHandler {
@@ -33,7 +32,7 @@ public class ConfigurationHandler {
         
         for (final Feature feature : FeatureManager.FEATURES)
             feature.setupConfig(config);
-
+            
         if (config.hasChanged())
             config.save();
     }
@@ -41,8 +40,8 @@ public class ConfigurationHandler {
     /**
      * Checks if a feature is enabled.
      *
-     * @param feature     The feature to check for.
-     * @param name        The name of the feature.
+     * @param feature The feature to check for.
+     * @param name The name of the feature.
      * @param description The description for the feature.
      * @return Whether or not the feature was enabled.
      */

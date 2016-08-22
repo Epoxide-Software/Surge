@@ -8,7 +8,6 @@ import java.util.WeakHashMap;
 import net.epoxide.surge.asm.mappings.Mapping;
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -78,7 +77,7 @@ public class FeatureGroupRenderCulling extends Feature {
             
             if (entity instanceof EntityPlayer || !(entity instanceof EntityLivingBase))
                 return true;
-
+                
             final EntityLivingBase living = (EntityLivingBase) entity;
             if (cullList.contains(living))
                 return false;
@@ -99,7 +98,7 @@ public class FeatureGroupRenderCulling extends Feature {
                 }
                 else
                     parentMap.remove(living);
-
+                    
             }
             else if (!parentMap.containsKey(living)) {
                 final List<EntityLivingBase> entityList = living.getEntityWorld().getEntitiesWithinAABB(living.getClass(), living.getEntityBoundingBox());

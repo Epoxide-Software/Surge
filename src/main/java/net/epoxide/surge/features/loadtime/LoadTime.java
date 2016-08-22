@@ -16,9 +16,9 @@ public class LoadTime {
      * Constructs a new load time object.
      *
      * @param modID The ID of the mod being loaded.
-     * @param time  The amount of time it took to load.
+     * @param time The amount of time it took to load.
      */
-    public LoadTime (String modID, long time) {
+    public LoadTime(String modID, long time) {
         
         this.modID = modID;
         this.time = time;

@@ -34,7 +34,7 @@ public interface SurgeCommand {
      * Handles execution of the surge sub command.
      *
      * @param sender The player sending the command.
-     * @param args   The arguments for the command.
+     * @param args The arguments for the command.
      */
     void execute (ICommandSender sender, String[] args);
 }

@@ -2,7 +2,6 @@ package net.epoxide.surge.features.animation;
 
 import net.epoxide.surge.command.CommandSurgeWrapper;
 import net.epoxide.surge.features.Feature;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,9 +35,8 @@ public class FeatureDisableAnimation extends Feature {
     
     /**
      * Hook for checking if animations should be disabled. If this returns true, animated
-     * textures will stay at their first frame.
-     * <p>
-     * WARNING: This method is referenced directly through ASM. Take care when editing it.
+     * textures will stay at their first frame. <p> WARNING: This method is referenced directly
+     * through ASM. Take care when editing it.
      *
      * @return Whether or not animations should play.
      */

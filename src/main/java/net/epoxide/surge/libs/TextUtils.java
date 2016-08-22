@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import net.minecraft.util.text.TextFormatting;
-
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.text.WordUtils;
+
+import net.minecraft.util.text.TextFormatting;
 
 public class TextUtils {
     
@@ -40,16 +40,16 @@ public class TextUtils {
      * is similar to wrap in Apache WordUtils however it uses a List making it easier to use
      * when working with Minecraft.
      *
-     * @param string:        The string being split into multiple lines. It's recommended to use
-     *                       StatCollector.translateToLocal() for this so multiple languages will be
-     *                       supported.
-     * @param lnLength:      The ideal size for each line of text.
+     * @param string: The string being split into multiple lines. It's recommended to use
+     *        StatCollector.translateToLocal() for this so multiple languages will be
+     *        supported.
+     * @param lnLength: The ideal size for each line of text.
      * @param wrapLongWords: If true the ideal size will be exact, potentially splitting words
-     *                       on the end of each line.
-     * @param list:          A list to add each line of text to. An good example of such list would be
-     *                       the list of tooltips on an item.
+     *        on the end of each line.
+     * @param list: A list to add each line of text to. An good example of such list would be
+     *        the list of tooltips on an item.
      * @return List: The same List instance provided however the string provided will be
-     * wrapped to the ideal line length and then added.
+     *         wrapped to the ideal line length and then added.
      */
     public static List<String> wrapStringToList (String string, int lnLength, boolean wrapLongWords, List<String> list) {
         
@@ -65,16 +65,16 @@ public class TextUtils {
      * is similar to wrap in Apache WordUtils however it uses a List making it easier to use
      * when working with Minecraft.
      *
-     * @param string:        The string being split into multiple lines. It's recommended to use
-     *                       StatCollector.translateToLocal() for this so multiple languages will be
-     *                       supported.
-     * @param lnLength:      The ideal size for each line of text.
+     * @param string: The string being split into multiple lines. It's recommended to use
+     *        StatCollector.translateToLocal() for this so multiple languages will be
+     *        supported.
+     * @param lnLength: The ideal size for each line of text.
      * @param wrapLongWords: If true the ideal size will be exact, potentially splitting words
-     *                       on the end of each line.
-     * @param format:        A list to add each line of text to. An good example of such list would be
-     *                       the list of tooltips on an item.
+     *        on the end of each line.
+     * @param format: A list to add each line of text to. An good example of such list would be
+     *        the list of tooltips on an item.
      * @return List: The same List instance provided however the string provided will be
-     * wrapped to the ideal line length and then added.
+     *         wrapped to the ideal line length and then added.
      */
     public static List<String> wrapStringToListWithFormat (String string, int lnLength, boolean wrapLongWords, List<String> list, TextFormatting format) {
         
@@ -82,7 +82,7 @@ public class TextUtils {
         
         for (final String line : lines)
             list.add(format + line);
-
+            
         return list;
     }
     
@@ -176,7 +176,7 @@ public class TextUtils {
          *
          * @param character The character code used for the format.
          */
-        private ChatFormat (char character) {
+        private ChatFormat(char character) {
             
             this(character, false);
         }
@@ -185,9 +185,9 @@ public class TextUtils {
          * Constructs a styling format.
          *
          * @param character The character code used for the format.
-         * @param isStyled  Whether or not the this is a styling.
+         * @param isStyled Whether or not the this is a styling.
          */
-        private ChatFormat (char character, boolean isStyled) {
+        private ChatFormat(char character, boolean isStyled) {
             
             this.formatCode = character;
             this.isStyle = isStyled;
