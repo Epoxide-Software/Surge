@@ -50,22 +50,22 @@ public class SurgeTransformerManager implements IClassTransformer {
         if (transformedName.equals(this.CLASS_RENDER_GLOBAL)) {
             final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
             this.transformRenderClouds(this.METHOD_RENDER_CLOUDS.getMethodNode(clazz));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
         }
         else if (transformedName.equals(this.CLASS_RENDER_MANAGER)) {
             final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
             this.transformDoRenderEntity(this.METHOD_DO_RENDER_ENTITY.getMethodNode(clazz));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
         }
         else if (transformedName.equals(this.CLASS_LOAD_CONTROLLER)) {
             final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
             this.transformSendEventToModContainer(this.METHOD_SEND_EVENT_TO_MOD_CONTAINER.getMethodNode(clazz));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
         }
         else if (transformedName.equals(this.CLASS_TEXTURE_ATLAS_SPRITE)) {
             final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
             this.transformUpdateAnimation(this.METHOD_UPDATE_ANIMATION.getMethodNode(clazz));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
         }
         return classBytes;
     }
