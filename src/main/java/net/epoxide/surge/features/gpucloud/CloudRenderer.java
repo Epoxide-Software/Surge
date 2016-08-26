@@ -26,7 +26,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * This code was originally written by Zaggy1024 for MinecraftForge. The goal is to take
- * advantage of the GPU when rendering clouds, which provides significant performance benefits.
+ * advantage of the GPU by uploading vertex data to the GPU to be reused
+ * when rendering clouds, which provides significant performance benefits.
  * In testing, this cloud renderer accounted for ~0.48% of the gameRender time, compared to
  * vanilla's ~10%. This will allow players to have clouds enabled, and not experience huge
  * performance penalties.
