@@ -8,6 +8,7 @@
 	"updateUrl": "",
 	"authorList": ["Darkhax", "lclc98"],
 	"logoFile": "logo_surge.png",
+    "credits": "Special thanks to Zaggy1024 and SanAndreasP",
 	"screenshots": [],
 	"dependencies": []
 }]

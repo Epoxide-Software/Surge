@@ -32,3 +32,9 @@ This feature will analyse the load time of every mod installed. Once the game ha
 
 **GPU Cloud Geometry**    
 This feature significantly improves the performance of vanilla cloud rendering. Traditionally clouds have been very resource intensive, taking up a decent chunk of the total game render time. This feature greatly reduces that chunk of time, allowing you to play with clouds enabled, without losing performance. This feature also adds a `/surge clouds` command which allows you to toggle this special rendering off and on. Full credit to [Zaggy1024](https://github.com/Zaggy1024) for this feature.
+
+# Credits
+- lclc98 - Lead Developer
+- Darkhax - Developer
+- Zaggy1024 - Improved Cloud Rendering
+- SanAndreasP - ASM tools
