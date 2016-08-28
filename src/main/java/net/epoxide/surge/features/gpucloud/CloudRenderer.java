@@ -60,7 +60,9 @@ public class CloudRenderer implements IResourceManagerReloadListener {
     
     private int texW;
     private int texH;
-    
+
+    private boolean wasVbo = false;
+
     public CloudRenderer() {
         
         MC = Minecraft.getMinecraft();
@@ -240,17 +242,18 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         
         return (int) coord / scale - (coord < 0 ? 1 : 0);
     }
-    
+
     public boolean render (float partialTicks, int cloudTickCounter) {
-        
+
         if (!FeatureGPUClouds.shouldRenderClouds())
             return false;
             
         if (!MC.theWorld.provider.isSurfaceWorld())
             return true;
-            
-        if (this.cloudMode != MC.gameSettings.shouldRenderClouds() || (OpenGlHelper.useVbo() ? this.vbo == null : this.displayList < 0)) {
-            
+
+
+        if (this.wasVbo != OpenGlHelper.useVbo() || this.cloudMode != MC.gameSettings.shouldRenderClouds() || (OpenGlHelper.useVbo() ? this.vbo == null : this.displayList < 0)) {
+            this.wasVbo = OpenGlHelper.useVbo();
             this.cloudMode = MC.gameSettings.shouldRenderClouds();
             this.rebuild();
         }
@@ -285,10 +288,10 @@ public class CloudRenderer implements IResourceManagerReloadListener {
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         
         GlStateManager.disableCull();
-        
+
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        
+
         // Color multiplier.
         final Vec3d color = MC.theWorld.getCloudColour(partialTicks);
         float r = (float) color.xCoord;
