@@ -55,47 +55,6 @@ public class Feature {
     }
     
     /**
-     * Checks if the feature uses any ASM.
-     * 
-     * @return Whether or not the feature uses ASM.
-     */
-    public boolean isTransformer () {
-        
-        return false;
-    }
-    
-    /**
-     * Checks if the feature wants to transform a specific class.
-     * 
-     * @param name The name of the class being transformed.
-     * @return Whether or not the feature wants to transform the class.
-     */
-    public boolean shouldTransform (String name) {
-        
-        return false;
-    }
-    
-    /**
-     * Allows features to initialize fields and mappings at the right time.
-     */
-    public void initTransformer () {
-    
-    }
-    
-    /**
-     * Gives the feature access to transforming class byes.
-     * 
-     * @param name The initial name.
-     * @param transformedName The transformed name.
-     * @param bytes The original bytes of the class.
-     * @return The new bytes for the class.
-     */
-    public byte[] transform (String name, String transformedName, byte[] bytes) {
-        
-        return bytes;
-    }
-    
-    /**
      * Reads nbt data from a persistent nbt object which is stored separately from the world.
      * 
      * @param nbt The nbt object to read from.

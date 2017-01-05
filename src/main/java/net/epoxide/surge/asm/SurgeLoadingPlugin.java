@@ -1,7 +1,10 @@
 package net.epoxide.surge.asm;
 
+import java.io.File;
 import java.util.Map;
 
+import net.epoxide.surge.features.FeatureManager;
+import net.epoxide.surge.handler.ConfigurationHandler;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.SortingIndex(1001)
@@ -10,14 +13,15 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     
     public static boolean loaded = false;
-    
+
     public SurgeLoadingPlugin() {
         
         if (loaded)
             return; // FML Callback constructs this twice
             
-        ASMUtils.isASMEnabled = true;
-        
+        ConfigurationHandler.initConfig(new File("config/surge.cfg"));
+        FeatureManager.initFeatures();
+        ConfigurationHandler.syncConfig();
         loaded = true;
     }
     

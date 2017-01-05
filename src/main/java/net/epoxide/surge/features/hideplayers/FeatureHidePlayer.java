@@ -83,7 +83,7 @@ public class FeatureHidePlayer extends Feature {
      */
     public static boolean isHiding () {
         
-        return isHiding();
+        return hidePlayers;
     }
     
     /**

@@ -1,23 +1,19 @@
+import groovy.json.*
+
 buildscript {
-
     repositories {
-
         jcenter()
-
         maven {
-
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
 
         maven {
-
             url "https://plugins.gradle.org/m2/"
         }
     }
 
     dependencies {
-
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.7"
     }
@@ -35,12 +31,17 @@ version = getVersionFromJava(file("src/main/java/net/epoxide/surge/libs/Constant
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+URL info = new URL("https://epoxide.org/gradle/1.10.2.json");
+URLConnection urlConnection = info.openConnection();
+urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
+
+def json = new JsonSlurper().parse(urlConnection.inputStream);
+
 //Defines the MC environment information.
 minecraft {
-
-    version = "1.10.2-12.18.1.2044"
+    version = json.forge_version
     runDir = "run"
-    mappings = "snapshot_20160731"
+    mappings = json.mapping
     useDepAts = true
 }
 
@@ -175,7 +176,7 @@ curseforge {
         releaseType = "alpha";
         changelog = "All changes can be found here: https://github.com/Epoxide-Software/Surge/commits/master/";
 
-        addGameVersion "1.10.2"
+        addGameVersion json.mc_version
         
         //Adds main jar, deobf jar, source jar, and javadoc jar to the upload.
         mainArtifact(jar) {

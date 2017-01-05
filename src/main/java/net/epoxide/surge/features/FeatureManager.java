@@ -7,7 +7,6 @@ import net.epoxide.surge.features.animation.FeatureDisableAnimation;
 import net.epoxide.surge.features.gpucloud.FeatureGPUClouds;
 import net.epoxide.surge.features.hideplayers.FeatureHidePlayer;
 import net.epoxide.surge.features.loadtime.FeatureLoadTimes;
-import net.epoxide.surge.features.redstonetoggle.FeatureRedstoneFix;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,11 +19,6 @@ public class FeatureManager {
     public static final List<Feature> FEATURES = new ArrayList<>();
     
     /**
-     * List of all transformer features.
-     */
-    public static final List<Feature> TRANSFORMERS = new ArrayList<>();
-    
-    /**
      * This method is called before any mods have had a chance to initialize. Constructors
      * should take care not to reference any actual game code.
      */
@@ -32,13 +26,10 @@ public class FeatureManager {
         
         if (FMLLaunchHandler.side() == Side.CLIENT) {
             
-            // Disabled for now// registerFeature(new FeatureGroupRenderCulling(), "Group
-            // Render Culling", "Cuts down on the amount of entities rendered, when they are
-            // bunched together.");
             registerFeature(new FeatureHidePlayer(), "Hide Players", "Command to disable the rendering of other players on the client.");
-            registerFeature(new FeatureRedstoneFix(), "Redstone Toggle Fix", "Fixes a memory leak with toggle state of redstone torches. MC-101233");
-            registerFeature(new FeatureGPUClouds(), "Cloud Rendering", "Switches the RenderGlobal to render clouds using GPU to render.");
             registerFeature(new FeatureDisableAnimation(), "Disable Animation", "Allows the animation of block/item textures to be disabled.");
+            registerFeature(new FeatureGPUClouds(), "Cloud Rendering", "Switches the RenderGlobal to render clouds using GPU to render.");
+            registerFeature(new FeaturePigmanSleep(), "Pigman Sleep" , "Allow the player to sleep while pigman are around, unless angered");
         }
         
         registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");
@@ -61,9 +52,6 @@ public class FeatureManager {
             
             feature.configName = name.toLowerCase().replace(' ', '_');
             FEATURES.add(feature);
-            
-            if (feature.isTransformer())
-                TRANSFORMERS.add(feature);
         }
     }
 }
