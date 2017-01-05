@@ -5,4 +5,8 @@ public class ProxyCommon {
     public void onPreInit () {
 
     }
+    
+    public void registerFeatures() {
+        
+    }
 }

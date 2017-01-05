@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.epoxide.surge.Surge;
 import net.epoxide.surge.features.animation.FeatureDisableAnimation;
 import net.epoxide.surge.features.hideplayers.FeatureHidePlayer;
 import net.epoxide.surge.features.loadtime.FeatureLoadTimes;
@@ -25,13 +26,7 @@ public class FeatureManager {
      */
     public static void initFeatures () {
 
-        if (FMLLaunchHandler.side() == Side.CLIENT) {
-
-            registerFeature(new FeatureHidePlayer(), "Hide Players", "Command to disable the rendering of other players on the client.");
-            registerFeature(new FeatureDisableAnimation(), "Disable Animation", "Allows the animation of block/item textures to be disabled.");
-            registerFeature(new FeaturePigmanSleep(), "Pigman Sleep", "Allow the player to sleep while pigman are around, unless angered");
-        }
-
+        Surge.proxy.registerFeatures();
         registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");
     }
 
@@ -44,7 +39,7 @@ public class FeatureManager {
      * @param name The name of the feature.
      * @param description A short description of the feature.
      */
-    private static void registerFeature (Feature feature, String name, String description) {
+    public static void registerFeature (Feature feature, String name, String description) {
 
         feature.enabled = ConfigurationHandler.isFeatureEnabled(feature, name, description);
 
