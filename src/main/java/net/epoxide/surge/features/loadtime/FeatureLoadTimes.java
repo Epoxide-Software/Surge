@@ -9,12 +9,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.libs.Constants;
 import net.epoxide.surge.libs.TextUtils;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.FMLEvent;
-import org.apache.commons.lang3.SystemUtils;
 
 /**
  * Tracks the load time for mods, at various load stages. While these load times are not 100%

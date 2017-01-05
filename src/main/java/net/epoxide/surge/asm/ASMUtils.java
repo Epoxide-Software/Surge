@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import net.epoxide.surge.libs.Constants;
-import net.minecraft.launchwrapper.Launch;
 import org.apache.commons.lang3.SystemUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -25,6 +23,9 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;
+
+import net.epoxide.surge.libs.Constants;
+import net.minecraft.launchwrapper.Launch;
 
 public final class ASMUtils {
 

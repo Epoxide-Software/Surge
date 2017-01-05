@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.text.WordUtils;
+
+import net.minecraft.util.text.TextFormatting;
 
 public class TextUtils {
 
