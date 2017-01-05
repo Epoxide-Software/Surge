@@ -57,10 +57,4 @@ public class FeatureDisableAnimation extends Feature {
 
         nbt.setBoolean("animationDisabled", disableAnimations);
     }
-
-    @Override
-    public boolean enabledByDefault () {
-
-        return false;
-    }
 }
