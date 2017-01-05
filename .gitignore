@@ -2,9 +2,12 @@
 *.iml
 *.ipr
 *.iws
-/output
+*.classpath
+*.project
+*.prefs
+*.launch
 
-#ForgeGradle
+/output
 /build
 /.gradle
 /eclipse/assets
@@ -12,3 +15,4 @@
 /src/main/java/net/minecraft
 /out
 /run
+/bin
