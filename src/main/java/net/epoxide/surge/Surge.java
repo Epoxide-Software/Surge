@@ -1,8 +1,11 @@
 package net.epoxide.surge;
 
+import java.io.File;
+
 import net.epoxide.surge.common.ProxyCommon;
 import net.epoxide.surge.features.Feature;
 import net.epoxide.surge.features.FeatureManager;
+import net.epoxide.surge.handler.ConfigurationHandler;
 import net.epoxide.surge.handler.PersistentDataHandler;
 import net.epoxide.surge.libs.Constants;
 import net.minecraftforge.common.MinecraftForge;

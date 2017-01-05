@@ -1,5 +1,6 @@
 package net.epoxide.surge.features;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,5 +52,18 @@ public class FeatureManager {
             feature.configName = name.toLowerCase().replace(' ', '_');
             FEATURES.add(feature);
         }
+    }
+
+    public static Feature getFeature (Class<? extends Feature> f) {
+        if(FEATURES.size() == 0) {
+            ConfigurationHandler.initConfig(new File("config/surge.cfg"));
+            FeatureManager.initFeatures();
+            ConfigurationHandler.syncConfig();
+        }
+        for (Feature feature : FEATURES) {
+            if (feature.getClass() == f)
+                return feature;
+        }
+        return null;
     }
 }

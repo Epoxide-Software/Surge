@@ -1,5 +1,9 @@
 package net.epoxide.surge.asm;
 
+import net.epoxide.surge.features.Feature;
+import net.epoxide.surge.features.FeatureManager;
+import net.epoxide.surge.features.animation.FeatureDisableAnimation;
+import net.epoxide.surge.features.loadtime.FeatureLoadTimes;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -11,15 +15,23 @@ public class SurgeTransformerManager implements IClassTransformer {
     public byte[] transform (String name, String transformedName, byte[] classBytes) {
 
         if (transformedName.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite")) {
-            final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-            this.transformUpdateAnimation(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_94219_l" : "updateAnimation", "()V"));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+            Feature f = FeatureManager.getFeature(FeatureDisableAnimation.class);
+            if (f != null && f.enabled) {
+
+                final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+                this.transformUpdateAnimation(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_94219_l" : "updateAnimation", "()V"));
+                return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+            }
         }
 
         if (transformedName.equals("net.minecraftforge.fml.common.LoadController")) {
-            final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-            this.transformSendEventToModContainer(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+            Feature f = FeatureManager.getFeature(FeatureLoadTimes.class);
+            if (f != null && f.enabled) {
+
+                final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+                this.transformSendEventToModContainer(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
+                return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+            }
         }
         return classBytes;
     }

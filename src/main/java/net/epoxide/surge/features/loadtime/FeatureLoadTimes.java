@@ -22,9 +22,6 @@ import org.apache.commons.lang3.SystemUtils;
  */
 public class FeatureLoadTimes extends Feature {
 
-    public String CLASS_LOAD_CONTROLLER;
-    //    public Mapping METHOD_SEND_EVENT_TO_MOD_CONTAINER;
-
     /**
      * A map that holds the load time of all mods, at various stages.
      */

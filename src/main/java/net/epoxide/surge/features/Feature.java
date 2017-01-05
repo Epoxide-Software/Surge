@@ -8,7 +8,7 @@ public class Feature {
     /**
      * Whether or not this feature is enabled.
      */
-    protected boolean enabled;
+    public boolean enabled;
 
     /**
      * The category name used for this feature in the config file.
