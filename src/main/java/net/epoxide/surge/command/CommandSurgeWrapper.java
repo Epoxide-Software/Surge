@@ -78,11 +78,10 @@ public class CommandSurgeWrapper extends CommandBase {
     public List<String> getTabCompletionOptions (MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
 
         if (args.length == 1) {
-            Set<String> set = subCommands.keySet();
-            return getListOfStringsMatchingLastWord(args, (String[]) set.toArray(new String[set.size()]));
+            final Set<String> set = subCommands.keySet();
+            return getListOfStringsMatchingLastWord(args, set.toArray(new String[set.size()]));
         }
-        else {
+        else
             return Collections.emptyList();
-        }
     }
 }

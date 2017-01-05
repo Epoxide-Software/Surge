@@ -160,7 +160,7 @@ public final class InstructionComparator {
      * @param node2 The second IntInsnNode to compare.
      *
      * @return boolean: True if the instructions share the same operand, or if either operand
-     * is -1.
+     *         is -1.
      */
     public static boolean intInsnEqual (IntInsnNode node1, IntInsnNode node2) {
 
@@ -177,7 +177,7 @@ public final class InstructionComparator {
      * @param insn2 The second LdcInsnNode to compare.
      *
      * @return boolean: True if the instructions are loading the same constant, or if either is
-     * loading "~".
+     *         loading "~".
      */
     public static boolean ldcInsnEqual (LdcInsnNode insn1, LdcInsnNode insn2) {
 
@@ -193,7 +193,7 @@ public final class InstructionComparator {
      * @param insn2 The second MethodInsnNode to compare.
      *
      * @return boolean True if the instructions share the same owner, the same name, and the
-     * same description.
+     *         same description.
      */
     public static boolean methodInsnEqual (MethodInsnNode insn1, MethodInsnNode insn2) {
 
@@ -209,7 +209,7 @@ public final class InstructionComparator {
      * @param insn2 The second TypeInsnNode to compare.
      *
      * @return boolean: True if the instructions share the same description, or if either
-     * description is ~.
+     *         description is ~.
      */
     public static boolean typeInsnEqual (TypeInsnNode insn1, TypeInsnNode insn2) {
 
@@ -226,7 +226,7 @@ public final class InstructionComparator {
      * @param insn2 The second VarInsnNode to compare.
      *
      * @return boolean True if the instructions share the same variable index, or if either
-     * instruction has an index of -1.
+     *         instruction has an index of -1.
      */
     public static boolean varInsnEqual (VarInsnNode insn1, VarInsnNode insn2) {
 
@@ -242,7 +242,7 @@ public final class InstructionComparator {
      * @param node2 The second IincInsnNode to compare.
      *
      * @return boolean True if the instructions share the same local variable index, and
-     * increment by the same amount.
+     *         increment by the same amount.
      */
     public static boolean iincInsnEqual (IincInsnNode node1, IincInsnNode node2) {
 

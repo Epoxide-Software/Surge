@@ -7,6 +7,7 @@ import java.util.List;
 import net.epoxide.surge.features.animation.FeatureDisableAnimation;
 import net.epoxide.surge.features.hideplayers.FeatureHidePlayer;
 import net.epoxide.surge.features.loadtime.FeatureLoadTimes;
+import net.epoxide.surge.features.pigsleep.FeaturePigmanSleep;
 import net.epoxide.surge.handler.ConfigurationHandler;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -55,15 +56,15 @@ public class FeatureManager {
     }
 
     public static Feature getFeature (Class<? extends Feature> f) {
-        if(FEATURES.size() == 0) {
+
+        if (FEATURES.size() == 0) {
             ConfigurationHandler.initConfig(new File("config/surge.cfg"));
             FeatureManager.initFeatures();
             ConfigurationHandler.syncConfig();
         }
-        for (Feature feature : FEATURES) {
+        for (final Feature feature : FEATURES)
             if (feature.getClass() == f)
                 return feature;
-        }
         return null;
     }
 }

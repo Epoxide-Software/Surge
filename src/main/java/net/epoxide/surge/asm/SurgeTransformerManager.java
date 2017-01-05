@@ -27,7 +27,7 @@ public class SurgeTransformerManager implements IClassTransformer {
     public byte[] transform (String name, String transformedName, byte[] classBytes) {
 
         if (transformedName.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite")) {
-            Feature f = FeatureManager.getFeature(FeatureDisableAnimation.class);
+            final Feature f = FeatureManager.getFeature(FeatureDisableAnimation.class);
             if (f != null && f.enabled) {
 
                 final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
@@ -37,7 +37,7 @@ public class SurgeTransformerManager implements IClassTransformer {
         }
 
         if (transformedName.equals("net.minecraftforge.fml.common.LoadController")) {
-            Feature f = FeatureManager.getFeature(FeatureLoadTimes.class);
+            final Feature f = FeatureManager.getFeature(FeatureLoadTimes.class);
             if (f != null && f.enabled) {
 
                 final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);

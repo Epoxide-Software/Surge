@@ -15,7 +15,7 @@ public class PlayerUtils {
     /**
      * A cache for storing known username uuid pairs.
      */
-    public static BiMap<String, UUID> PROFILE_CACHE = HashBiMap.<String, UUID>create();
+    public static BiMap<String, UUID> PROFILE_CACHE = HashBiMap.<String, UUID> create();
 
     /**
      * Attempts to get the username associated with a UUID from Mojang. If no username is

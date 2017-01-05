@@ -35,9 +35,8 @@ public class FeatureDisableAnimation extends Feature {
 
     /**
      * Hook for checking if animations should be disabled. If this returns true, animated
-     * textures will stay at their first frame.
-     * <p>
-     * WARNING: This method is referenced directly through ASM. Take care when editing it.
+     * textures will stay at their first frame. <p> WARNING: This method is referenced directly
+     * through ASM. Take care when editing it.
      *
      * @return Whether or not animations should play.
      */

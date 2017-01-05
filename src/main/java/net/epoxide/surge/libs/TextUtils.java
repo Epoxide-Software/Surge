@@ -16,12 +16,12 @@ public class TextUtils {
     /**
      * A map for getting a ChatFormat to be quickly retrieved based on its character value.
      */
-    private static final Map<Character, ChatFormat> CHARACTER_TO_FORMAT = new HashMap<Character, ChatFormat>();
+    private static final Map<Character, ChatFormat> CHARACTER_TO_FORMAT = new HashMap<>();
 
     /**
      * A map for getting a ChatFormat quickly by using its name.
      */
-    private static final Map<String, ChatFormat> NAME_TO_FORMAT = new HashMap<String, ChatFormat>();
+    private static final Map<String, ChatFormat> NAME_TO_FORMAT = new HashMap<>();
 
     /**
      * The prefix character used for formatting codes.
@@ -41,16 +41,16 @@ public class TextUtils {
      * when working with Minecraft.
      *
      * @param string: The string being split into multiple lines. It's recommended to use
-     * StatCollector.translateToLocal() for this so multiple languages will be
-     * supported.
+     *        StatCollector.translateToLocal() for this so multiple languages will be
+     *        supported.
      * @param lnLength: The ideal size for each line of text.
      * @param wrapLongWords: If true the ideal size will be exact, potentially splitting words
-     * on the end of each line.
+     *        on the end of each line.
      * @param list: A list to add each line of text to. An good example of such list would be
-     * the list of tooltips on an item.
+     *        the list of tooltips on an item.
      *
      * @return List: The same List instance provided however the string provided will be
-     * wrapped to the ideal line length and then added.
+     *         wrapped to the ideal line length and then added.
      */
     public static List<String> wrapStringToList (String string, int lnLength, boolean wrapLongWords, List<String> list) {
 
@@ -67,16 +67,16 @@ public class TextUtils {
      * when working with Minecraft.
      *
      * @param string: The string being split into multiple lines. It's recommended to use
-     * StatCollector.translateToLocal() for this so multiple languages will be
-     * supported.
+     *        StatCollector.translateToLocal() for this so multiple languages will be
+     *        supported.
      * @param lnLength: The ideal size for each line of text.
      * @param wrapLongWords: If true the ideal size will be exact, potentially splitting words
-     * on the end of each line.
+     *        on the end of each line.
      * @param format: A list to add each line of text to. An good example of such list would be
-     * the list of tooltips on an item.
+     *        the list of tooltips on an item.
      *
      * @return List: The same List instance provided however the string provided will be
-     * wrapped to the ideal line length and then added.
+     *         wrapped to the ideal line length and then added.
      */
     public static List<String> wrapStringToListWithFormat (String string, int lnLength, boolean wrapLongWords, List<String> list, TextFormatting format) {
 

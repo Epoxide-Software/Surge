@@ -49,7 +49,7 @@ public final class ASMUtils {
      *
      * @param classNode: An instance of the ClassNode you wish to convert into a byte array.
      * @param flags: The flags to use when converting the ClassNode. These are generally
-     * COMPUTE_FRAMES and COMPUTE_MAXS.
+     *        COMPUTE_FRAMES and COMPUTE_MAXS.
      *
      * @return byte[]: A byte array representation of the ClassNode.
      */
@@ -102,10 +102,10 @@ public final class ASMUtils {
      * @param classNode: An instance of the ClassNode to go looking through.
      * @param methodName: The name of the desired method.
      * @param descriptor: The descriptor for the method, used to find a specific version of the
-     * desired method.
+     *        desired method.
      *
      * @return MethodNode: A MethodNode which represents the desired method. If this method can
-     * not be found, a MethodNotFoundException will be thrown and the game will stop.
+     *         not be found, a MethodNotFoundException will be thrown and the game will stop.
      */
 
     public static MethodNode getMethodFromClass (ClassNode classNode, String methodName, String descriptor) {
@@ -124,10 +124,10 @@ public final class ASMUtils {
      *
      * @param haystack: A complete list of instructions which is being searched through.
      * @param needle: A small list of instructions which represents a very specific part of the
-     * larger instruction list.
+     *        larger instruction list.
      *
      * @return AbstractInsnNode: The first instruction node from the specified list of
-     * instructions. (the needle)
+     *         instructions. (the needle)
      */
     public static AbstractInsnNode findFirstNodeFromNeedle (InsnList haystack, InsnList needle) {
 
@@ -145,10 +145,10 @@ public final class ASMUtils {
      *
      * @param haystack: A large list of instructions which is being searched through.
      * @param needle: A small list of instructions which represents a very specific part of the
-     * larger instruction list.
+     *        larger instruction list.
      *
      * @return AbstractInsnNode: The last instruction node from the specified list of
-     * instructions. (the needle)
+     *         instructions. (the needle)
      */
     public static AbstractInsnNode findLastNodeFromNeedle (InsnList haystack, InsnList needle) {
 
@@ -167,7 +167,7 @@ public final class ASMUtils {
      *
      * @param haystack: A large list of instructions which is being searched through.
      * @param needle: A specific list of instructions which are to be removed from the larger
-     * instruction list.
+     *        instruction list.
      */
     public static void removeNeedleFromHaystack (InsnList haystack, InsnList needle) {
 

@@ -75,7 +75,7 @@ public class FeatureLoadTimes extends Feature {
                 writer.write(String.format("#%s - %.2f sec", key, LOAD_TOTAL_TIME.get(key) / 1000d) + SystemUtils.LINE_SEPARATOR);
 
                 final List<LoadTime> times = LOAD_TIMES.get(key);
-                times.sort((a, b) -> a.getTime() < b.getTime() ? 1 : a.getTime() == b.getTime() ? 0 : -1);
+                times.sort( (a, b) -> a.getTime() < b.getTime() ? 1 : a.getTime() == b.getTime() ? 0 : -1);
 
                 for (final LoadTime time : times)
                     writer.write(time.toString() + SystemUtils.LINE_SEPARATOR);
