@@ -27,102 +27,102 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FeatureHidePlayer extends Feature {
-    
+
     /**
      * A list containing the UUID of every whitelisted player.
      */
     private static final List<UUID> WHITELISTED = new ArrayList<>();
-    
+
     /**
      * The UUID of the client player. Used to make sure the client player is always rendered.
      */
     private static UUID clientID = null;
-    
+
     /**
      * The flag for whether or not this feature is enabled. Toggled using the /surge
      * hideplayers
      */
     private static boolean hidePlayers = false;
-    
+
     @Override
     public void onInit () {
-        
+
         clientID = PlayerUtils.fixStrippedUUID(Minecraft.getMinecraft().getSession().getPlayerID());
         CommandSurgeWrapper.addCommand(new CommandHide());
         CommandSurgeWrapper.addCommand(new CommandWhitelist());
     }
-    
+
     @SubscribeEvent
     public void onPlayerPreRender (RenderPlayerEvent.Pre event) {
-        
+
         if (!event.getEntityPlayer().getUniqueID().equals(clientID) && hidePlayers && !WHITELISTED.contains(event.getEntityPlayer().getUniqueID()))
             event.setCanceled(true);
     }
-    
+
     @SubscribeEvent
     public void onSpecialPreRender (@SuppressWarnings("deprecation") RenderPlayerEvent.Specials.Pre event) {
-        
+
         if (!event.getEntityPlayer().getUniqueID().equals(clientID) && hidePlayers && !WHITELISTED.contains(event.getEntityPlayer().getUniqueID()))
             event.setCanceled(true);
     }
-    
+
     /**
      * Gets access to the whitelist.
-     * 
+     *
      * @return The player whitelist.
      */
     public static List<UUID> getWhitelist () {
-        
+
         return WHITELISTED;
     }
-    
+
     /**
      * Checks if players should be hidden.
-     * 
+     *
      * @return Whether or not players are being hidden.
      */
     public static boolean isHiding () {
-        
+
         return hidePlayers;
     }
-    
+
     /**
      * Toggles whether or not players should be hidden.
      */
     public static void toggleHiding () {
-        
+
         hidePlayers = !hidePlayers;
     }
-    
+
     @Override
     public boolean usesEvents () {
-        
+
         return true;
     }
-    
+
     @Override
     public void readNBT (NBTTagCompound nbt) {
-        
+
         hidePlayers = nbt.getBoolean("hidePlayers");
         final NBTTagList list = nbt.getTagList("hidePlayers", 8);
-        
+
         for (int index = 0; index < list.tagCount(); index++) {
-            
+
             final NBTTagString string = (NBTTagString) list.get(index);
             WHITELISTED.add(UUID.fromString(string.getString()));
         }
     }
-    
+
     @Override
     public void writeNBT (NBTTagCompound nbt) {
-        
+
         nbt.setBoolean("hidePlayers", hidePlayers);
-        
+
         final NBTTagList list = new NBTTagList();
-        
+
         for (final UUID uuid : WHITELISTED)
             list.appendTag(new NBTTagString(uuid.toString()));
-            
+
         nbt.setTag("playerWhitelist", list);
     }
 }

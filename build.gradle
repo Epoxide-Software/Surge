@@ -61,16 +61,16 @@ processResources {
 
         exclude 'mcmod.info'
     }
-    
+
     rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
 jar {
 
-	manifest {
-	
-		attributes 'FMLAT': 'surge_at.cfg', "FMLCorePlugin": "net.epoxide.surge.asm.SurgeLoadingPlugin", "FMLCorePluginContainsFMLMod": "true"
-	}
+    manifest {
+
+        attributes 'FMLAT': 'surge_at.cfg', "FMLCorePlugin": "net.epoxide.surge.asm.SurgeLoadingPlugin", "FMLCorePluginContainsFMLMod": "true"
+    }
 }
 
 //Pulls the build version from a Java file.
@@ -84,24 +84,24 @@ String getVersionFromJava(File file) {
     def outfile = "";
     def ln = System.getProperty("line.separator")
 
-    String prefix = "public static final String VERSION_NUMBER = \"";
+    String prefix = "public static final String VERSION = \"";
     file.eachLine {
         String s ->
 
             String v = s.trim();
 
-        if (v.startsWith(prefix)) {
+            if (v.startsWith(prefix)) {
 
-            v = v.substring(prefix.length(), v.length() - 2);
-            String[] pts = v.split("\\.");
+                v = v.substring(prefix.length(), v.length() - 2);
+                String[] pts = v.split("\\.");
 
-            release = pts[0];
-            update = pts[1];
-            patch = pts[2];
-            s = s.replaceAll(".0\";", ".${build}\";");
-        }
+                release = pts[0];
+                update = pts[1];
+                patch = pts[2];
+                s = s.replaceAll(".0\";", ".${build}\";");
+            }
 
-        outfile += (s + ln);
+            outfile += (s + ln);
     }
 
     file.write(outfile);
@@ -177,17 +177,17 @@ curseforge {
         changelog = "All changes can be found here: https://github.com/Epoxide-Software/Surge/commits/master/";
 
         addGameVersion json.mc_version
-        
+
         //Adds main jar, deobf jar, source jar, and javadoc jar to the upload.
         mainArtifact(jar) {
-          
+
             relations {
 
                 //Adds the file relations to the upload.
                 requiredLibrary 'bookshelf'
             }
         }
-        
+
         addArtifact(deobfJar)
         addArtifact(sourcesJar)
         addArtifact(javadocJar)

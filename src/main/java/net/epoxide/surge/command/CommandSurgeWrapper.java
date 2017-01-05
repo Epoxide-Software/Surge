@@ -1,5 +1,13 @@
 package net.epoxide.surge.command;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nullable;
+
 import net.epoxide.surge.libs.TextUtils.ChatFormat;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
@@ -7,9 +15,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-
-import javax.annotation.Nullable;
-import java.util.*;
 
 public class CommandSurgeWrapper extends CommandBase {
 
@@ -23,31 +28,31 @@ public class CommandSurgeWrapper extends CommandBase {
      *
      * @param command The surge sub command to register.
      */
-    public static void addCommand(SurgeCommand command) {
+    public static void addCommand (SurgeCommand command) {
 
         subCommands.put(command.getSubName(), command);
     }
 
     @Override
-    public String getCommandName() {
+    public String getCommandName () {
 
         return "surge";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getCommandUsage (ICommandSender sender) {
 
         return "command.surge.usage";
     }
 
     @Override
-    public int getRequiredPermissionLevel() {
+    public int getRequiredPermissionLevel () {
 
         return 0;
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
+    public void execute (MinecraftServer server, ICommandSender sender, String[] args) {
 
         if (args.length > 0 && subCommands.containsKey(args[0]))
             subCommands.get(args[0]).execute(sender, Arrays.copyOfRange(args, 1, args.length));
@@ -61,7 +66,7 @@ public class CommandSurgeWrapper extends CommandBase {
      *
      * @return A string that contains descriptions for all sub commands for surge.
      */
-    private String getSubCommandDescriptions() {
+    private String getSubCommandDescriptions () {
 
         final StringBuilder builder = new StringBuilder(I18n.format("command.surge.usage"));
         subCommands.values().forEach(command -> builder.append("\n" + ChatFormat.GREEN + "/surge " + command.getUsage() + ChatFormat.RESET + " - " + command.getDescription()));
@@ -69,11 +74,13 @@ public class CommandSurgeWrapper extends CommandBase {
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+    public List<String> getTabCompletionOptions (MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+
         if (args.length == 1) {
             Set<String> set = subCommands.keySet();
             return getListOfStringsMatchingLastWord(args, (String[]) set.toArray(new String[set.size()]));
-        } else {
+        }
+        else {
             return Collections.emptyList();
         }
     }

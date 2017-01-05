@@ -43,7 +43,7 @@ public class FeatureDisableAnimation extends Feature {
      */
     public static boolean animationDisabled () {
 
-           return disableAnimations;
+        return disableAnimations;
     }
 
     @Override

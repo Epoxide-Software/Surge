@@ -11,47 +11,47 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.TransformerExclusions("net.epoxide.surge.asm")
 // Removing version as 1.9 and 1.10 are supported. @IFMLLoadingPlugin.MCVersion("1.10.2")
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
-    
+
     public static boolean loaded = false;
 
-    public SurgeLoadingPlugin() {
-        
+    public SurgeLoadingPlugin () {
+
         if (loaded)
             return; // FML Callback constructs this twice
-            
+
         ConfigurationHandler.initConfig(new File("config/surge.cfg"));
         FeatureManager.initFeatures();
         ConfigurationHandler.syncConfig();
         loaded = true;
     }
-    
+
     @Override
     public String[] getASMTransformerClass () {
-        
+
         return new String[] { SurgeTransformerManager.class.getName() };
     }
-    
+
     @Override
     public String getModContainerClass () {
-        
+
         return null;
     }
-    
+
     @Override
     public String getSetupClass () {
-        
+
         return null;
     }
-    
+
     @Override
     public void injectData (Map<String, Object> data) {
-        
+
         ASMUtils.isSrg = (Boolean) data.get("runtimeDeobfuscationEnabled");
     }
-    
+
     @Override
     public String getAccessTransformerClass () {
-        
+
         return null;
     }
 }
