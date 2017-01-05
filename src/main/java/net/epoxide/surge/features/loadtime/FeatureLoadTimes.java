@@ -40,7 +40,7 @@ public class FeatureLoadTimes extends Feature {
     @Override
     public void onFMLFinished () {
 
-        final File surgeDirectory = new File("surge");
+        final File surgeDirectory = new File("Surge");
         final String timestamp = TIME_FORMAT.format(new Date());
 
         if (!surgeDirectory.exists())
