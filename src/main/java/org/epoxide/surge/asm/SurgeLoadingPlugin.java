@@ -5,7 +5,7 @@ import java.util.Map;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.SortingIndex(1001)
-@IFMLLoadingPlugin.TransformerExclusions("net.epoxide.surge.asm")
+@IFMLLoadingPlugin.TransformerExclusions("org.epoxide.surge.asm")
 // Removing version as 1.9 and 1.10 are supported. @IFMLLoadingPlugin.MCVersion("1.10.2")
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
 

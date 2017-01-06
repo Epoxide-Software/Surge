@@ -4,22 +4,11 @@ import org.epoxide.surge.features.Feature;
 import org.epoxide.surge.features.FeatureManager;
 import org.epoxide.surge.features.animation.FeatureDisableAnimation;
 import org.epoxide.surge.features.loadtime.FeatureLoadTimes;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.LineNumberNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TypeInsnNode;
-import org.objectweb.asm.tree.VarInsnNode;
 
 import net.minecraft.launchwrapper.IClassTransformer;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
 
 public class SurgeTransformerManager implements IClassTransformer {
 
@@ -58,7 +47,7 @@ public class SurgeTransformerManager implements IClassTransformer {
 
         final InsnList newInstr = new InsnList();
 
-        newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/animation/FeatureDisableAnimation", "animationDisabled", "()Z", false));
+        newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "org/epoxide/surge/features/animation/FeatureDisableAnimation", "animationDisabled", "()Z", false));
         final LabelNode L1 = new LabelNode();
         newInstr.add(new JumpInsnNode(Opcodes.IFEQ, L1));
         newInstr.add(new LabelNode());
@@ -112,7 +101,7 @@ public class SurgeTransformerManager implements IClassTransformer {
             newInstr.add(new VarInsnNode(Opcodes.ALOAD, 1));
             newInstr.add(new VarInsnNode(Opcodes.LLOAD, 5));
             newInstr.add(new VarInsnNode(Opcodes.LLOAD, 7));
-            newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "net/epoxide/surge/features/loadtime/FeatureLoadTimes", "registerLoadingTime", "(Lnet/minecraftforge/fml/common/ModContainer;Lnet/minecraftforge/fml/common/event/FMLEvent;JJ)V", false));
+            newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "org/epoxide/surge/features/loadtime/FeatureLoadTimes", "registerLoadingTime", "(Lnet/minecraftforge/fml/common/ModContainer;Lnet/minecraftforge/fml/common/event/FMLEvent;JJ)V", false));
             newInstr.add(new LabelNode());
 
             method.instructions.insert(pointer, newInstr);
