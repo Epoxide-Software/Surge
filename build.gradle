@@ -15,18 +15,16 @@ buildscript {
 
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.7"
     }
 }
 
 apply plugin: "maven"
 
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: "com.matthewprenger.cursegradle"
 
-group = "net.epoxide.surge"
+group = "org.epoxide.surge"
 archivesBaseName = "Surge"
-version = getVersionFromJava(file("src/main/java/net/epoxide/surge/libs/Constants.java"))
+version = getVersionFromJava(file("src/main/java/org/epoxide/surge/libs/Constants.java"))
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -69,7 +67,7 @@ jar {
 
     manifest {
 
-        attributes 'FMLAT': 'surge_at.cfg', "FMLCorePlugin": "net.epoxide.surge.asm.SurgeLoadingPlugin", "FMLCorePluginContainsFMLMod": "true"
+        attributes 'FMLAT': 'surge_at.cfg', "FMLCorePlugin": "org.epoxide.surge.asm.SurgeLoadingPlugin", "FMLCorePluginContainsFMLMod": "true"
     }
 }
 
@@ -159,37 +157,5 @@ if (JavaVersion.current().isJava8Compatible()) {
 
             options.addStringOption('Xdoclint:none', '-quiet')
         }
-    }
-}
-
-//Provides the basic CurseForge upload details
-curseforge {
-
-    //Sets the API from the system environment, if available.
-    apiKey = System.getenv("curseForgeApiKey") ? System.getenv("curseForgeApiKey") : "0";
-
-    project {
-
-        //Sets the Project ID from the system environment, if available.
-        id = System.getenv("projectId") ? System.getenv("projectId") : "0";
-
-        releaseType = "alpha";
-        changelog = "All changes can be found here: https://github.com/Epoxide-Software/Surge/commits/master/";
-
-        addGameVersion json.mc_version
-
-        //Adds main jar, deobf jar, source jar, and javadoc jar to the upload.
-        mainArtifact(jar) {
-
-            relations {
-
-                //Adds the file relations to the upload.
-                requiredLibrary 'bookshelf'
-            }
-        }
-
-        addArtifact(deobfJar)
-        addArtifact(sourcesJar)
-        addArtifact(javadocJar)
     }
 }
