@@ -4,14 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.epoxide.surge.Surge;
-import net.epoxide.surge.features.animation.FeatureDisableAnimation;
-import net.epoxide.surge.features.hideplayers.FeatureHidePlayer;
+import net.epoxide.surge.client.ProxyClient;
 import net.epoxide.surge.features.loadtime.FeatureLoadTimes;
-import net.epoxide.surge.features.pigsleep.FeaturePigmanSleep;
 import net.epoxide.surge.handler.ConfigurationHandler;
-import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class FeatureManager {
 
@@ -26,7 +22,9 @@ public class FeatureManager {
      */
     public static void initFeatures () {
 
-        Surge.proxy.registerFeatures();
+        if (FMLCommonHandler.instance().getSide().isClient())
+            ProxyClient.registerClient();
+
         registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");
     }
 
