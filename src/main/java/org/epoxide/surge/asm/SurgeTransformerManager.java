@@ -40,6 +40,12 @@ public class SurgeTransformerManager implements IClassTransformer {
                 return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
             }
         }
+
+        if (transformedName.equals("net.minecraft.client.renderer.RenderGlobal")) {
+            final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+            this.transformRenderClouds(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_180447_b" : "renderClouds", "(FI)V"));
+            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+        }
         return classBytes;
     }
 
@@ -55,6 +61,42 @@ public class SurgeTransformerManager implements IClassTransformer {
         catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * Transforms the renderClouds method to take gpu cloud rendering into account.
+     *
+     * @param method RenderGlobal#renderClouds
+     */
+    private void transformRenderClouds (MethodNode method) {
+
+        final InsnList needle = new InsnList();
+        needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/RenderGlobal", ASMUtils.isSrg ? "field_72777_q" : "mc", "Lnet/minecraft/client/Minecraft;"));
+        needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/Minecraft", ASMUtils.isSrg ? "field_71441_e" : "theWorld", "Lnet/minecraft/client/multiplayer/WorldClient;"));
+        needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        needle.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/RenderGlobal", ASMUtils.isSrg ? "field_72777_q" : "mc", "Lnet/minecraft/client/Minecraft;"));
+        needle.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraftforge/client/IRenderHandler", "render", "(FLnet/minecraft/client/multiplayer/WorldClient;Lnet/minecraft/client/Minecraft;)V", false));
+        needle.add(new LabelNode());
+        needle.add(new LineNumberNode(-1, new LabelNode()));
+        needle.add(new InsnNode(Opcodes.RETURN));
+        needle.add(new LabelNode());
+        needle.add(new LineNumberNode(-1, new LabelNode()));
+
+        final AbstractInsnNode pointer = ASMUtils.findLastNodeFromNeedle(method.instructions, needle);
+        final InsnList newInstr = new InsnList();
+
+        newInstr.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "org/epoxide/surge/features/gpucloud/FeatureGPUClouds", "getInstance", "()Lorg/epoxide/surge/features/gpucloud/CloudRenderer;", false));
+        newInstr.add(new VarInsnNode(Opcodes.FLOAD, 1));
+        newInstr.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        newInstr.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/renderer/RenderGlobal", ASMUtils.isSrg ? "field_72773_u" : "cloudTickCounter", "I"));
+        newInstr.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "org/epoxide/surge/features/gpucloud/CloudRenderer", "render", "(FI)Z", false));
+        final LabelNode label5 = new LabelNode();
+        newInstr.add(new JumpInsnNode(Opcodes.IFEQ, label5));
+        newInstr.add(new InsnNode(Opcodes.RETURN));
+        newInstr.add(label5);
+
+        method.instructions.insert(pointer, newInstr);
     }
 
     /**
