@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.epoxide.surge.asm.ASMUtils;
 import org.epoxide.surge.features.Feature;
 
 import net.minecraft.block.state.IBlockState;
@@ -57,7 +58,7 @@ public class FeaturePigmanSleep extends Feature {
                 return;
             }
 
-            final List<EntityMob> list = entityPlayer.worldObj.<EntityMob> getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(event.getPos().getX() - 8.0D, event.getPos().getY() - 5.0D, event.getPos().getZ() - 8.0D, event.getPos().getX() + 8.0D, event.getPos().getY() + 5.0D, event.getPos().getZ() + 8.0D));
+            final List<EntityMob> list = entityPlayer.worldObj.<EntityMob>getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(event.getPos().getX() - 8.0D, event.getPos().getY() - 5.0D, event.getPos().getZ() - 8.0D, event.getPos().getX() + 8.0D, event.getPos().getY() + 5.0D, event.getPos().getZ() + 8.0D));
             final List<EntityMob> mobList = new ArrayList<>();
 
             for (final EntityMob mob : list) {
@@ -81,7 +82,7 @@ public class FeaturePigmanSleep extends Feature {
 
         try {
 
-            final Method m = Entity.class.getDeclaredMethod("setSize", float.class, float.class);
+            final Method m = Entity.class.getDeclaredMethod(ASMUtils.isSrg ? "func_70105_a" : "setSize", float.class, float.class);
             m.setAccessible(true);
             m.invoke(entityPlayer, 0.2f, 0.2f);
         }
