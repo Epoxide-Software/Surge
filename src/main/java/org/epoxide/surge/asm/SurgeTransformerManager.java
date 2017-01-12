@@ -1,11 +1,17 @@
 package org.epoxide.surge.asm;
 
+import java.util.Map;
+
 import org.epoxide.surge.features.Feature;
 import org.epoxide.surge.features.FeatureManager;
 import org.epoxide.surge.features.animation.FeatureDisableAnimation;
 import org.epoxide.surge.features.loadtime.FeatureLoadTimes;
 
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.MetadataCollection;
+import net.minecraftforge.fml.common.ModMetadata;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
@@ -15,7 +21,7 @@ public class SurgeTransformerManager implements IClassTransformer {
     @Override
     public byte[] transform (String name, String transformedName, byte[] classBytes) {
 
-        if (transformedName.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite")) {
+        if (transformedName.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite") && !hasOptifine()) {
             final Feature f = FeatureManager.getFeature(FeatureDisableAnimation.class);
             if (f != null && f.enabled) {
 
@@ -35,6 +41,20 @@ public class SurgeTransformerManager implements IClassTransformer {
             }
         }
         return classBytes;
+    }
+
+    public boolean hasOptifine () {
+
+        try {
+            Class<?> optifineConfig = Class.forName("Config", false, Loader.instance().getModClassLoader());
+            String optifineVersion = (String) optifineConfig.getField("VERSION").get(null);
+            Map<String, Object> dummyOptifineMeta = ImmutableMap.<String, Object>builder().put("name", "Optifine").put("version", optifineVersion).build();
+            ModMetadata optifineMetadata = MetadataCollection.from(getClass().getResourceAsStream("optifinemod.info"), "optifine").getMetadataForId("optifine", dummyOptifineMeta);
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 
     /**
