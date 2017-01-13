@@ -5,6 +5,7 @@ import java.util.Map;
 import org.epoxide.surge.features.Feature;
 import org.epoxide.surge.features.FeatureManager;
 import org.epoxide.surge.features.animation.FeatureDisableAnimation;
+import org.epoxide.surge.features.gpucloud.FeatureGPUClouds;
 import org.epoxide.surge.features.loadtime.FeatureLoadTimes;
 
 import com.google.common.collect.ImmutableMap;
@@ -23,28 +24,35 @@ public class SurgeTransformerManager implements IClassTransformer {
 
         if (transformedName.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite") && !hasOptifine()) {
             final Feature f = FeatureManager.getFeature(FeatureDisableAnimation.class);
-            if (f != null && f.enabled) {
-
-                final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-                this.transformUpdateAnimation(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_94219_l" : "updateAnimation", "()V"));
-                return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+            if (f != null) {
+                if (f.enabled) {
+                    final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+                    this.transformUpdateAnimation(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_94219_l" : "updateAnimation", "()V"));
+                    return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+                }
             }
         }
 
         if (transformedName.equals("net.minecraftforge.fml.common.LoadController")) {
             final Feature f = FeatureManager.getFeature(FeatureLoadTimes.class);
-            if (f != null && f.enabled) {
-
-                final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-                this.transformSendEventToModContainer(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
-                return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+            if (f != null) {
+                if (f.enabled) {
+                    final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+                    this.transformSendEventToModContainer(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
+                    return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+                }
             }
         }
 
-        if (transformedName.equals("net.minecraft.client.renderer.RenderGlobal")) {
-            final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-            this.transformRenderClouds(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_180447_b" : "renderClouds", "(FI)V"));
-            return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+        if (transformedName.equals("net.minecraft.client.renderer.RenderGlobal") && !hasOptifine()) {
+            final Feature f = FeatureManager.getFeature(FeatureGPUClouds.class);
+            if (f != null) {
+                if (f.enabled) {
+                    final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+                    this.transformRenderClouds(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_180447_b" : "renderClouds", "(FI)V"));
+                    return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
+                }
+            }
         }
         return classBytes;
     }

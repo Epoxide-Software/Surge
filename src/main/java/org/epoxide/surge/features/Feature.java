@@ -1,7 +1,13 @@
 package org.epoxide.surge.features;
 
+import java.util.Map;
+
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.MetadataCollection;
+import net.minecraftforge.fml.common.ModMetadata;
 
 public class Feature {
 
@@ -92,5 +98,19 @@ public class Feature {
     public boolean enabledByDefault () {
 
         return true;
+    }
+
+    public boolean hasOptifine () {
+
+        try {
+            Class<?> optifineConfig = Class.forName("Config", false, Loader.instance().getModClassLoader());
+            String optifineVersion = (String) optifineConfig.getField("VERSION").get(null);
+            Map<String, Object> dummyOptifineMeta = ImmutableMap.<String, Object>builder().put("name", "Optifine").put("version", optifineVersion).build();
+            ModMetadata optifineMetadata = MetadataCollection.from(getClass().getResourceAsStream("optifinemod.info"), "optifine").getMetadataForId("optifine", dummyOptifineMeta);
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
     }
 }

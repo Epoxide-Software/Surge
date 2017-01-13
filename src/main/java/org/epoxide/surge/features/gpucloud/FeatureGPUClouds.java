@@ -27,7 +27,8 @@ public class FeatureGPUClouds extends Feature {
     @Override
     public void onInit () {
 
-        CommandSurgeWrapper.addCommand(new CommandClouds());
+        if (!hasOptifine())
+            CommandSurgeWrapper.addCommand(new CommandClouds());
     }
 
     /**

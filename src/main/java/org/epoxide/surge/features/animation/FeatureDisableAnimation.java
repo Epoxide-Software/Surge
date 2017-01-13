@@ -22,7 +22,8 @@ public class FeatureDisableAnimation extends Feature {
     @Override
     public void onInit () {
 
-        CommandSurgeWrapper.addCommand(new CommandAnimation());
+        if (!hasOptifine())
+            CommandSurgeWrapper.addCommand(new CommandAnimation());
     }
 
     /**
