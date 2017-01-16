@@ -61,6 +61,9 @@ public class PersistentDataHandler {
 
         try {
 
+            if (persistentData == null)
+                persistentData = new NBTTagCompound();
+            
             FeatureManager.FEATURES.forEach(feature -> feature.writeNBT(persistentData));
             CompressedStreamTools.write(persistentData, getSaveFile());
         }
