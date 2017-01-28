@@ -19,35 +19,28 @@ public class SurgeTransformerManager implements IClassTransformer {
 
         if (transformedName.equals("net.minecraft.client.renderer.texture.TextureAtlasSprite") && !FMLClientHandler.instance().hasOptifine()) {
             final Feature f = FeatureManager.getFeature(FeatureDisableAnimation.class);
-            if (f != null) {
-                if (f.enabled) {
-                    final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-                    this.transformUpdateAnimation(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_94219_l" : "updateAnimation", "()V"));
-                    return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
-                }
+            if (FeatureManager.isEnabled(f)) {
+                final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+                this.transformUpdateAnimation(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_94219_l" : "updateAnimation", "()V"));
+                return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
             }
         }
 
         if (transformedName.equals("net.minecraftforge.fml.common.LoadController")) {
             final Feature f = FeatureManager.getFeature(FeatureLoadTimes.class);
-            if (f != null) {
-                if (f.enabled) {
-                    final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-                    this.transformSendEventToModContainer(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
-                    return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
-                }
+            if (FeatureManager.isEnabled(f)) {
+                final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+                this.transformSendEventToModContainer(ASMUtils.getMethodFromClass(clazz, "sendEventToModContainer", "(Lnet/minecraftforge/fml/common/event/FMLEvent;Lnet/minecraftforge/fml/common/ModContainer;)V"));
+                return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
             }
         }
 
-
         if (transformedName.equals("net.minecraft.entity.player.EntityPlayerMP")) {
             final Feature f = FeatureManager.getFeature(FeatureBedBug.class);
-            if (f != null) {
-                if (f.enabled) {
-                    final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-                    this.transformWakeUpPlayer(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_70999_a" : "wakeUpPlayer", "(ZZZ)V"));
-                    return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
-                }
+            if (FeatureManager.isEnabled(f)) {
+                final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
+                this.transformWakeUpPlayer(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_70999_a" : "wakeUpPlayer", "(ZZZ)V"));
+                return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
             }
         }
         return classBytes;
@@ -56,7 +49,7 @@ public class SurgeTransformerManager implements IClassTransformer {
     private void transformWakeUpPlayer (MethodNode method) {
 
         final InsnList needle = new InsnList();
-        needle.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/entity/player/EntityPlayerMP", "isPlayerSleeping", "()Z", false));
+        needle.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/entity/player/EntityPlayerMP", ASMUtils.isSrg ? "func_70608_bn" : "isPlayerSleeping", "()Z", false));
         needle.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode()));
         needle.add(new LabelNode());
         needle.add(new LineNumberNode(-1, new LabelNode()));

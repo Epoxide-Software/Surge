@@ -49,7 +49,7 @@ public class FeatureManager {
             if (feature.getClass() == ff.getClass())
                 return;
 
-        feature.enabled = ConfigurationHandler.isFeatureEnabled(feature, name, description);
+        feature.enabled = ConfigurationHandler.isFeatureEnabled(feature, name, description) && (!feature.disableWithOptifine() || (feature.disableWithOptifine() && !FMLClientHandler.instance().hasOptifine()));
 
         if (feature.enabled) {
 
@@ -69,6 +69,15 @@ public class FeatureManager {
         FeatureManager.initFeatures();
         ConfigurationHandler.syncConfig();
 
-        return getFeature(f);
+        for (final Feature feature : FEATURES)
+            if (feature.getClass() == f)
+                return feature;
+
+        return null;
+    }
+
+    public static boolean isEnabled (Feature f) {
+
+        return f != null && f.enabled && (!f.disableWithOptifine() || (f.disableWithOptifine() && !FMLClientHandler.instance().hasOptifine()));
     }
 }
