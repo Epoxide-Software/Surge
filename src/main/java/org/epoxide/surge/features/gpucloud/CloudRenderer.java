@@ -3,10 +3,12 @@ package org.epoxide.surge.features.gpucloud;
 import java.nio.ByteBuffer;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -18,6 +20,7 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,7 +36,7 @@ import org.lwjgl.opengl.GL11;
  * @author Zaggy1024
  */
 @SideOnly(Side.CLIENT)
-public class CloudRenderer implements IResourceManagerReloadListener {
+public class CloudRenderer extends IRenderHandler implements IResourceManagerReloadListener {
 
     // Shared constants.
     private static final float PX_SIZE = 1 / 256F;
@@ -50,6 +53,7 @@ public class CloudRenderer implements IResourceManagerReloadListener {
 
     private static Minecraft MC;
     private static final ResourceLocation TEXTURE = new ResourceLocation("textures/environment/clouds.png");
+    private final RenderGlobal renderGlobal;
 
     private int displayList = -1;
     private net.minecraft.client.renderer.vertex.VertexBuffer vbo;
@@ -62,13 +66,171 @@ public class CloudRenderer implements IResourceManagerReloadListener {
 
     private boolean wasVbo = false;
 
-    public CloudRenderer () {
+    public CloudRenderer (RenderGlobal renderGlobal) {
 
         MC = Minecraft.getMinecraft();
         MinecraftForge.EVENT_BUS.register(this);
         final IResourceManager resourceManager = MC.getResourceManager();
         ((IReloadableResourceManager) resourceManager).registerReloadListener(this);
         this.COLOR_TEX = new DynamicTexture(1, 1);
+        this.renderGlobal = renderGlobal;
+    }
+
+    @Override
+    public void render (float partialTicks, WorldClient world, Minecraft mc) {
+
+        if (!MC.theWorld.provider.isSurfaceWorld())
+            return;
+
+        if (this.wasVbo != OpenGlHelper.useVbo() || this.cloudMode != MC.gameSettings.shouldRenderClouds() || (OpenGlHelper.useVbo() ? this.vbo == null : this.displayList < 0)) {
+            this.wasVbo = OpenGlHelper.useVbo();
+            this.cloudMode = MC.gameSettings.shouldRenderClouds();
+            this.rebuild();
+        }
+
+        final Entity entity = MC.getRenderViewEntity();
+        final double totalOffset = renderGlobal.cloudTickCounter + partialTicks;
+        final double x = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks + totalOffset * 0.03;
+        final double y = MC.theWorld.provider.getCloudHeight() - (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks) + 0.33;
+        double z = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
+
+        if (this.cloudMode == 2)
+            z += 0.33 * this.getScale();
+
+        final int scale = this.getScale();
+
+        // Integer UVs to translate the texture matrix by.
+        int offU = this.fullCoord(x, scale);
+        int offV = this.fullCoord(z, scale);
+
+        GlStateManager.pushMatrix();
+
+        // Translate by the remainder after the UV offset.
+        GlStateManager.translate(offU * scale - x, y, offV * scale - z);
+
+        // Modulo to prevent texture samples becoming inaccurate at extreme offsets.
+        offU = Math.floorMod(offU, this.texW);
+        offV = Math.floorMod(offV, this.texH);
+
+        // Translate the texture.
+        GlStateManager.matrixMode(GL11.GL_TEXTURE);
+        GlStateManager.translate(offU * PX_SIZE, offV * PX_SIZE, 0);
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+
+        GlStateManager.disableCull();
+
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
+        // Color multiplier.
+        final Vec3d color = MC.theWorld.getCloudColour(partialTicks);
+        float r = (float) color.xCoord;
+        float g = (float) color.yCoord;
+        float b = (float) color.zCoord;
+
+        if (MC.gameSettings.anaglyph) {
+
+            final float tempR = r * 0.3F + g * 0.59F + b * 0.11F;
+            final float tempG = r * 0.3F + g * 0.7F;
+            final float tempB = r * 0.3F + b * 0.7F;
+            r = tempR;
+            g = tempG;
+            b = tempB;
+        }
+
+        // Apply a color multiplier through a texture upload if shaders aren't supported.
+        this.COLOR_TEX.getTextureData()[0] = 255 << 24 | (int) (r * 255) << 16 | (int) (g * 255) << 8 | (int) (b * 255);
+        this.COLOR_TEX.updateDynamicTexture();
+
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.bindTexture(this.COLOR_TEX.getGlTextureId());
+        GlStateManager.enableTexture2D();
+
+        // Bind the clouds texture last so the shader's sampler2D is correct.
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+        MC.renderEngine.bindTexture(TEXTURE);
+
+        final ByteBuffer buffer = Tessellator.getInstance().getBuffer().getByteBuffer();
+
+        // Set up pointers for the display list/VBO.
+        if (OpenGlHelper.useVbo()) {
+
+            this.vbo.bindBuffer();
+
+            final int stride = FORMAT.getNextOffset();
+            GlStateManager.glVertexPointer(3, GL11.GL_FLOAT, stride, 0);
+            GlStateManager.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+            GlStateManager.glTexCoordPointer(2, GL11.GL_FLOAT, stride, 12);
+            GlStateManager.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+            GlStateManager.glColorPointer(4, GL11.GL_UNSIGNED_BYTE, stride, 20);
+            GlStateManager.glEnableClientState(GL11.GL_COLOR_ARRAY);
+        }
+        else {
+
+            buffer.limit(FORMAT.getNextOffset());
+
+            for (int i = 0; i < FORMAT.getElementCount(); i++)
+                FORMAT.getElements().get(i).getUsage().preDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
+
+            buffer.position(0);
+        }
+
+        // Depth pass to prevent insides rendering from the outside.
+        GlStateManager.colorMask(false, false, false, false);
+
+        if (OpenGlHelper.useVbo())
+            this.vbo.drawArrays(GL11.GL_QUADS);
+
+        else
+            GlStateManager.callList(this.displayList);
+
+        // Full render.
+        if (!MC.gameSettings.anaglyph)
+            GlStateManager.colorMask(true, true, true, true);
+
+        else
+            switch (EntityRenderer.anaglyphField) {
+
+                case 0:
+                    GlStateManager.colorMask(false, true, true, true);
+                    break;
+
+                case 1:
+                    GlStateManager.colorMask(true, false, false, true);
+                    break;
+            }
+
+        if (OpenGlHelper.useVbo())
+            this.vbo.drawArrays(GL11.GL_QUADS);
+
+        else
+            GlStateManager.callList(this.displayList);
+
+        // Unbind buffer and disable pointers.
+        if (OpenGlHelper.useVbo())
+            this.vbo.unbindBuffer();
+
+        buffer.limit(0);
+
+        for (int i = 0; i < FORMAT.getElementCount(); i++)
+            FORMAT.getElements().get(i).getUsage().postDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
+
+        buffer.position(0);
+
+        // Disable our coloring.
+        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+        GlStateManager.disableTexture2D();
+        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+
+        // Reset texture matrix.
+        GlStateManager.matrixMode(GL11.GL_TEXTURE);
+        GlStateManager.loadIdentity();
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+
+        GlStateManager.disableBlend();
+        GlStateManager.enableCull();
+
+        GlStateManager.popMatrix();
     }
 
     private int getScale () {
@@ -240,168 +402,6 @@ public class CloudRenderer implements IResourceManagerReloadListener {
     private int fullCoord (double coord, int scale) {
 
         return (int) coord / scale - (coord < 0 ? 1 : 0);
-    }
-
-    public boolean render (float partialTicks, int cloudTickCounter) {
-
-        if (!FeatureGPUClouds.shouldRenderClouds())
-            return false;
-
-        if (!MC.theWorld.provider.isSurfaceWorld())
-            return true;
-
-
-        if (this.wasVbo != OpenGlHelper.useVbo() || this.cloudMode != MC.gameSettings.shouldRenderClouds() || (OpenGlHelper.useVbo() ? this.vbo == null : this.displayList < 0)) {
-            this.wasVbo = OpenGlHelper.useVbo();
-            this.cloudMode = MC.gameSettings.shouldRenderClouds();
-            this.rebuild();
-        }
-
-        final Entity entity = MC.getRenderViewEntity();
-        final double totalOffset = cloudTickCounter + partialTicks;
-        final double x = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks + totalOffset * 0.03;
-        final double y = MC.theWorld.provider.getCloudHeight() - (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks) + 0.33;
-        double z = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
-
-        if (this.cloudMode == 2)
-            z += 0.33 * this.getScale();
-
-        final int scale = this.getScale();
-
-        // Integer UVs to translate the texture matrix by.
-        int offU = this.fullCoord(x, scale);
-        int offV = this.fullCoord(z, scale);
-
-        GlStateManager.pushMatrix();
-
-        // Translate by the remainder after the UV offset.
-        GlStateManager.translate(offU * scale - x, y, offV * scale - z);
-
-        // Modulo to prevent texture samples becoming inaccurate at extreme offsets.
-        offU = Math.floorMod(offU, this.texW);
-        offV = Math.floorMod(offV, this.texH);
-
-        // Translate the texture.
-        GlStateManager.matrixMode(GL11.GL_TEXTURE);
-        GlStateManager.translate(offU * PX_SIZE, offV * PX_SIZE, 0);
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-
-        GlStateManager.disableCull();
-
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-
-        // Color multiplier.
-        final Vec3d color = MC.theWorld.getCloudColour(partialTicks);
-        float r = (float) color.xCoord;
-        float g = (float) color.yCoord;
-        float b = (float) color.zCoord;
-
-        if (MC.gameSettings.anaglyph) {
-
-            final float tempR = r * 0.3F + g * 0.59F + b * 0.11F;
-            final float tempG = r * 0.3F + g * 0.7F;
-            final float tempB = r * 0.3F + b * 0.7F;
-            r = tempR;
-            g = tempG;
-            b = tempB;
-        }
-
-        // Apply a color multiplier through a texture upload if shaders aren't supported.
-        this.COLOR_TEX.getTextureData()[0] = 255 << 24 | (int) (r * 255) << 16 | (int) (g * 255) << 8 | (int) (b * 255);
-        this.COLOR_TEX.updateDynamicTexture();
-
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.bindTexture(this.COLOR_TEX.getGlTextureId());
-        GlStateManager.enableTexture2D();
-
-        // Bind the clouds texture last so the shader's sampler2D is correct.
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-        MC.renderEngine.bindTexture(TEXTURE);
-
-        final ByteBuffer buffer = Tessellator.getInstance().getBuffer().getByteBuffer();
-
-        // Set up pointers for the display list/VBO.
-        if (OpenGlHelper.useVbo()) {
-
-            this.vbo.bindBuffer();
-
-            final int stride = FORMAT.getNextOffset();
-            GlStateManager.glVertexPointer(3, GL11.GL_FLOAT, stride, 0);
-            GlStateManager.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-            GlStateManager.glTexCoordPointer(2, GL11.GL_FLOAT, stride, 12);
-            GlStateManager.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-            GlStateManager.glColorPointer(4, GL11.GL_UNSIGNED_BYTE, stride, 20);
-            GlStateManager.glEnableClientState(GL11.GL_COLOR_ARRAY);
-        }
-        else {
-
-            buffer.limit(FORMAT.getNextOffset());
-
-            for (int i = 0; i < FORMAT.getElementCount(); i++)
-                FORMAT.getElements().get(i).getUsage().preDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
-
-            buffer.position(0);
-        }
-
-        // Depth pass to prevent insides rendering from the outside.
-        GlStateManager.colorMask(false, false, false, false);
-
-        if (OpenGlHelper.useVbo())
-            this.vbo.drawArrays(GL11.GL_QUADS);
-
-        else
-            GlStateManager.callList(this.displayList);
-
-        // Full render.
-        if (!MC.gameSettings.anaglyph)
-            GlStateManager.colorMask(true, true, true, true);
-
-        else
-            switch (EntityRenderer.anaglyphField) {
-
-                case 0:
-                    GlStateManager.colorMask(false, true, true, true);
-                    break;
-
-                case 1:
-                    GlStateManager.colorMask(true, false, false, true);
-                    break;
-            }
-
-        if (OpenGlHelper.useVbo())
-            this.vbo.drawArrays(GL11.GL_QUADS);
-
-        else
-            GlStateManager.callList(this.displayList);
-
-        // Unbind buffer and disable pointers.
-        if (OpenGlHelper.useVbo())
-            this.vbo.unbindBuffer();
-
-        buffer.limit(0);
-
-        for (int i = 0; i < FORMAT.getElementCount(); i++)
-            FORMAT.getElements().get(i).getUsage().postDraw(FORMAT, i, FORMAT.getNextOffset(), buffer);
-
-        buffer.position(0);
-
-        // Disable our coloring.
-        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-        GlStateManager.disableTexture2D();
-        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
-
-        // Reset texture matrix.
-        GlStateManager.matrixMode(GL11.GL_TEXTURE);
-        GlStateManager.loadIdentity();
-        GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-
-        GlStateManager.disableBlend();
-        GlStateManager.enableCull();
-
-        GlStateManager.popMatrix();
-
-        return true;
     }
 
     private void reloadTextures () {

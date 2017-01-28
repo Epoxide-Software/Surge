@@ -1,9 +1,15 @@
 package org.epoxide.surge.features.gpucloud;
 
+import org.epoxide.surge.asm.ASMUtils;
 import org.epoxide.surge.command.CommandSurgeWrapper;
 import org.epoxide.surge.features.Feature;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,8 +33,26 @@ public class FeatureGPUClouds extends Feature {
     @Override
     public void onInit () {
 
-        if (!hasOptifine())
+        if (!FMLClientHandler.instance().hasOptifine())
             CommandSurgeWrapper.addCommand(new CommandClouds());
+    }
+
+    @SubscribeEvent
+    public void onRenderWorld (RenderWorldLastEvent event) {
+
+        World world = Minecraft.getMinecraft().theWorld;
+        if (renderClouds && !(world.provider.getCloudRenderer() instanceof CloudRenderer)) {
+            world.provider.setCloudRenderer(new CloudRenderer(event.getContext()));
+        }
+        else if (!renderClouds && world.provider.getCloudRenderer() instanceof CloudRenderer) {
+            world.provider.setCloudRenderer(null);
+        }
+    }
+
+    @Override
+    public boolean usesEvents () {
+
+        return true;
     }
 
     /**
@@ -50,19 +74,6 @@ public class FeatureGPUClouds extends Feature {
     public static boolean shouldRenderClouds () {
 
         return renderClouds;
-    }
-
-    /**
-     * Gets the instance of the GPU cloud renderer.
-     *
-     * @return The effectively final instance of the gpu cloud renderer.
-     */
-    public static CloudRenderer getInstance () {
-
-        if (INSTANCE == null)
-            INSTANCE = new CloudRenderer();
-
-        return INSTANCE;
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.epoxide.surge.command.CommandSurgeWrapper;
 import org.epoxide.surge.features.Feature;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -22,7 +23,7 @@ public class FeatureDisableAnimation extends Feature {
     @Override
     public void onInit () {
 
-        if (!hasOptifine())
+        if (!FMLClientHandler.instance().hasOptifine())
             CommandSurgeWrapper.addCommand(new CommandAnimation());
     }
 

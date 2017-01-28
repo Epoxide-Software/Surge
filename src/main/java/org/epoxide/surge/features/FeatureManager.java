@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.epoxide.surge.client.ProxyClient;
+import org.epoxide.surge.features.bedbug.FeatureBedBug;
 import org.epoxide.surge.features.loadtime.FeatureLoadTimes;
 import org.epoxide.surge.features.pigsleep.FeaturePigmanSleep;
 import org.epoxide.surge.handler.ConfigurationHandler;
 
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class FeatureManager {
@@ -24,11 +26,12 @@ public class FeatureManager {
      */
     public static void initFeatures () {
 
-        if (FMLCommonHandler.instance().getSide().isClient())
+        if (FMLCommonHandler.instance().getSidedDelegate() != null && FMLCommonHandler.instance().getSide().isClient())
             ProxyClient.registerClient();
 
         registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");
         registerFeature(new FeaturePigmanSleep(), "Pigman Sleep", "Allow the player to sleep while pigman are around, unless angered");
+        registerFeature(new FeatureBedBug(), "Bed Bug", "Fixes being stuck in the bed when the packet gets lost");
     }
 
     /**
@@ -42,25 +45,30 @@ public class FeatureManager {
      */
     public static void registerFeature (Feature feature, String name, String description) {
 
+        for (final Feature ff : FEATURES)
+            if (feature.getClass() == ff.getClass())
+                return;
+
         feature.enabled = ConfigurationHandler.isFeatureEnabled(feature, name, description);
 
         if (feature.enabled) {
 
             feature.configName = name.toLowerCase().replace(' ', '_');
+
             FEATURES.add(feature);
         }
     }
 
     public static Feature getFeature (Class<? extends Feature> f) {
 
-        if (FEATURES.size() == 0) {
-            ConfigurationHandler.initConfig(new File("config/surge.cfg"));
-            FeatureManager.initFeatures();
-            ConfigurationHandler.syncConfig();
-        }
         for (final Feature feature : FEATURES)
             if (feature.getClass() == f)
                 return feature;
-        return null;
+
+        ConfigurationHandler.initConfig(new File("config/surge.cfg"));
+        FeatureManager.initFeatures();
+        ConfigurationHandler.syncConfig();
+
+        return getFeature(f);
     }
 }

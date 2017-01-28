@@ -9,8 +9,6 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 // Removing version as 1.9 and 1.10 are supported. @IFMLLoadingPlugin.MCVersion("1.10.2")
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
 
-    public static boolean loaded = false;
-
     public SurgeLoadingPlugin () {
 
     }
