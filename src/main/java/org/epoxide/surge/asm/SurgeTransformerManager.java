@@ -3,7 +3,6 @@ package org.epoxide.surge.asm;
 import org.epoxide.surge.features.Feature;
 import org.epoxide.surge.features.FeatureManager;
 import org.epoxide.surge.features.animation.FeatureDisableAnimation;
-import org.epoxide.surge.features.bedbug.FeatureBedBug;
 import org.epoxide.surge.features.loadtime.FeatureLoadTimes;
 
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -35,27 +34,7 @@ public class SurgeTransformerManager implements IClassTransformer {
             }
         }
 
-        if (transformedName.equals("net.minecraft.entity.player.EntityPlayerMP")) {
-            final Feature f = FeatureManager.getFeature(FeatureBedBug.class);
-            if (FeatureManager.isEnabled(f)) {
-                final ClassNode clazz = ASMUtils.createClassFromByteArray(classBytes);
-                this.transformWakeUpPlayer(ASMUtils.getMethodFromClass(clazz, ASMUtils.isSrg ? "func_70999_a" : "wakeUpPlayer", "(ZZZ)V"));
-                return ASMUtils.createByteArrayFromClass(clazz, ClassWriter.COMPUTE_MAXS);
-            }
-        }
         return classBytes;
-    }
-
-    private void transformWakeUpPlayer (MethodNode method) {
-
-        final InsnList needle = new InsnList();
-        needle.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/entity/player/EntityPlayerMP", ASMUtils.isSrg ? "func_70608_bn" : "isPlayerSleeping", "()Z", false));
-        needle.add(new JumpInsnNode(Opcodes.IFEQ, new LabelNode()));
-        needle.add(new LabelNode());
-        needle.add(new LineNumberNode(-1, new LabelNode()));
-        needle.add(new VarInsnNode(Opcodes.ALOAD, 0));
-
-        ASMUtils.removeNeedleFromHaystack(method.instructions, needle);
     }
 
     /**

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.epoxide.surge.client.ProxyClient;
-import org.epoxide.surge.features.bedbug.FeatureBedBug;
 import org.epoxide.surge.features.loadtime.FeatureLoadTimes;
 import org.epoxide.surge.features.pigsleep.FeaturePigmanSleep;
 import org.epoxide.surge.handler.ConfigurationHandler;
@@ -31,7 +30,6 @@ public class FeatureManager {
 
         registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");
         registerFeature(new FeaturePigmanSleep(), "Pigman Sleep", "Allow the player to sleep while pigman are around, unless angered");
-        registerFeature(new FeatureBedBug(), "Bed Bug", "Fixes being stuck in the bed when the packet gets lost");
     }
 
     /**
