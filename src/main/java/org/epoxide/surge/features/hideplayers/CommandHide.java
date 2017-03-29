@@ -21,7 +21,7 @@ public class CommandHide implements SurgeCommand {
     public void execute (ICommandSender sender, String[] args) {
 
         FeatureHidePlayer.toggleHiding();
-        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.hideplayers." + FeatureHidePlayer.isHiding())));
+        sender.sendMessage(new TextComponentString(I18n.format("message.surge.hideplayers." + FeatureHidePlayer.isHiding())));
     }
 
     @Override

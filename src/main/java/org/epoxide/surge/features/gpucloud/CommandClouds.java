@@ -26,6 +26,6 @@ public class CommandClouds implements SurgeCommand {
     public void execute (ICommandSender sender, String[] args) {
 
         FeatureGPUClouds.toggleRenderClouds();
-        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.clouds." + FeatureGPUClouds.shouldRenderClouds())));
+        sender.sendMessage(new TextComponentString(I18n.format("message.surge.clouds." + FeatureGPUClouds.shouldRenderClouds())));
     }
 }

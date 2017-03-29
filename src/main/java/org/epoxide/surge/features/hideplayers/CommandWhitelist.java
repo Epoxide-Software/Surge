@@ -38,7 +38,7 @@ public class CommandWhitelist implements SurgeCommand {
                 for (final UUID uuid : whitelist)
                     builder.append("\n> ").append(PlayerUtils.getPlayerNameFromUUID(uuid));
 
-                sender.addChatMessage(new TextComponentString(builder.toString()));
+                sender.sendMessage(new TextComponentString(builder.toString()));
             }
 
             if (args.length == 2) {
@@ -48,19 +48,19 @@ public class CommandWhitelist implements SurgeCommand {
 
                 if (id == null) {
 
-                    sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.missing", TextUtils.formatString(username, ChatFormat.RED))));
+                    sender.sendMessage(new TextComponentString(I18n.format("message.surge.whitelist.missing", TextUtils.formatString(username, ChatFormat.RED))));
                     return;
                 }
 
                 if (commandName.equalsIgnoreCase("add")) {
 
                     if (whitelist.contains(id))
-                        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.already", TextUtils.formatString(username, ChatFormat.RED))));
+                        sender.sendMessage(new TextComponentString(I18n.format("message.surge.whitelist.already", TextUtils.formatString(username, ChatFormat.RED))));
 
                     else {
 
                         whitelist.add(id);
-                        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist", TextUtils.formatString(username, ChatFormat.GREEN))));
+                        sender.sendMessage(new TextComponentString(I18n.format("message.surge.whitelist", TextUtils.formatString(username, ChatFormat.GREEN))));
                     }
                 }
 
@@ -68,16 +68,16 @@ public class CommandWhitelist implements SurgeCommand {
                     if (whitelist.contains(id)) {
 
                         whitelist.remove(id);
-                        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.removed", TextUtils.formatString(username, ChatFormat.RED))));
+                        sender.sendMessage(new TextComponentString(I18n.format("message.surge.whitelist.removed", TextUtils.formatString(username, ChatFormat.RED))));
                     }
 
                     else
-                        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.whitelist.not", TextUtils.formatString(username, ChatFormat.RED))));
+                        sender.sendMessage(new TextComponentString(I18n.format("message.surge.whitelist.not", TextUtils.formatString(username, ChatFormat.RED))));
             }
         }
 
         else
-            sender.addChatMessage(new TextComponentString("/surge " + this.getUsage()));
+            sender.sendMessage(new TextComponentString("/surge " + this.getUsage()));
     }
 
     @Override

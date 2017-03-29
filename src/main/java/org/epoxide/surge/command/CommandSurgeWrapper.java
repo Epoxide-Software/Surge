@@ -60,7 +60,7 @@ public class CommandSurgeWrapper extends CommandBase {
             subCommands.get(args[0]).execute(sender, Arrays.copyOfRange(args, 1, args.length));
 
         else
-            sender.addChatMessage(new TextComponentString(this.getSubCommandDescriptions()));
+            sender.sendMessage(new TextComponentString(this.getSubCommandDescriptions()));
     }
 
     /**
