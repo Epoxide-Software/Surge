@@ -1,10 +1,10 @@
 [{
-	"modid": "Surge",
+	"modid": "surge",
 	"name": "Surge",
-	"description": "A tweak mod that improves Minecraft performance and stability.",
+	"description": "A tweak mod that improves Minecraft performance and stability. NOTE: This is an unofficial port of the mod to 1.11.2 by spikespaz.",
 	"version": "${version}",
 	"mcversion": "${mcversion}",
-	"url": "",
+	"url": "https://github.com/spikespaz/Surge",
 	"updateUrl": "",
 	"authorList": ["Darkhax", "lclc98"],
 	"logoFile": "logo_surge.png",
