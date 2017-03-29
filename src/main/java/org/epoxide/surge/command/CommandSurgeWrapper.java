@@ -36,13 +36,13 @@ public class CommandSurgeWrapper extends CommandBase {
     }
 
     @Override
-    public String getCommandName () {
+    public String getName () {
 
         return "surge";
     }
 
     @Override
-    public String getCommandUsage (ICommandSender sender) {
+    public String getUsage (ICommandSender sender) {
 
         return "command.surge.usage";
     }
@@ -76,7 +76,7 @@ public class CommandSurgeWrapper extends CommandBase {
     }
 
     @Override
-    public List<String> getTabCompletionOptions (MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+    public List<String> getTabCompletions (MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
 
         if (args.length == 1) {
             final Set<String> set = subCommands.keySet();

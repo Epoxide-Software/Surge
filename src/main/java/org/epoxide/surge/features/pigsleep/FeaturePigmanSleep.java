@@ -32,7 +32,7 @@ public class FeaturePigmanSleep extends Feature {
 
         final EntityPlayer entityPlayer = event.getEntityPlayer();
 
-        if (!entityPlayer.worldObj.isRemote) {
+        if (!entityPlayer.world.isRemote) {
 
             if (entityPlayer.isPlayerSleeping() || !entityPlayer.isEntityAlive()) {
 
@@ -40,13 +40,13 @@ public class FeaturePigmanSleep extends Feature {
                 return;
             }
 
-            else if (!entityPlayer.worldObj.provider.isSurfaceWorld()) {
+            else if (!entityPlayer.world.provider.isSurfaceWorld()) {
 
                 event.setResult(EntityPlayer.SleepResult.NOT_POSSIBLE_HERE);
                 return;
             }
 
-            else if (entityPlayer.worldObj.isDaytime()) {
+            else if (entityPlayer.world.isDaytime()) {
 
                 event.setResult(EntityPlayer.SleepResult.NOT_POSSIBLE_NOW);
                 return;
@@ -58,7 +58,7 @@ public class FeaturePigmanSleep extends Feature {
                 return;
             }
 
-            final List<EntityMob> list = entityPlayer.worldObj.<EntityMob>getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(event.getPos().getX() - 8.0D, event.getPos().getY() - 5.0D, event.getPos().getZ() - 8.0D, event.getPos().getX() + 8.0D, event.getPos().getY() + 5.0D, event.getPos().getZ() + 8.0D));
+            final List<EntityMob> list = entityPlayer.world.<EntityMob>getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(event.getPos().getX() - 8.0D, event.getPos().getY() - 5.0D, event.getPos().getZ() - 8.0D, event.getPos().getX() + 8.0D, event.getPos().getY() + 5.0D, event.getPos().getZ() + 8.0D));
             final List<EntityMob> mobList = new ArrayList<>();
 
             for (final EntityMob mob : list) {
@@ -94,12 +94,12 @@ public class FeaturePigmanSleep extends Feature {
 
         IBlockState state = null;
 
-        if (entityPlayer.worldObj.isBlockLoaded(event.getPos()))
-            state = entityPlayer.worldObj.getBlockState(event.getPos());
+        if (entityPlayer.world.isBlockLoaded(event.getPos()))
+            state = entityPlayer.world.getBlockState(event.getPos());
 
-        if (state != null && state.getBlock().isBed(state, entityPlayer.worldObj, event.getPos(), entityPlayer)) {
+        if (state != null && state.getBlock().isBed(state, entityPlayer.world, event.getPos(), entityPlayer)) {
 
-            final EnumFacing enumfacing = state.getBlock().getBedDirection(state, entityPlayer.worldObj, event.getPos());
+            final EnumFacing enumfacing = state.getBlock().getBedDirection(state, entityPlayer.world, event.getPos());
             float f = 0.5F;
             float f1 = 0.5F;
 
@@ -133,8 +133,8 @@ public class FeaturePigmanSleep extends Feature {
         entityPlayer.motionY = 0.0D;
         entityPlayer.motionZ = 0.0D;
 
-        if (!entityPlayer.worldObj.isRemote)
-            entityPlayer.worldObj.updateAllPlayersSleepingFlag();
+        if (!entityPlayer.world.isRemote)
+            entityPlayer.world.updateAllPlayersSleepingFlag();
 
         event.setResult(EntityPlayer.SleepResult.OK);
     }

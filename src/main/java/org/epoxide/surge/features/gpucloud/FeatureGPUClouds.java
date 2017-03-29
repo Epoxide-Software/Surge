@@ -40,7 +40,7 @@ public class FeatureGPUClouds extends Feature {
     @SubscribeEvent
     public void onRenderWorld (RenderWorldLastEvent event) {
 
-        World world = Minecraft.getMinecraft().theWorld;
+        World world = Minecraft.getMinecraft().world;
         if (renderClouds && !(world.provider.getCloudRenderer() instanceof CloudRenderer)) {
             world.provider.setCloudRenderer(new CloudRenderer(event.getContext()));
         }
