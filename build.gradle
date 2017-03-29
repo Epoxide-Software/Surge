@@ -96,7 +96,7 @@ String getVersionFromJava(File file) {
 
     file.write(outfile);
 
-    return "1.10.2-$release.$update.$patch.$build";
+    return "1.11.2-$release.$update.$patch.$build";
 }
 
 //Creates the source jar.
