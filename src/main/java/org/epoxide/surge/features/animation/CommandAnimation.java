@@ -27,6 +27,6 @@ public class CommandAnimation implements SurgeCommand {
     public void execute (ICommandSender sender, String[] args) {
 
         FeatureDisableAnimation.toggleAnimation();
-        sender.addChatMessage(new TextComponentString(I18n.format("message.surge.animation." + FeatureDisableAnimation.animationDisabled())));
+        sender.sendMessage(new TextComponentString(I18n.format("message.surge.animation." + FeatureDisableAnimation.animationDisabled())));
     }
 }

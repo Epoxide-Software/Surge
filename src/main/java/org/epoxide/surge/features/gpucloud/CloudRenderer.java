@@ -79,7 +79,7 @@ public class CloudRenderer extends IRenderHandler implements IResourceManagerRel
     @Override
     public void render (float partialTicks, WorldClient world, Minecraft mc) {
 
-        if (!MC.theWorld.provider.isSurfaceWorld())
+        if (!MC.world.provider.isSurfaceWorld())
             return;
 
         if (this.wasVbo != OpenGlHelper.useVbo() || this.cloudMode != MC.gameSettings.shouldRenderClouds() || (OpenGlHelper.useVbo() ? this.vbo == null : this.displayList < 0)) {
@@ -91,7 +91,7 @@ public class CloudRenderer extends IRenderHandler implements IResourceManagerRel
         final Entity entity = MC.getRenderViewEntity();
         final double totalOffset = renderGlobal.cloudTickCounter + partialTicks;
         final double x = entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks + totalOffset * 0.03;
-        final double y = MC.theWorld.provider.getCloudHeight() - (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks) + 0.33;
+        final double y = MC.world.provider.getCloudHeight() - (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * partialTicks) + 0.33;
         double z = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks;
 
         if (this.cloudMode == 2)
@@ -123,7 +123,7 @@ public class CloudRenderer extends IRenderHandler implements IResourceManagerRel
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         // Color multiplier.
-        final Vec3d color = MC.theWorld.getCloudColour(partialTicks);
+        final Vec3d color = MC.world.getCloudColour(partialTicks);
         float r = (float) color.xCoord;
         float g = (float) color.yCoord;
         float b = (float) color.zCoord;
