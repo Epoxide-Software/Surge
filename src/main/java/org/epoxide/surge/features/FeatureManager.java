@@ -13,25 +13,26 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class FeatureManager {
-
+    
     /**
      * List of all registered features.
      */
     public static final List<Feature> FEATURES = new ArrayList<>();
-
+    
     /**
      * This method is called before any mods have had a chance to initialize. Constructors
      * should take care not to reference any actual game code.
      */
     public static void initFeatures () {
-
-        if (FMLCommonHandler.instance().getSidedDelegate() != null && FMLCommonHandler.instance().getSide().isClient())
+        
+        if (FMLCommonHandler.instance().getSidedDelegate() != null && FMLCommonHandler.instance().getSide().isClient()) {
             ProxyClient.registerClient();
-
+        }
+        
         registerFeature(new FeatureLoadTimes(), "Load Time Analysis", "Records the load time of all mods being loaded.");
         registerFeature(new FeaturePigmanSleep(), "Pigman Sleep", "Allow the player to sleep while pigman are around, unless angered");
     }
-
+    
     /**
      * Registers a new feature with the feature manager. This will automatically create an
      * entry in the configuration file to enable/disable this feature. If the feature has been
@@ -42,40 +43,40 @@ public class FeatureManager {
      * @param description A short description of the feature.
      */
     public static void registerFeature (Feature feature, String name, String description) {
-
+        
         for (final Feature ff : FEATURES)
             if (feature.getClass() == ff.getClass())
                 return;
-
-        feature.enabled = ConfigurationHandler.isFeatureEnabled(feature, name, description) && (!feature.disableWithOptifine() || (feature.disableWithOptifine() && !FMLClientHandler.instance().hasOptifine()));
-
+            
+        feature.enabled = ConfigurationHandler.isFeatureEnabled(feature, name, description) && (!feature.disableWithOptifine() || feature.disableWithOptifine() && !FMLClientHandler.instance().hasOptifine());
+        
         if (feature.enabled) {
-
+            
             feature.configName = name.toLowerCase().replace(' ', '_');
-
+            
             FEATURES.add(feature);
         }
     }
-
+    
     public static Feature getFeature (Class<? extends Feature> f) {
-
+        
         for (final Feature feature : FEATURES)
             if (feature.getClass() == f)
                 return feature;
-
+            
         ConfigurationHandler.initConfig(new File("config/surge.cfg"));
         FeatureManager.initFeatures();
         ConfigurationHandler.syncConfig();
-
+        
         for (final Feature feature : FEATURES)
             if (feature.getClass() == f)
                 return feature;
-
+            
         return null;
     }
-
+    
     public static boolean isEnabled (Feature f) {
-
-        return f != null && f.enabled && (!f.disableWithOptifine() || (f.disableWithOptifine() && !FMLClientHandler.instance().hasOptifine()));
+        
+        return f != null && f.enabled && (!f.disableWithOptifine() || f.disableWithOptifine() && !FMLClientHandler.instance().hasOptifine());
     }
 }

@@ -14,28 +14,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FeatureDisableAnimation extends Feature {
-
+    
     /**
      * Whether or not animations should be displayed. Can be toggled via command.
      */
     private static boolean disableAnimations = false;
-
+    
     @Override
     public void onInit () {
-
-        if (!FMLClientHandler.instance().hasOptifine())
+        
+        if (!FMLClientHandler.instance().hasOptifine()) {
             CommandSurgeWrapper.addCommand(new CommandAnimation());
+        }
     }
-
+    
     /**
      * Toggles the state of {@link #disableAnimations}. If it was false, it will become true.
      * The reverse is also true.
      */
     public static void toggleAnimation () {
-
+        
         disableAnimations = !disableAnimations;
     }
-
+    
     /**
      * Hook for checking if animations should be disabled. If this returns true, animated
      * textures will stay at their first frame. <p> WARNING: This method is referenced directly
@@ -44,19 +45,19 @@ public class FeatureDisableAnimation extends Feature {
      * @return Whether or not animations should play.
      */
     public static boolean animationDisabled () {
-
+        
         return disableAnimations;
     }
-
+    
     @Override
     public void readNBT (NBTTagCompound nbt) {
-
+        
         disableAnimations = nbt.getBoolean("animationDisabled");
     }
-
+    
     @Override
     public void writeNBT (NBTTagCompound nbt) {
-
+        
         nbt.setBoolean("animationDisabled", disableAnimations);
     }
 }

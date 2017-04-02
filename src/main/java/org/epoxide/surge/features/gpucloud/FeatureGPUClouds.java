@@ -1,6 +1,5 @@
 package org.epoxide.surge.features.gpucloud;
 
-import org.epoxide.surge.asm.ASMUtils;
 import org.epoxide.surge.command.CommandSurgeWrapper;
 import org.epoxide.surge.features.Feature;
 
@@ -19,28 +18,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FeatureGPUClouds extends Feature {
-
+    
     /**
      * Whether or not the new cloud renderer should be used. Can be toggled via command.
      */
     private static boolean renderClouds = true;
-
+    
     /**
      * Instance of the GPU cloud renderer.
      */
     private static CloudRenderer INSTANCE;
-
+    
     @Override
     public void onInit () {
-
-        if (!FMLClientHandler.instance().hasOptifine())
+        
+        if (!FMLClientHandler.instance().hasOptifine()) {
             CommandSurgeWrapper.addCommand(new CommandClouds());
+        }
     }
-
+    
     @SubscribeEvent
     public void onRenderWorld (RenderWorldLastEvent event) {
-
-        World world = Minecraft.getMinecraft().theWorld;
+        
+        final World world = Minecraft.getMinecraft().theWorld;
         if (renderClouds && !(world.provider.getCloudRenderer() instanceof CloudRenderer)) {
             world.provider.setCloudRenderer(new CloudRenderer(event.getContext()));
         }
@@ -48,43 +48,42 @@ public class FeatureGPUClouds extends Feature {
             world.provider.setCloudRenderer(null);
         }
     }
-
+    
     @Override
     public boolean usesEvents () {
-
+        
         return true;
     }
-
+    
     /**
      * Toggles the state of {@link #renderClouds}. If it was true, it will become false. The
      * opposite is also true.
      */
     public static void toggleRenderClouds () {
-
+        
         renderClouds = !renderClouds;
     }
-
+    
     /**
-     * A hook to allow cloud rendering to be replaced with the GPU geometry clouds.
-     * <p>
+     * A hook to allow cloud rendering to be replaced with the GPU geometry clouds. <p>
      * WARNING: This method is referenced directly through ASM. Take care when editing it.
      *
      * @return Whether or not the custom cloud renderer should be used.
      */
     public static boolean shouldRenderClouds () {
-
+        
         return renderClouds;
     }
-
+    
     @Override
     public void readNBT (NBTTagCompound nbt) {
-
+        
         renderClouds = nbt.getBoolean("renderClouds");
     }
-
+    
     @Override
     public void writeNBT (NBTTagCompound nbt) {
-
+        
         nbt.setBoolean("renderClouds", renderClouds);
     }
 }

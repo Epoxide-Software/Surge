@@ -10,22 +10,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class CommandAnimation implements SurgeCommand {
-
+    
     @Override
     public String getSubName () {
-
+        
         return "animation";
     }
-
+    
     @Override
     public String getUsage () {
-
+        
         return "animation";
     }
-
+    
     @Override
     public void execute (ICommandSender sender, String[] args) {
-
+        
         FeatureDisableAnimation.toggleAnimation();
         sender.addChatMessage(new TextComponentString(I18n.format("message.surge.animation." + FeatureDisableAnimation.animationDisabled())));
     }

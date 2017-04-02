@@ -10,23 +10,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class CommandHide implements SurgeCommand {
-
+    
     @Override
     public String getSubName () {
-
+        
         return "hideplayers";
     }
-
+    
     @Override
     public void execute (ICommandSender sender, String[] args) {
-
+        
         FeatureHidePlayer.toggleHiding();
         sender.addChatMessage(new TextComponentString(I18n.format("message.surge.hideplayers." + FeatureHidePlayer.isHiding())));
     }
-
+    
     @Override
     public String getUsage () {
-
+        
         return "hideplayers";
     }
 }
