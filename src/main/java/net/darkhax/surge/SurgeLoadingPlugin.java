@@ -1,22 +1,29 @@
-package org.epoxide.surge.asm;
+package net.darkhax.surge;
 
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.Mixins;
+
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
+@IFMLLoadingPlugin.MCVersion("1.12.2")
 @IFMLLoadingPlugin.SortingIndex(1001)
-@IFMLLoadingPlugin.TransformerExclusions("org.epoxide.surge.asm")
-// Removing version as 1.9 and 1.10 are supported. @IFMLLoadingPlugin.MCVersion("1.10.2")
+@IFMLLoadingPlugin.TransformerExclusions("net.darkhax.surge")
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     
-    public SurgeLoadingPlugin () {
+    public SurgeLoadingPlugin() {
         
+        MixinBootstrap.init();
+        Mixins.addConfiguration("mixins.surge.json");
     }
     
     @Override
     public String[] getASMTransformerClass () {
         
-        return new String[] { SurgeTransformerManager.class.getName() };
+        return new String[0];
     }
     
     @Override
@@ -25,6 +32,7 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
         return null;
     }
     
+    @Nullable
     @Override
     public String getSetupClass () {
         
@@ -34,7 +42,6 @@ public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
     @Override
     public void injectData (Map<String, Object> data) {
         
-        ASMUtils.isSrg = (Boolean) data.get("runtimeDeobfuscationEnabled");
     }
     
     @Override

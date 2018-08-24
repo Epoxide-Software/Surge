@@ -1,14 +1,11 @@
 [{
-	"modid": "Surge",
+	"modid": "surge",
 	"name": "Surge",
 	"description": "A tweak mod that improves Minecraft performance and stability.",
 	"version": "${version}",
 	"mcversion": "${mcversion}",
 	"url": "",
 	"updateUrl": "",
-	"authorList": ["Darkhax", "lclc98"],
-	"logoFile": "logo_surge.png",
-    "credits": "Special thanks to Zaggy1024 and SanAndreasP",
-	"screenshots": [],
-	"dependencies": []
+	"authorList": ["Darkhax", "Jaredlll08", "lclc98"],
+    "credits": "Special thanks to Zaggy1024 and SanAndreasP"
 }]
