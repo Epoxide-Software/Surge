@@ -14,10 +14,10 @@ import net.minecraftforge.client.model.animation.ModelBlockAnimation;
 @Mixin(ModelBlockAnimation.class)
 public class MixinModelBlockAnimation {
 
-    @Shadow
+    @Shadow(remap = false)
     private static ModelBlockAnimation defaultModelBlockAnimation;
 
-    @Inject(method = "loadVanillaAnimation(Lnet/minecraft/client/resources/IResourceManager;Lnet/minecraft/util/ResourceLocation;)Lnet/minecraftforge/client/model/animation/ModelBlockAnimation;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "loadVanillaAnimation(Lnet/minecraft/client/resources/IResourceManager;Lnet/minecraft/util/ResourceLocation;)Lnet/minecraftforge/client/model/animation/ModelBlockAnimation;", at = @At("HEAD"), cancellable = true, remap = false)
     private static void loadVanillaAnimation (IResourceManager manager, ResourceLocation location, CallbackInfoReturnable<ModelBlockAnimation> info) {
 
         if (manager instanceof ICheckableResourceManager && !((ICheckableResourceManager) manager).hasResource(location))
