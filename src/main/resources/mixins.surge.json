@@ -9,6 +9,7 @@
   "client": [
       "client.MixinModelBlockAnimation",
 	  "client.resources.MixinFallbackResourceManager",
-	  "client.resources.MixinSimpleReloadableResourceManager"
+	  "client.resources.MixinSimpleReloadableResourceManager",
+      "client.gui.MixinGuiRepair"
   ]
 }
