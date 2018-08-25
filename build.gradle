@@ -53,14 +53,17 @@ minecraft {
     replace '@VERSION@', project.version
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
     replaceIn "${mod_class}.java"
+    
+    def args = [
+            "-Dfml.coreMods.load=net.darkhax.surge.SurgeLoadingPlugin"
+    ]
+    clientJvmArgs.addAll(args)
+    serverJvmArgs.addAll(args)
 }
 
-sourceSets {
+mixin {
 
-    main {
-	
-        ext.refMap = "mixins.surge.refmap.json"
-    }
+    add sourceSets.main, "mixins.surge.refmap.json"
 }
 
 processResources {
