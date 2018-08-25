@@ -20,7 +20,8 @@ public class MixinModelBlockAnimation {
     @Inject(method = "loadVanillaAnimation(Lnet/minecraft/client/resources/IResourceManager;Lnet/minecraft/util/ResourceLocation;)Lnet/minecraftforge/client/model/animation/ModelBlockAnimation;", at = @At("HEAD"), cancellable = true, remap = false)
     private static void loadVanillaAnimation (IResourceManager manager, ResourceLocation location, CallbackInfoReturnable<ModelBlockAnimation> info) {
 
-        if (manager instanceof ICheckableResourceManager && !((ICheckableResourceManager) manager).hasResource(location))
+        if (manager instanceof ICheckableResourceManager && !((ICheckableResourceManager) manager).hasResource(location)) {
             info.setReturnValue(defaultModelBlockAnimation);
+        }
     }
 }
