@@ -1,4 +1,4 @@
-package net.darkhax.surge;
+package net.darkhax.surge.core;
 
 import java.util.Map;
 
@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 @IFMLLoadingPlugin.SortingIndex(1001)
-@IFMLLoadingPlugin.TransformerExclusions("net.darkhax.surge")
+@IFMLLoadingPlugin.TransformerExclusions("net.darkhax.surge.core")
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
 
     public static long firstLaunchTime = 0;

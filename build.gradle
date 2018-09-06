@@ -117,7 +117,7 @@ jar {
         "ForceLoadAsMod": "true",
 	    "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
         "MixinConfigs": "mixins.surge.json",
-        "FMLCorePlugin": "net.darkhax.surge.SurgeLoadingPlugin"
+        "FMLCorePlugin": "net.darkhax.surge.core.SurgeLoadingPlugin"
  	)
 }
 

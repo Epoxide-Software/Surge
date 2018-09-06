@@ -3,6 +3,7 @@ package net.darkhax.surge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.darkhax.surge.core.SurgeLoadingPlugin;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;

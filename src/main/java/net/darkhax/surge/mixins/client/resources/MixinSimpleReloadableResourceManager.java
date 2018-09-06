@@ -5,6 +5,7 @@ import java.util.Map;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import net.darkhax.surge.lib.ICheckableResourceManager;
 import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;

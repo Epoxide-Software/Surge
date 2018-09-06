@@ -1,4 +1,4 @@
-package net.darkhax.surge.mixins.client.resources;
+package net.darkhax.surge.lib;
 
 import net.minecraft.util.ResourceLocation;
 
