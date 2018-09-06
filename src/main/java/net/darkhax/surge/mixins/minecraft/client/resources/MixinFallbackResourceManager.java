@@ -1,4 +1,4 @@
-package net.darkhax.surge.mixins.client.resources;
+package net.darkhax.surge.mixins.minecraft.client.resources;
 
 import java.util.List;
 

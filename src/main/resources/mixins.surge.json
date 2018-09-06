@@ -9,9 +9,9 @@
       "minecraftforge.registries.MixinGameData"
   ],
   "client": [
-      "client.MixinModelBlockAnimation",
-	  "client.resources.MixinFallbackResourceManager",
-	  "client.resources.MixinSimpleReloadableResourceManager",
-      "client.gui.MixinGuiRepair"
+      "minecraftforge.client.model.animation.MixinModelBlockAnimation",
+	  "minecraft.client.resources.MixinFallbackResourceManager",
+	  "minecraft.client.resources.MixinSimpleReloadableResourceManager",
+      "minecraft.client.gui.MixinGuiRepair"
   ]
 }
