@@ -5,6 +5,7 @@
   "minVersion": "0.6",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+      "minecraft.entity.passive.MixinEntitySheep",
       "minecraftforge.registries.MixinGameData"
   ],
   "client": [
