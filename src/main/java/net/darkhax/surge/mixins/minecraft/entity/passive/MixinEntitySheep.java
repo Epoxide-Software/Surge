@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.darkhax.surge.core.SurgeConfiguration;
 import net.darkhax.surge.lib.DyeBlending;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntitySheep;
@@ -24,7 +25,7 @@ public class MixinEntitySheep {
     private void getDyeColorMixFromParents (EntityAnimal father, EntityAnimal mother, CallbackInfoReturnable<EnumDyeColor> info) {
 
         // Ensure both entities are sheep.
-        if (father instanceof EntitySheep && mother instanceof EntitySheep) {
+        if (SurgeConfiguration.sheepDyeBlendTable && father instanceof EntitySheep && mother instanceof EntitySheep) {
 
             // Get dye colors of both parents.
             final EnumDyeColor fatherColor = ((EntitySheep) father).getFleeceColor();

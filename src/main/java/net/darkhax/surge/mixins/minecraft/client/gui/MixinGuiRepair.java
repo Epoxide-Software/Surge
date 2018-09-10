@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.darkhax.surge.core.SurgeConfiguration;
 import net.minecraft.client.gui.GuiRepair;
 import net.minecraft.client.gui.GuiTextField;
 
@@ -15,10 +16,9 @@ public class MixinGuiRepair {
     @Shadow()
     private GuiTextField nameField;
 
-    @Inject(method = "initGui", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "initGui", at = @At("RETURN"))
     private void initGui (CallbackInfo ci) {
 
-        this.nameField.setMaxStringLength(256);
+        this.nameField.setMaxStringLength(SurgeConfiguration.maxRenameLength);
     }
-
 }

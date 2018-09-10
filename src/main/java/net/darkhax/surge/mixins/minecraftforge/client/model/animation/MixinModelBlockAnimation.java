@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.darkhax.surge.core.SurgeConfiguration;
 import net.darkhax.surge.lib.ICheckableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +21,8 @@ public class MixinModelBlockAnimation {
     @Inject(method = "loadVanillaAnimation(Lnet/minecraft/client/resources/IResourceManager;Lnet/minecraft/util/ResourceLocation;)Lnet/minecraftforge/client/model/animation/ModelBlockAnimation;", at = @At("HEAD"), cancellable = true, remap = false)
     private static void loadVanillaAnimation (IResourceManager manager, ResourceLocation location, CallbackInfoReturnable<ModelBlockAnimation> info) {
 
-        if (manager instanceof ICheckableResourceManager && !((ICheckableResourceManager) manager).hasResource(location)) {
+        if (SurgeConfiguration.disableAnimatedModels || SurgeConfiguration.checkForAnimatedModels && manager instanceof ICheckableResourceManager && !((ICheckableResourceManager) manager).hasResource(location)) {
+
             info.setReturnValue(defaultModelBlockAnimation);
         }
     }
