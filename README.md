@@ -1,40 +1,18 @@
-# Surge
-Surge is a modular performance improvement mod, which aims to increase performance and stability of the game. 
+# Surge [![](http://cf.way2muchnoise.eu/250290.svg)](https://minecraft.curseforge.com/projects/250290) [![](http://cf.way2muchnoise.eu/versions/250290.svg)](https://minecraft.curseforge.com/projects/250290)
+Surge is an open source mod which aims to improve the load time and performance of the game. 
 
-# Possibly Asked Questions
-**Can I use this in my modpack?**    
-Yes, this mod is intended to be used by mod packs. A link back to this page would be appreciated.
+## Features
 
-**Can I use this on a vanilla server?**    
-Yes, this mod does not require the server to have it installed. This mod should work with any server. 
+### Load Times
+- **Fast Prefix Checking** - Cleans up Forge's ID prefix checking, to improve the time it takes to create and register new things to the game registry. 
+- **Animated JSON Model Checking** - Cleans up Forge's custom animated model loader to greatly improve model loading times.
+- **Disable Debug Sound Info** - Turns off debug code for missing sounds and missing subtitles. This will improve sound loading times.
 
-**Is this mod open to suggestions?**    
-Yes, if you know of a way to improve game performance let us know and we can look into it. If you are a mod developer, you can also create a pull request. 
+### Performance
+- **SheepDyeBlendTable** - Switches sheep color blending code to use a predefined table instead of the vanilla behaviour which is to do a recipe lookup.
 
-**Do I need OP or cheats to use commands added by this mod?**    
-All commands added by this mod are client side, and should work regardless of permission level. You can use the `/surge` command for more info about our commands.
+### Bug Fixes
+- **Max Rename Length** - Fixes a bug where renaming long items in an anvil will cause the name to error out.
 
-**This mod crashed! / This mod is incompatible with _____!**    
-One of the primary goals for Surge is to provide players with a tool that is stable and compatible with their favorite mods. If you encounter an issue, please report it, and it will be looked into. 
-
-# Features
-**Animations**    
-This feature adds the `/surge animation` command. If this command is executed, texture animation will be disabled. This will prevent things like water or lava from having animated textures, but it will also increase performance. Running the command again will disable the feature, allowing animations to work as they normally would. This command does **not** require OP, or cheats to be enabled.
-
-**Hide Players**    
-This feature adds the `/surge hideplayers` command. When this command is executed, only your player will be shown. This feature also adds the `/surge whitelist [add|remove] [username]` command which allows you to disable this effect for specific players. 
-
-**Redstone Toggle Fix**    
-This feature fixes a memory leak in redstone torches. A memory leak is a type of bug, where a program claims some memroy (RAM) for a specific task, but does not release it when said task is complete. The leak fixed by this feature caused information about a world to stay loaded, even when that world was not being used. 
-
-**Load Time Analysis**    
-This feature will analyse the load time of every mod installed. Once the game has started a file will be created in `.minecraft/surge/loadtimes` which contains approximate load times of every mod. While this shouldn't be used as undeniable proof that a mod is slow or broken, it can be used to spot mods which are bogging down load times. This feature is disabled by default, as it will slightly slow down load times while analyzing the load times of other mods.
-
-**GPU Cloud Geometry**    
-This feature significantly improves the performance of vanilla cloud rendering. Traditionally clouds have been very resource intensive, taking up a decent chunk of the total game render time. This feature greatly reduces that chunk of time, allowing you to play with clouds enabled, without losing performance. This feature also adds a `/surge clouds` command which allows you to toggle this special rendering off and on. Full credit to [Zaggy1024](https://github.com/Zaggy1024) for this feature.
-
-# Credits
-- lclc98 - Lead Developer
-- Darkhax - Developer
-- Zaggy1024 - Improved Cloud Rendering
-- SanAndreasP - ASM tools
+### Misc
+- **Show Total Load Time** - Displays the total game load time in the console. This lets you see how changing your game impacts load time.
