@@ -14,6 +14,7 @@ public class SurgeConfiguration {
     public static boolean fastPrefixChecking;
     public static boolean checkForAnimatedModels;
     public static boolean disableAnimatedModels;
+    public static boolean disableDebugSoundInfo;
 
     // Performance
     public static final String PERFORMANCE = "performance";
@@ -47,6 +48,7 @@ public class SurgeConfiguration {
         fastPrefixChecking = config.getBoolean("fastPrefixChecking", LOAD_TIME, true, "Optimizes Forge's id prefix checking. Also removes prefix warnings which significantly impact load time in large quantities.");
         checkForAnimatedModels = config.getBoolean("checkForAnimatedModels", LOAD_TIME, true, "Improves model load times, by checking if an animated model exists before trying to load it.");
         disableAnimatedModels = config.getBoolean("disableAnimatedModels", LOAD_TIME, false, "Improves model load times by completely removing Forge's animated models. This is a faster version of checkForAnimatedModels");
+        disableDebugSoundInfo = config.getBoolean("disableDebugSoundInfo", LOAD_TIME, true, "Improves sound loading times by removing debug code for missing sounds and missing subtitles.");
 
         // Performance
         sheepDyeBlendTable = config.getBoolean("sheepDyeBlendTable", PERFORMANCE, true, "Replace sheep breeding to check a predefined table rather than querying the recipe registry.");

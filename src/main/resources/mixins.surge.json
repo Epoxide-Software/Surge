@@ -12,6 +12,7 @@
       "minecraftforge.client.model.animation.MixinModelBlockAnimation",
 	  "minecraft.client.resources.MixinFallbackResourceManager",
 	  "minecraft.client.resources.MixinSimpleReloadableResourceManager",
-      "minecraft.client.gui.MixinGuiRepair"
+      "minecraft.client.gui.MixinGuiRepair",
+	  "minecraft.client.audio.MixinSoundHandler"
   ]
 }
