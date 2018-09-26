@@ -1,9 +1,12 @@
 package net.darkhax.surge.core;
 
+import java.io.File;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixins;
 
@@ -14,9 +17,12 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 @IFMLLoadingPlugin.TransformerExclusions("net.darkhax.surge.core")
 public class SurgeLoadingPlugin implements IFMLLoadingPlugin {
 
+    public static final Logger LOG = LogManager.getLogger("Surge");
     public static long firstLaunchTime = 0;
 
     public SurgeLoadingPlugin () {
+
+        SurgeConfiguration.init(new File("config/surge.cfg"));
 
         firstLaunchTime = System.currentTimeMillis();
         MixinBootstrap.init();
