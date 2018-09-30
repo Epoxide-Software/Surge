@@ -1,4 +1,4 @@
-package net.darkhax.surge.mixins.minecraft.client.gui;
+package net.darkhax.surge.mixins.minecraft.client.audio;
 
 import java.io.IOException;
 import java.io.InputStream;
