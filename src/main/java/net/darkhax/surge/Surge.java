@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 
-@Mod(modid = "surge", name = "Surge", version = "@VERSION@", certificateFingerprint = "@FINGERPRINT@")
+@Mod(modid = "surge", name = "Surge", version = "@VERSION@", acceptableRemoteVersions = "*", certificateFingerprint = "@FINGERPRINT@")
 public class Surge {
 
     public static final Logger LOG = SurgeLoadingPlugin.LOG;
