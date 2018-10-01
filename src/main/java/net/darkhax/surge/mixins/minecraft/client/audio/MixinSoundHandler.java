@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.darkhax.surge.core.SurgeConfiguration;
+import net.darkhax.surge.core.SurgeLoadingPlugin;
 import net.minecraft.client.audio.SoundEventAccessor;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.audio.SoundList;
@@ -111,9 +112,10 @@ public class MixinSoundHandler {
                 }
             }
 
-            catch (final IOException e) {
+            catch (final Exception e) {
 
-                // TODO add more stuff
+                SurgeLoadingPlugin.LOG.error("Unabled to load sounds.json for {}.", s);
+                e.printStackTrace();
             }
         }
     }
