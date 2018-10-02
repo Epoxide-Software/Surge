@@ -25,6 +25,7 @@ public class SurgeConfiguration {
     public static final String BUG_FIX = "bugfix";
 
     public static int maxRenameLength;
+    public static boolean fixWallGlitch = true;
 
     // Misc Features
     public static final String MISC = "misc";
@@ -55,6 +56,7 @@ public class SurgeConfiguration {
 
         // Buf Fix
         maxRenameLength = config.getInt("maxRenameLength", BUG_FIX, 256, 32, 1024, "The maximum number of characters that can be entered in an anvil.");
+        fixWallGlitch = config.getBoolean("fixMobsWallGlitching", BUG_FIX, true, "Attempts to fix MC-2025 by saving entity AABB to NBT.");
 
         // Misc
         showTotalLoadtime = config.getBoolean("showTotalLoadTime", MISC, true, "If true, the total load time will be printed in the console.");

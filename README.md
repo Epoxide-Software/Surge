@@ -13,6 +13,7 @@ Surge is an open source mod which aims to improve the load time and performance 
 
 ### Bug Fixes
 - **Max Rename Length** - Fixes a bug where renaming long items in an anvil will cause the name to error out.
+- **Entity Wall Glitching** - Fixes a bug which allows entities to glitch into and through walls on chunk load. [MC-2025](https://bugs.mojang.com/browse/MC-2025)
 
 ### Misc
 - **Show Total Load Time** - Displays the total game load time in the console. This lets you see how changing your game impacts load time.
