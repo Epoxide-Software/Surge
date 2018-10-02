@@ -1,6 +1,5 @@
 package net.darkhax.surge.mixins.minecraft.client.audio;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
