@@ -113,8 +113,9 @@ public class MixinSoundHandler {
 
             catch (final Exception e) {
 
-                SurgeLoadingPlugin.LOG.error("Unable to load sounds.json for {}.", s);
-                e.printStackTrace();
+                // TODO Implement better handling so this exception isn't thrown
+                // SurgeLoadingPlugin.LOG.error("Unable to load sounds.json for {}.", s);
+                // e.printStackTrace();
             }
         }
     }
