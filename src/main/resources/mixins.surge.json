@@ -7,6 +7,7 @@
   "mixins": [
       "minecraft.entity.passive.MixinEntitySheep",
 	  "minecraft.entity.MixinEntity",
+	  "minecraft.entity.item.MixinEntityItem",
       "minecraftforge.registries.MixinGameData"
   ],
   "client": [
